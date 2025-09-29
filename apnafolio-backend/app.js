@@ -9,7 +9,11 @@ const User = require("./models/User");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: ["https://apnafolio.in", "https://www.apnafolio.in"], // ✅ Allowed origins
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+}));
 app.use(express.json());
 app.use(helmet());   // 🔒 security headers
 app.use(morgan("dev")); // 📜 request logging
