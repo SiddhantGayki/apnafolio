@@ -19,11 +19,10 @@ const sanitizeUser = (userDoc) => {
 };
 
 exports.signup = async (req, res) => {
-  try{
-    const { name, email, password, username } = req.body;
+      const { name, email, password, username } = req.body;
   if (!name || !email || !password || !username) {
     return res.status(400).json({ message: "All fields required" });
-  }}
+  }
     const normalizedEmail = email.toLowerCase().trim();
     const normalizedUsername = username.trim();
 
