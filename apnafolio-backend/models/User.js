@@ -52,7 +52,7 @@ const userSchema = new mongoose.Schema(
     isPremium: { type: Boolean, default: false },
 
     username: { type: String, unique: true, required: true },
-    usernameLower: { type: String, unique: true, required: true }, // lowercase copy
+    usernameLower: { type: String, unique: true }, // lowercase copy
 
     isAdmin: { type: Boolean, default: false },
 
@@ -63,8 +63,10 @@ const userSchema = new mongoose.Schema(
 );
 
 // keep lowercase username in sync
-userSchema.pre("save", function (next) {
-  if (this.username) this.usernameLower = this.username.toLowerCase();
+userSchema.pre("validate", function (next) {
+  if (this.username) {
+    this.usernameLower = this.username.toLowerCase();
+  }
   next();
 });
 
