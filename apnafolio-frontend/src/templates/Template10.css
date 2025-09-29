@@ -1,0 +1,67 @@
+
+/* ===== THEME VARS ===== */
+body.light{--bg:#fff;--text:#1e1e1e;--accent:#0077ff;--card-bg:#f9f9f9;--shadow:rgba(0,0,0,0.08)}
+body.dark{--bg:#0f0f0f;--text:#eaeaea;--accent:#00cec9;--card-bg:#1a1a1a;--shadow:rgba(0,0,0,0.5)}
+
+.t1-container{background:var(--bg);color:var(--text);transition:background .5s,color .5s;font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto}
+
+/* ===== NAVBAR ===== */
+.navbar.solid{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;position:sticky;top:0;z-index:1000;background:var(--bg);border-bottom:1px solid #333;flex-wrap:wrap}
+.nav-logo{font-weight:700;font-size:1.2rem;color:var(--accent)}
+.navbar nav{display:flex;gap:20px;align-items:center}
+.navbar nav a{text-decoration:none;color:var(--text);font-weight:500;position:relative}
+.navbar nav a::after{content:"";position:absolute;width:0;height:2px;bottom:-4px;left:0;background:var(--accent);transition:.3s}
+.navbar nav a:hover::after{width:100%}
+.theme-toggle{background:transparent;border:none;font-size:1.3rem;cursor:pointer}
+
+/* Hamburger */
+.menu-toggle{display:none;font-size:1.8rem;background:none;border:none;cursor:pointer}
+@media(max-width:768px){
+  .menu-toggle{display:block}
+  .navbar nav{display:none;flex-direction:column;position:absolute;top:60px;right:20px;background:var(--bg);padding:20px;border-radius:10px;width:200px;text-align:right}
+  .navbar nav.show{display:flex}
+}
+/* ===== HERO ===== */
+.t1-hero{text-align:center;padding:100px 20px 80px}
+.t1-avatar{width:150px;height:150px;object-fit:cover;border-radius:50%;border:4px solid var(--accent);margin-bottom:20px}
+.gradient-text{font-size:2.8rem;background:linear-gradient(90deg,#00cec9,#0077ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.t1-hero h2{font-size:1.4rem;font-weight:400;margin-bottom:15px;color:var(--accent)}
+.t1-hero p{max-width:600px;margin:0 auto;line-height:1.6}
+
+/* ===== SECTIONS ===== */
+.t1-section{padding:80px 20px;max-width:1000px;margin:auto}
+.t1-section h3{font-size:1.8rem;margin-bottom:30px;color:var(--accent);text-align:center}
+
+/* ===== SKILLS ===== */
+.skills-subcat{margin-bottom:30px}
+.t1-skill-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:20px}
+.t1-skill{display:flex;flex-direction:column;align-items:center;padding:12px;background:var(--card-bg);border-radius:10px;transition:.3s}
+.t1-skill img{width:40px;height:40px;margin-bottom:8px}
+.t1-skill:hover{box-shadow:0 0 15px var(--accent)}
+
+/* ===== PROJECTS ===== */
+.t1-projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.t1-project-card{background:var(--card-bg);padding:20px;border-radius:12px;transition:.3s}
+.t1-project-card:hover{transform:translateY(-5px);box-shadow:0 8px 20px var(--shadow)}
+.t1-project-media{width:100%;border-radius:10px;margin-bottom:10px;display:block}
+.t1-tag{background:var(--accent);color:#fff;padding:4px 10px;border-radius:6px;font-size:.8rem;margin-right:8px;display:inline-block;margin-top:6px}
+.t1-links a{margin-right:10px;text-decoration:none;color:var(--accent);font-weight:600}
+
+/* ===== SIMPLE CARDS ===== */
+.t1-card{background:var(--card-bg);padding:20px;border-radius:12px;margin-bottom:20px;box-shadow:0 4px 12px var(--shadow)}
+
+/* ===== RESUME ===== */
+.t1-btn{background:var(--accent);color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600;display:inline-block}
+.t1-btn:hover{opacity:.9}
+
+/* ===== CONTACT ===== */
+.t1-contact-form{display:flex;flex-direction:column;gap:15px;margin-bottom:30px}
+.t1-contact-form input,.t1-contact-form textarea{padding:12px;border:1px solid #ccc;border-radius:8px;background:var(--card-bg);color:var(--text);font-size:1rem;transition:.3s}
+.t1-contact-form input:focus,.t1-contact-form textarea:focus{border-color:var(--accent);box-shadow:0 0 8px var(--accent)}
+.t1-contact-form button{background:var(--accent);color:#fff;padding:12px;border:none;border-radius:8px;cursor:pointer;font-weight:600;transition:.2s}
+.t1-contact-form button:hover{transform:scale(1.05)}
+.t1-contact-info{text-align:center;margin-top:20px;font-size:.95rem}
+
+/* ===== FOOTER ===== */
+.t1-footer{text-align:center;padding:20px;margin-top:40px;background:var(--card-bg);color:var(--text);border-top:1px solid #333}
+

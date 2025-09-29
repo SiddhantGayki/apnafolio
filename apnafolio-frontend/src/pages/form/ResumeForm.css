@@ -1,0 +1,375 @@
+/* .resume-form {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  font-family: "Poppins", sans-serif;
+}
+
+.resume-form h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #222;
+}
+
+.resume-form h3 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  color: #0077ff;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 5px;
+}
+
+.resume-form label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+  color: #333;
+}
+
+.resume-form input,
+.resume-form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.resume-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.resume-form .nested-section {
+  margin-bottom: 15px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.resume-form button {
+  margin-top: 15px;
+  padding: 12px 20px;
+  background: #0077ff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.resume-form button:hover {
+  background: #0056cc;
+} */
+/*  
+.resume-form {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  font-family: "Poppins", sans-serif;
+}
+
+.resume-form h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #222;
+}
+
+.resume-form h3 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  color: #0077ff;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 5px;
+}
+
+.resume-form h4 {
+  margin-top: 20px;
+  color: #444;
+  font-weight: 600;
+}
+
+.resume-form label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+  color: #333;
+}
+
+.resume-form input,
+.resume-form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.resume-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.resume-form .nested-section {
+  margin-bottom: 15px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.skill-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.add-btn {
+  margin-top: 8px;
+  padding: 8px 14px;
+  background: #e6e6e6;
+  color: #222;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.add-btn:hover {
+  background: #ccc;
+}
+
+.remove-btn {
+  background: #ff4d4f;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.remove-btn:hover {
+  background: #d9363e;
+}
+
+.submit-btn {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: #0077ff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.submit-btn:hover {
+  background: #0056cc;
+} */
+
+
+
+
+/* Global Form Container */
+.resume-form {
+  max-width: 950px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  color: #eee;
+  font-family: "Poppins", sans-serif;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.7s ease-in-out;
+}
+
+/* Form Heading */
+.resume-form h2 {
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ff0080, #00f5ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1.8rem;
+}
+
+/* Section Headings */
+.resume-form h3 {
+  margin-top: 2rem;
+  font-size: 1.6rem;
+  color: #00f5ff;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 0.4rem;
+}
+
+.resume-form h4 {
+  margin: 1rem 0 0.5rem;
+  font-size: 1.2rem;
+  color: #ff66cc;
+}
+
+/* Inputs & Textarea */
+.resume-form input,
+.resume-form textarea {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  margin: 0.6rem 0 1.2rem;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.resume-form input:focus,
+.resume-form textarea:focus {
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 10px #00f5ff;
+}
+
+/* Skill Row */
+.skill-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.skill-row input {
+  flex: 1;
+}
+
+/* Nested Section (Projects, Education, etc.) */
+.nested-section {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+  border-radius: 15px;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.nested-section:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 245, 255, 0.25);
+}
+
+/* Buttons */
+.add-btn,
+.remove-btn,
+.submit-btn {
+  padding: 0.7rem 1.4rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+/* Add Button */
+.add-btn {
+  background: linear-gradient(135deg, #43e97b, #38f9d7);
+  color: #000;
+  margin-top: 0.5rem;
+}
+
+.add-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #38f9d7, #43e97b);
+}
+
+/* Remove Button */
+.remove-btn {
+  background: linear-gradient(135deg, #ff512f, #dd2476);
+  color: #fff;
+}
+
+.remove-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #dd2476, #ff512f);
+}
+
+/* Submit Button */
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #ff0080, #00f5ff);
+  color: white;
+  margin-top: 1.5rem;
+  font-size: 1.2rem;
+}
+
+.submit-btn:hover {
+  background: linear-gradient(135deg, #00f5ff, #ff0080);
+  transform: scale(1.02);
+  box-shadow: 0 6px 25px rgba(0, 245, 255, 0.4);
+}
+
+/* File Inputs */
+.resume-form input[type="file"] {
+  background: transparent;
+  border: none;
+  color: #ddd;
+  margin: 0.5rem 0 1rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .resume-form {
+    padding: 1.5rem;
+  }
+}
+
+
+/* spinner */
+.saving-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 1.2rem;
+  z-index: 9999;
+}
+
+.spinner {
+  border: 6px solid rgba(255, 255, 255, 0.2);
+  border-top: 6px solid #ffffff;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -1,0 +1,46 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.nav-logo {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+.navbar nav {
+  display: flex;
+  gap: 20px;
+}
+.navbar nav a {
+  text-decoration: none;
+  color: var(--text);
+  transition: 0.3s;
+}
+.navbar nav a:hover {
+  color: var(--accent);
+}
+.theme-toggle {
+  background: transparent;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+/* Theme variables */
+body.light {
+  --bg: #fff;
+  --text: #222;
+  --accent: #0077ff;
+}
+body.dark {
+  --bg: #111;
+  --text: #eee;
+  --accent: #00cec9;
+}

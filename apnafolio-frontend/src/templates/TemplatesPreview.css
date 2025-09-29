@@ -1,0 +1,77 @@
+.template-preview-page {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100%;
+  background: #f8f9fa;
+}
+
+/* Left Side - Template View */
+.preview-left {
+  flex: 3;
+  background: #fff;
+  overflow-y: auto;
+  border-right: 1px solid #ddd;
+  padding: 10px;
+}
+
+.preview-left::-webkit-scrollbar {
+  width: 6px;
+}
+.preview-left::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 10px;
+}
+
+/* Right Side - Info Panel */
+.preview-right {
+  flex: 1;
+  background: #121212;
+  color: #fff;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.preview-right h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.preview-right p {
+  font-size: 16px;
+  margin-bottom: 30px;
+  color: #ccc;
+}
+
+/* Buttons */
+.preview-right .btn {
+  display: block;
+  width: 80%;
+  margin: 10px auto;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: #00c853;
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #009624;
+}
+
+.btn-secondary {
+  background: #2962ff;
+  color: #fff;
+}
+.btn-secondary:hover {
+  background: #0039cb;
+}
