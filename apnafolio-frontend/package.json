@@ -22,7 +22,8 @@
     "react-parallax-tilt": "^1.7.307",
     "react-router-dom": "^7.7.1",
     "@tsparticles/react": "^3.0.0",
-    "tsparticles": "^3.9.1"
+    "tsparticles": "^3.9.1",
+    "recharts": "^2.12.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
