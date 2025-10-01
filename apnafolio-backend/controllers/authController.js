@@ -62,6 +62,7 @@ const sanitizeUser = (userDoc) => {
 
 exports.signup = async (req, res) => {
   try {
+    console.log("📩 Signup body:", req.body);
     const { name, email, password, username } = req.body;
     if (!name || !email || !password || !username) {
       return res.status(400).json({ message: "All fields required" });
