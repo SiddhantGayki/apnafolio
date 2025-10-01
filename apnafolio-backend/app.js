@@ -18,6 +18,8 @@ app.use(express.json());
 app.use(helmet());   // 🔒 security headers
 app.use(morgan("dev")); // 📜 request logging
 
+app.set("trust proxy", 1);
+
 // Mount routes
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/user", require("./routes/userRoutes"));
