@@ -58,6 +58,7 @@ export const loadRazorpay = (order, templateId) => {
   });
 };
 
+export default api;
 
 
 // // src/utils/api.js
