@@ -10,7 +10,7 @@ const User = require("./models/User");
 const app = express();
 
 app.use(cors({
-  origin: ["https://apnafolio.in", "https://www.apnafolio.in"], // ✅ Allowed origins
+  origin: ["https://apnafolio.in", "https://www.apnafolio.in","https://apnafolio-amttynbd1-siddhant-gaykis-projects.vercel.app"], // ✅ Allowed origins
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
 }));
