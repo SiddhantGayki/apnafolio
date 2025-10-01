@@ -1,7 +1,6 @@
 // src/pages/auth/Login.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-// import api, { AuthAPI } from "../../utils/api";
 import api from "../../utils/api";
 import { setAuth } from "../../utils/auth";
 import "../../styles/AuthPages.css";
