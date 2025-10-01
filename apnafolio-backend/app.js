@@ -13,7 +13,8 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:3000", // local dev
   "https://apnafolio-919e652t3-siddhant-gaykis-projects.vercel.app", // vercel frontend
-  "https://apnafolio.in" // तुझं custom domain
+  "https://apnafolio.in", // तुझं custom domain
+  "https://www.apnafolio.in"
 ];
 
 // ✅ CORS config
