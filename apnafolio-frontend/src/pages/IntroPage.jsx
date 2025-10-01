@@ -100,7 +100,7 @@ export default function IntroPage() {
       {/* Call to Action */}
       <section className="cta">
         <h2>Start your journey now🚀</h2>
-        <Link to="/register" className="btn btn-primary">Create Your Portfolio</Link>
+        <Link to="/signup" className="btn btn-primary">Create Your Portfolio</Link>
       </section>
     </div>
   );
