@@ -8,41 +8,78 @@ const bcrypt = require("bcryptjs");
 const User = require("./models/User");
 
 const app = express();
+// ✅ CORS setup (FIRST middleware)
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://apnafolio-919e652t3-siddhant-gaykis-projects.vercel.app",
+  "https://apnafolio.in",
+  "https://www.apnafolio.in"
+];
 
-// ✅ CORS config (Direct array of origins)
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000", 
-      "https://apnafolio-919e652t3-siddhant-gaykis-projects.vercel.app",
-      "https://apnafolio.in",
-      "https://www.apnafolio.in"
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log("❌ Blocked CORS origin:", origin);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+}));
 
-app.options("*", cors()); // ✅ Preflight OPTIONS handle
+app.options("*", cors()); // ✅ Handle preflight requests
 
-
-
-// app.use(cors({
-//   origin: ["https://apnafolio.in", "https://www.apnafolio.in","https://apnafolio-amttynbd1-siddhant-gaykis-projects.vercel.app"], // ✅ Allowed origins
-//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//   credentials: true,
-// }));
-app.use(express.json());
-app.use(helmet());   // 🔒 security headers
-app.use(morgan("dev")); // 📜 request logging
-
+// ✅ Debug middleware (remove after testing)
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   next();
 });
+
+// Other middleware AFTER CORS
+app.use(express.json());
+app.use(helmet());
+app.use(morgan("dev"));
+
+
+// // ✅ CORS config (Direct array of origins)
+// app.use(
+//   cors({
+//     origin: [
+//       "http://localhost:3000", 
+//       "https://apnafolio-919e652t3-siddhant-gaykis-projects.vercel.app",
+//       "https://apnafolio.in",
+//       "https://www.apnafolio.in"
+//     ],
+//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//     credentials: true,
+//   })
+// );
+
+// app.options("*", cors()); // ✅ Preflight OPTIONS handle
+
+
+
+// // app.use(cors({
+// //   origin: ["https://apnafolio.in", "https://www.apnafolio.in","https://apnafolio-amttynbd1-siddhant-gaykis-projects.vercel.app"], // ✅ Allowed origins
+// //   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+// //   credentials: true,
+// // }));
+// app.use(express.json());
+// app.use(helmet());   // 🔒 security headers
+// app.use(morgan("dev")); // 📜 request logging
+
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+//   next();
+// });
 
 app.set("trust proxy", 1);
 
