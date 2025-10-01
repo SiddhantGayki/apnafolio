@@ -1,45 +1,86 @@
-const SibApiV3Sdk = require("sib-api-v3-sdk");
+const axios = require("axios");
 
 const sendOtp = async (email, otp) => {
   try {
-    // Brevo API config
-    let defaultClient = SibApiV3Sdk.ApiClient.instance;
-    let apiKey = defaultClient.authentications['api-key'];
-    apiKey.apiKey = process.env.BREVO_API_KEY;
+    const response = await axios.post(
+      "https://api.brevo.com/v3/smtp/email",
+      {
+        sender: { email: process.env.MAIL_FROM, name: "ApnaFolio" },
+        to: [{ email }],
+        subject: "ApnaFolio Email OTP Verification",
+        htmlContent: `
+          <div style="font-family: Arial, sans-serif; color:#333;">
+            <h3>🔑 ApnaFolio - Email Verification</h3>
+            <p>Your OTP is: <strong style="font-size:18px">${otp}</strong></p>
+            <p>This OTP is valid for <b>15 minutes</b>.</p>
+            <br/>
+            <p>If you didn’t request this, please ignore.</p>
+          </div>
+        `,
+      },
+      {
+        headers: {
+          "api-key": process.env.BREVO_API_KEY,
+          "Content-Type": "application/json",
+          accept: "application/json",
+        },
+      }
+    );
 
-    let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-
-    const sender = { 
-      email: process.env.MAIL_FROM, 
-      name: "ApnaFolio" 
-    };
-    const receivers = [{ email }];
-
-    const sendSmtpEmail = {
-      sender,
-      to: receivers,
-      subject: "ApnaFolio Email OTP Verification",
-      htmlContent: `
-        <div style="font-family: Arial, sans-serif; color:#333;">
-          <h3>🔑 ApnaFolio - Email Verification</h3>
-          <p>Your OTP is: <strong style="font-size:18px">${otp}</strong></p>
-          <p>This OTP is valid for <b>15 minutes</b>.</p>
-          <br/>
-          <p>If you didn’t request this, please ignore.</p>
-        </div>
-      `
-    };
-
-    await apiInstance.sendTransacEmail(sendSmtpEmail);
-    console.log(`✅ OTP sent via Brevo to ${email}`);
+    console.log(`✅ OTP Email sent to ${email}`, response.data);
     return true;
   } catch (err) {
-    console.error("❌ sendOtp error:", err.response?.text || err.message);
+    console.error("❌ sendOtp error:", err.response?.data || err.message);
     throw new Error("Failed to send OTP email");
   }
 };
 
 module.exports = sendOtp;
+
+
+// old
+// const SibApiV3Sdk = require("sib-api-v3-sdk");
+
+// const sendOtp = async (email, otp) => {
+//   try {
+//     // Brevo API config
+//     let defaultClient = SibApiV3Sdk.ApiClient.instance;
+//     let apiKey = defaultClient.authentications['api-key'];
+//     apiKey.apiKey = process.env.BREVO_API_KEY;
+
+//     let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
+//     const sender = { 
+//       email: process.env.MAIL_FROM, 
+//       name: "ApnaFolio" 
+//     };
+//     const receivers = [{ email }];
+
+//     const sendSmtpEmail = {
+//       sender,
+//       to: receivers,
+//       subject: "ApnaFolio Email OTP Verification",
+//       htmlContent: `
+//         <div style="font-family: Arial, sans-serif; color:#333;">
+//           <h3>🔑 ApnaFolio - Email Verification</h3>
+//           <p>Your OTP is: <strong style="font-size:18px">${otp}</strong></p>
+//           <p>This OTP is valid for <b>15 minutes</b>.</p>
+//           <br/>
+//           <p>If you didn’t request this, please ignore.</p>
+//         </div>
+//       `
+//     };
+
+//     await apiInstance.sendTransacEmail(sendSmtpEmail);
+//     console.log(`✅ OTP sent via Brevo to ${email}`);
+//     return true;
+//   } catch (err) {
+//     console.error("❌ sendOtp error:", err.response?.text || err.message);
+//     throw new Error("Failed to send OTP email");
+//   }
+// };
+
+// module.exports = sendOtp;
 
 
 
