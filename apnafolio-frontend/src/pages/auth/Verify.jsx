@@ -15,7 +15,7 @@ export default function Verify() {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post("api/auth/verify", { email, otp });
+      await axios.post("/auth/verify", { email, otp });
       setMsg("Email verified successfully!");
       navigate("/login");
     } catch (err) {
