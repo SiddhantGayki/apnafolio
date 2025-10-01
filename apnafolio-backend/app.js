@@ -27,7 +27,6 @@ app.use(
 app.options("*", cors()); // ✅ Preflight OPTIONS handle
 
 
-app.options("*", cors()); // ✅ Preflight OPTIONS handle करण्यासाठी
 
 // app.use(cors({
 //   origin: ["https://apnafolio.in", "https://www.apnafolio.in","https://apnafolio-amttynbd1-siddhant-gaykis-projects.vercel.app"], // ✅ Allowed origins
@@ -37,6 +36,13 @@ app.options("*", cors()); // ✅ Preflight OPTIONS handle करण्यास�
 app.use(express.json());
 app.use(helmet());   // 🔒 security headers
 app.use(morgan("dev")); // 📜 request logging
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  next();
+});
 
 app.set("trust proxy", 1);
 
