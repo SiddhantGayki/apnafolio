@@ -15,7 +15,7 @@ export default function IntroPage() {
           <Link to="/" className="nav-link">Home</Link>
           <Link to="/templateE" className="nav-link">Templates</Link>
           <Link to="/login" className="nav-btn">Login</Link>
-          <Link to="/register" className="nav-btn">Register</Link>
+          <Link to="/signup" className="nav-btn">Register</Link>
         </div>
       </nav>
       
@@ -31,7 +31,7 @@ export default function IntroPage() {
             Showcase your skills, experience & projects with stunning templates.
           </p>
           <div className="hero-buttons">
-            <Link to="/register" className="btn btn-primary">Get Started</Link>
+            <Link to="/signup" className="btn btn-primary">Get Started</Link>
             <Link to="/templateE" className="btn btn-primary">Explore Templates</Link>
           </div>
         </div>
