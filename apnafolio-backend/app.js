@@ -71,7 +71,7 @@ connectDB(process.env.MONGO_URI)
   .then(async () => {
     await ensureAdmin(); // run after DB connect
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`🚀 Server running on port ${PORT}`);
     });
   })
   .catch((err) => {
