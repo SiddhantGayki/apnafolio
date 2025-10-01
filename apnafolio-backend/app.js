@@ -9,29 +9,23 @@ const User = require("./models/User");
 
 const app = express();
 
-// ✅ Allowed Origins
-const allowedOrigins = [
-  "http://localhost:3000", // local dev
-  "https://apnafolio-919e652t3-siddhant-gaykis-projects.vercel.app", // vercel frontend
-  "https://apnafolio.in", // तुझं custom domain
-  "https://www.apnafolio.in"
-];
-
-// ✅ CORS config
+// ✅ CORS config (Direct array of origins)
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: [
+      "http://localhost:3000", 
+      "https://apnafolio-919e652t3-siddhant-gaykis-projects.vercel.app",
+      "https://apnafolio.in",
+      "https://www.apnafolio.in"
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
+
+app.options("*", cors()); // ✅ Preflight OPTIONS handle
+
 
 app.options("*", cors()); // ✅ Preflight OPTIONS handle करण्यासाठी
 
