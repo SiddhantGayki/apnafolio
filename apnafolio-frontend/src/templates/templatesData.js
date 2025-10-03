@@ -16,7 +16,7 @@
 //   {
 //     id: "template1",
 //     name: "1 Simple Clean Dark",
-//     price: 1,
+//     price: 299,
 //     features: ["Smooth fade-in scroll", "Gradient text hero", "Solid navbar"],
 //     image: "/thumbs/t1.png",
 //     demoUrl: "/templates/preview/template1",
@@ -134,7 +134,7 @@ const templates = [
   {
     id: "template1",
     name: "Modern Neon Dark",
-    price: 1,
+    price: 299,
     features: ["Sticky navbar", "Neon headings", "Smooth fade animations", "Glowing skill orbs", "Resume download button"],
     image: "/thumbs/t1.png",
     demoUrl: "/templates/preview/template1",
