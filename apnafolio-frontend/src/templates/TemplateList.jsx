@@ -9,60 +9,104 @@ export default function TemplateList({ allowBuy = true }) {
   const token = getToken();
   const username = getUsername();
   const [loading, setLoading] = useState(false);
+  // TemplateList.jsx
+const handleBuy = async (templateId, price) => {
+  setLoading(true);
+  try {
+    // create order in paise
+    const res = await api.post("/payment/order", { amount: price * 100 });
+    const { id, amount, currency } = res.data.order; // ✅ FIXED
 
-  const handleBuy = async (templateId, price) => {
-    setLoading(true);
-    try {
-      // 1. Create order from backend (amount in paise)
-      const res = await api.post(
-        "/payment/order",
-        { amount: price * 100 },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY,
+      amount,
+      currency,
+      name: "ApnaFolio",
+      description: "Portfolio Template Purchase",
+      order_id: id,
+      handler: async function (response) {
+        try {
+          await api.post(
+            "/payment/verify",
+            {
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+              templateId,
+            },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          window.location.href = `/u/${username}`;
+        } catch (err) {
+          alert("Payment verification failed.");
+          setLoading(false);
+        }
+      },
+      theme: { color: "#121212" },
+    };
 
-      const { order } = res.data; // ✅ backend returns { success, order }
-      const { id, amount, currency } = order;
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  } catch (err) {
+    alert("Payment failed to initiate.");
+    setLoading(false);
+  }
+};
 
-      // 2. Razorpay checkout options
-      const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY,
-        amount,
-        currency,
-        name: "ApnaFolio",
-        description: "Portfolio Template Purchase",
-        order_id: id,
-        handler: async function (response) {
-          try {
-            await api.post(
-              "/payment/verify",
-              {
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_signature: response.razorpay_signature,
-                templateId,
-                amount,
-              },
-              { headers: { Authorization: `Bearer ${token}` } }
-            );
 
-            window.location.href = `/u/${username}`;
-          } catch (err) {
-            console.error("Verify payment error:", err);
-            alert("Payment verification failed.");
-            setLoading(false);
-          }
-        },
-        theme: { color: "#121212" },
-      };
+  // const handleBuy = async (templateId, price) => {
+  //   setLoading(true);
+  //   try {
+  //     // 1. Create order from backend (amount in paise)
+  //     const res = await api.post(
+  //       "/payment/order",
+  //       { amount: price * 100 },
+  //       { headers: { Authorization: `Bearer ${token}` } }
+  //     );
 
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (err) {
-      console.error("Payment error:", err);
-      alert("Payment failed to initiate.");
-      setLoading(false);
-    }
-  };
+  //     const { order } = res.data; // ✅ backend returns { success, order }
+  //     const { id, amount, currency } = order;
+
+  //     // 2. Razorpay checkout options
+  //     const options = {
+  //       key: import.meta.env.VITE_RAZORPAY_KEY,
+  //       amount,
+  //       currency,
+  //       name: "ApnaFolio",
+  //       description: "Portfolio Template Purchase",
+  //       order_id: id,
+  //       handler: async function (response) {
+  //         try {
+  //           await api.post(
+  //             "/payment/verify",
+  //             {
+  //               razorpay_payment_id: response.razorpay_payment_id,
+  //               razorpay_order_id: response.razorpay_order_id,
+  //               razorpay_signature: response.razorpay_signature,
+  //               templateId,
+  //               amount,
+  //             },
+  //             { headers: { Authorization: `Bearer ${token}` } }
+  //           );
+
+  //           window.location.href = `/u/${username}`;
+  //         } catch (err) {
+  //           console.error("Verify payment error:", err);
+  //           alert("Payment verification failed.");
+  //           setLoading(false);
+  //         }
+  //       },
+  //       theme: { color: "#121212" },
+  //     };
+
+  //     const rzp = new window.Razorpay(options);
+  //     rzp.open();
+  //   } catch (err) {
+  //     console.error("Payment error:", err);
+  //     alert("Payment failed to initiate.");
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="template-list-container">
