@@ -12,18 +12,19 @@ const app = express();
 
 // ✅ CORS setup
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (
-      ["http://localhost:3000", "https://apnafolio.in", "https://www.apnafolio.in"].includes(origin) ||
-      /\.vercel\.app$/.test(origin)   // allow all vercel app subdomains
-    ) {
-      callback(null, true);
-    } else {
-      console.log("❌ Blocked CORS origin:", origin);
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: "*",
+  //   function (origin, callback) {
+  //   if (!origin) return callback(null, true);
+  //   if (
+  //     ["http://localhost:3000", "https://apnafolio.in", "https://www.apnafolio.in"].includes(origin) ||
+  //     /\.vercel\.app$/.test(origin)   // allow all vercel app subdomains
+  //   ) {
+  //     callback(null, true);
+  //   } else {
+  //     console.log("❌ Blocked CORS origin:", origin);
+  //     callback(new Error("Not allowed by CORS"));
+  //   }
+  // },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
