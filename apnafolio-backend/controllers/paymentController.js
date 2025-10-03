@@ -10,23 +10,41 @@ const razorpay = new Razorpay({
 });
 
 // ✅ Create Razorpay Order
+// exports.createOrder = async (req, res) => {
+//   try {
+//     let { amount } = req.body; // amount in paise (integer)
+//     if (!amount || isNaN(amount) || amount <= 0) {
+//       return res.status(400).json({ success: false, message: "Invalid amount" });
+//     }
+
+//     amount = parseInt(amount, 10);
+//     const options = { amount, currency: "INR", receipt: "receipt_" + Date.now() };
+//     const order = await razorpay.orders.create(options);
+
+//     return res.json({ success: true, order });
+//   } catch (err) {
+//     console.error("createOrder err:", err);
+//     res.status(500).json({ success: false, message: "Error creating order" });
+//   }
+// };
+
 exports.createOrder = async (req, res) => {
   try {
-    let { amount } = req.body; // amount in paise (integer)
-    if (!amount || isNaN(amount) || amount <= 0) {
+    console.log("🟢 Order body:", req.body); // <-- debug
+    let { amount } = req.body;
+    if (!amount || isNaN(amount)) {
       return res.status(400).json({ success: false, message: "Invalid amount" });
     }
-
     amount = parseInt(amount, 10);
-    const options = { amount, currency: "INR", receipt: "receipt_" + Date.now() };
-    const order = await razorpay.orders.create(options);
-
+    const order = await razorpay.orders.create({ amount, currency: "INR", receipt: "rcpt_" + Date.now() });
+    console.log("✅ Order created:", order); // <-- debug
     return res.json({ success: true, order });
   } catch (err) {
     console.error("createOrder err:", err);
     res.status(500).json({ success: false, message: "Error creating order" });
   }
 };
+
 
 // ✅ Verify Razorpay Payment
 exports.verifyPayment = async (req, res) => {
