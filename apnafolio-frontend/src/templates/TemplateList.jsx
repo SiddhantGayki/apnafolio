@@ -91,7 +91,7 @@ const options = {
   theme: { color: "#121212" },
 };
 new window.Razorpay(options).open();
-
+  }
   // const handleBuy = async (templateId, price) => {
   //   setLoading(true);
   //   try {
