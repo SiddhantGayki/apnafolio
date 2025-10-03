@@ -10,6 +10,7 @@ const sendOtp = async (email, otp) => {
         pass: process.env.MAIL_PASS, // Gmail App Password (not normal pwd)
       },
     });
+console.log("📧 Sending OTP to:", email);
 
     const mail = {
       from: `"ApnaFolio" <${process.env.MAIL_USER}>`,
