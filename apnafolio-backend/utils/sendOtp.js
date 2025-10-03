@@ -3,6 +3,8 @@ const SibApiV3Sdk = require("sib-api-v3-sdk");
 
 const sendOtp = async (email, otp) => {
   try {
+    console.log("📤 Sending OTP via Brevo:", email, process.env.MAIL_FROM);
+
     // 🔑 Configure Brevo API client
     let defaultClient = SibApiV3Sdk.ApiClient.instance;
     let apiKey = defaultClient.authentications["api-key"];
