@@ -10,9 +10,9 @@ export default function TemplateList({ allowBuy = true }) {
   const username = getUsername();
   const [loading, setLoading] = useState(false);
   // TemplateList.jsx
-const handleBuy = async (templateId, price) => {
-  setLoading(true);
-  try {
+// const handleBuy = async (templateId, price) => {
+//   setLoading(true);
+//   try {
     // create order in paise
 //     const res = await api.post("/payment/order", { amount: price * 100 });
 //     const { id, amount, currency } = res.data.order; // ✅ FIXED
