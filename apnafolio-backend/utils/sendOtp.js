@@ -1,53 +1,87 @@
-// utils/sendOtp.js
 const SibApiV3Sdk = require("sib-api-v3-sdk");
+const nodemailer = require("nodemailer");
 
+// 🔹 Brevo OTP Sender
+const sendWithBrevo = async (email, otp) => {
+  let defaultClient = SibApiV3Sdk.ApiClient.instance;
+  let apiKey = defaultClient.authentications["api-key"];
+  apiKey.apiKey = process.env.BREVO_API_KEY;
+
+  let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
+  const sender = {
+    email: process.env.MAIL_FROM,
+    name: "ApnaFolio",
+  };
+  const receivers = [{ email }];
+
+  const sendSmtpEmail = {
+    sender,
+    to: receivers,
+    subject: "ApnaFolio Email OTP Verification",
+    htmlContent: `
+      <div style="font-family: Arial, sans-serif; color:#333;">
+        <h3>🔑 ApnaFolio - Email Verification</h3>
+        <p>Your OTP is: <strong style="font-size:18px">${otp}</strong></p>
+        <p>This OTP is valid for <b>15 minutes</b>.</p>
+        <br/>
+        <p>If you didn’t request this, please ignore.</p>
+      </div>
+    `,
+  };
+
+  await apiInstance.sendTransacEmail(sendSmtpEmail);
+  console.log(`✅ OTP sent via Brevo to ${email}`);
+};
+
+// 🔹 Gmail (Nodemailer) OTP Sender
+const sendWithGmail = async (email, otp) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.MAIL_USER, // Gmail ID
+      pass: process.env.MAIL_PASS, // Gmail App Password
+    },
+  });
+
+  const mail = {
+    from: `"ApnaFolio" <${process.env.MAIL_USER}>`,
+    to: email,
+    subject: "ApnaFolio Email OTP Verification",
+    html: `
+      <div style="font-family: Arial, sans-serif; color:#333;">
+        <h3>🔑 ApnaFolio - Email Verification</h3>
+        <p>Your OTP is: <strong style="font-size:18px">${otp}</strong></p>
+        <p>This OTP is valid for <b>15 minutes</b>.</p>
+      </div>
+    `,
+  };
+
+  await transporter.sendMail(mail);
+  console.log(`✅ OTP sent via Gmail to ${email}`);
+};
+
+// 🔹 Hybrid OTP Sender
 const sendOtp = async (email, otp) => {
   try {
-    console.log("📤 Sending OTP via Brevo:", email, process.env.MAIL_FROM);
-
-    // 🔑 Configure Brevo API client
-    let defaultClient = SibApiV3Sdk.ApiClient.instance;
-    let apiKey = defaultClient.authentications["api-key"];
-    apiKey.apiKey = process.env.BREVO_API_KEY;
-
-    let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-
-    // 📧 Sender (must be verified in Brevo)
-    const sender = {
-      email: process.env.MAIL_FROM,
-      name: "ApnaFolio",
-    };
-
-    const receivers = [{ email }];
-
-    // ✉️ Email Content
-    const sendSmtpEmail = {
-      sender,
-      to: receivers,
-      subject: "ApnaFolio Email OTP Verification",
-      htmlContent: `
-        <div style="font-family: Arial, sans-serif; color:#333;">
-          <h3>🔑 ApnaFolio - Email Verification</h3>
-          <p>Your OTP is: <strong style="font-size:18px">${otp}</strong></p>
-          <p>This OTP is valid for <b>15 minutes</b>.</p>
-          <br/>
-          <p>If you didn’t request this, please ignore.</p>
-        </div>
-      `,
-    };
-
-    // 🚀 Send OTP email
-    await apiInstance.sendTransacEmail(sendSmtpEmail);
-    console.log(`✅ OTP sent via Brevo to ${email}`);
+    // Try Brevo first
+    await sendWithBrevo(email, otp);
     return true;
   } catch (err) {
-    console.error("❌ sendOtp error:", err.response?.text || err.message);
-    throw new Error("Failed to send OTP email");
+    console.error("❌ Brevo failed:", err.response?.data || err.message);
+
+    try {
+      // Fallback to Gmail
+      await sendWithGmail(email, otp);
+      return true;
+    } catch (gmailErr) {
+      console.error("❌ Gmail also failed:", gmailErr.message);
+      throw new Error("Failed to send OTP email via both Brevo and Gmail");
+    }
   }
 };
 
 module.exports = sendOtp;
-
 
 
 // // // utils/sendOtp.js
