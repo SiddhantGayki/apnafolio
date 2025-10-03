@@ -91,7 +91,11 @@ const options = {
   theme: { color: "#121212" },
 };
 new window.Razorpay(options).open();
+  } catch (err) {
+    alert("Payment failed to initiate.");
+    setLoading(false);
   }
+};
   // const handleBuy = async (templateId, price) => {
   //   setLoading(true);
   //   try {
