@@ -14,7 +14,7 @@ export default function TemplateList({ allowBuy = true }) {
     setLoading(true);
     try {
       // 1. Create order from backend (amount in paise)
-      const res = await api.post("/payment/order", { amount: price * 100 });
+      const res = await api.post("/payment/order", { templateId });
 
       const { id, amount, currency } = res.data; // Razorpay order object
 
