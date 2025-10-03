@@ -4,14 +4,30 @@ const nodemailer = require("nodemailer");
 const sendOtp = async (email, otp) => {
   try {
     const transporter = nodemailer.createTransport({
-      host: process.env.MAIL_HOST || "smtp.gmail.com",
-      port: process.env.MAIL_PORT || 587,
-      secure: process.env.MAIL_PORT == 465, // true if 465
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
-      },
-    });
+  host: process.env.MAIL_HOST,
+  port: process.env.MAIL_PORT,
+  secure: process.env.MAIL_PORT == 465,
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false, // avoid self-signed cert errors
+  },
+  pool: true, // ✅ connection pool for speed
+  maxConnections: 5,
+  maxMessages: 100,
+});
+
+    // const transporter = nodemailer.createTransport({
+    //   host: process.env.MAIL_HOST || "smtp.gmail.com",
+    //   port: process.env.MAIL_PORT || 587,
+    //   secure: process.env.MAIL_PORT == 465, // true if 465
+    //   auth: {
+    //     user: process.env.MAIL_USER,
+    //     pass: process.env.MAIL_PASS,
+    //   },
+    // });
 
     const mail = {
       from: process.env.MAIL_FROM || `"ApnaFolio" <${process.env.MAIL_USER}>`,
