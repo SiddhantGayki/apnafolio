@@ -11,7 +11,26 @@ const User = require("./models/User");
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://apnafolio.in",
+  "https://www.apnafolio.in",
+  /\.vercel\.app$/   // ✅ allow all vercel subdomains
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.some(o => (o instanceof RegExp ? o.test(origin) : o === origin))) {
+      callback(null, true);
+    } else {
+      console.log("❌ Blocked CORS origin:", origin);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+}));
 app.use(express.json());
 app.use(helmet());  // 🔒 security headers
 app.use(morgan("dev"));  // 📜 request logging
