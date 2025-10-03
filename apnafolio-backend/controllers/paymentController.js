@@ -74,6 +74,9 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZOR_SECRET,
 });
 
+console.log("🔑 Razorpay Key:", process.env.RAZOR_KEY_ID ? "Present" : "Missing");
+console.log("🔑 Razorpay Secret:", process.env.RAZOR_SECRET ? "Present" : "Missing");
+
 exports.createOrder = async (req, res) => {
   try {
     let { amount } = req.body; // frontend sends INR
