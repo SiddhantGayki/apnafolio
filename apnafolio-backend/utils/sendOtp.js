@@ -1,40 +1,40 @@
-// utils/sendOtp.js
-const nodemailer = require("nodemailer");
+// // utils/sendOtp.js
+// const nodemailer = require("nodemailer");
 
-const sendOtp = async (email, otp) => {
-  try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail", // Gmail वापरणार
-      auth: {
-        user: process.env.MAIL_USER, // तुझं Gmail address
-        pass: process.env.MAIL_PASS, // Gmail App Password (not normal pwd)
-      },
-    });
-console.log("📧 Sending OTP to:", email);
+// const sendOtp = async (email, otp) => {
+//   try {
+//     const transporter = nodemailer.createTransport({
+//       service: "gmail", // Gmail वापरणार
+//       auth: {
+//         user: process.env.MAIL_USER, // तुझं Gmail address
+//         pass: process.env.MAIL_PASS, // Gmail App Password (not normal pwd)
+//       },
+//     });
+// console.log("📧 Sending OTP to:", email);
 
-    const mail = {
-      from: `"ApnaFolio" <${process.env.MAIL_USER}>`,
-      to: email,
-      subject: "ApnaFolio Email OTP Verification",
-      html: `
-        <div style="font-family: Arial, sans-serif;">
-          <h3>🔑 ApnaFolio - Email Verification</h3>
-          <p>Your OTP is: <strong>${otp}</strong></p>
-          <p>This OTP is valid for <b>15 minutes</b>.</p>
-        </div>
-      `,
-    };
+//     const mail = {
+//       from: `"ApnaFolio" <${process.env.MAIL_USER}>`,
+//       to: email,
+//       subject: "ApnaFolio Email OTP Verification",
+//       html: `
+//         <div style="font-family: Arial, sans-serif;">
+//           <h3>🔑 ApnaFolio - Email Verification</h3>
+//           <p>Your OTP is: <strong>${otp}</strong></p>
+//           <p>This OTP is valid for <b>15 minutes</b>.</p>
+//         </div>
+//       `,
+//     };
 
-    await transporter.sendMail(mail);
-    console.log(`✅ OTP sent to ${email}`);
-    return true;
-  } catch (err) {
-    console.error("❌ sendOtp error:", err.message);
-    throw new Error("Failed to send OTP email");
-  }
-};
+//     await transporter.sendMail(mail);
+//     console.log(`✅ OTP sent to ${email}`);
+//     return true;
+//   } catch (err) {
+//     console.error("❌ sendOtp error:", err.message);
+//     throw new Error("Failed to send OTP email");
+//   }
+// };
 
-module.exports = sendOtp;
+// module.exports = sendOtp;
 
 
 // // const axios = require("axios");
@@ -78,48 +78,48 @@ module.exports = sendOtp;
 
 
 // // // old
-// // // const SibApiV3Sdk = require("sib-api-v3-sdk");
+const SibApiV3Sdk = require("sib-api-v3-sdk");
 
-// // // const sendOtp = async (email, otp) => {
-// // //   try {
-// // //     // Brevo API config
-// // //     let defaultClient = SibApiV3Sdk.ApiClient.instance;
-// // //     let apiKey = defaultClient.authentications['api-key'];
-// // //     apiKey.apiKey = process.env.BREVO_API_KEY;
+const sendOtp = async (email, otp) => {
+  try {
+    // Brevo API config
+    let defaultClient = SibApiV3Sdk.ApiClient.instance;
+    let apiKey = defaultClient.authentications['api-key'];
+    apiKey.apiKey = process.env.BREVO_API_KEY;
 
-// // //     let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+    let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
-// // //     const sender = { 
-// // //       email: process.env.MAIL_FROM, 
-// // //       name: "ApnaFolio" 
-// // //     };
-// // //     const receivers = [{ email }];
+    const sender = { 
+      email: process.env.MAIL_FROM, 
+      name: "ApnaFolio" 
+    };
+    const receivers = [{ email }];
 
-// // //     const sendSmtpEmail = {
-// // //       sender,
-// // //       to: receivers,
-// // //       subject: "ApnaFolio Email OTP Verification",
-// // //       htmlContent: `
-// // //         <div style="font-family: Arial, sans-serif; color:#333;">
-// // //           <h3>🔑 ApnaFolio - Email Verification</h3>
-// // //           <p>Your OTP is: <strong style="font-size:18px">${otp}</strong></p>
-// // //           <p>This OTP is valid for <b>15 minutes</b>.</p>
-// // //           <br/>
-// // //           <p>If you didn’t request this, please ignore.</p>
-// // //         </div>
-// // //       `
-// // //     };
+    const sendSmtpEmail = {
+      sender,
+      to: receivers,
+      subject: "ApnaFolio Email OTP Verification",
+      htmlContent: `
+        <div style="font-family: Arial, sans-serif; color:#333;">
+          <h3>🔑 ApnaFolio - Email Verification</h3>
+          <p>Your OTP is: <strong style="font-size:18px">${otp}</strong></p>
+          <p>This OTP is valid for <b>15 minutes</b>.</p>
+          <br/>
+          <p>If you didn’t request this, please ignore.</p>
+        </div>
+      `
+    };
 
-// // //     await apiInstance.sendTransacEmail(sendSmtpEmail);
-// // //     console.log(`✅ OTP sent via Brevo to ${email}`);
-// // //     return true;
-// // //   } catch (err) {
-// // //     console.error("❌ sendOtp error:", err.response?.text || err.message);
-// // //     throw new Error("Failed to send OTP email");
-// // //   }
-// // // };
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log(`✅ OTP sent via Brevo to ${email}`);
+    return true;
+  } catch (err) {
+    console.error("❌ sendOtp error:", err.response?.text || err.message);
+    throw new Error("Failed to send OTP email");
+  }
+};
 
-// // // module.exports = sendOtp;
+module.exports = sendOtp;
 
 
 
