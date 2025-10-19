@@ -10,7 +10,7 @@ const bcrypt = require("bcryptjs");
 const User = require("./models/User");
 
 const app = express();
-
+app.set("trust proxy", 1)
 // ✅ Build allowed origins dynamically
 const rawCors = process.env.CORS_ALLOW || "";
 const extraOrigins = rawCors.split(",").map(s => s.trim()).filter(Boolean);
