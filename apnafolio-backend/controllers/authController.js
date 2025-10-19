@@ -18,6 +18,49 @@ const sanitizeUser = (userDoc) => {
   };
 };
 
+// exports.signup = async (req, res) => {
+//   try {
+//     const { name, email, password, username } = req.body;
+//     if (!name || !email || !password || !username) {
+//       return res.status(400).json({ message: "Missing required fields" });
+//     }
+//     const normalizedEmail = email.toLowerCase().trim();
+//     const normalizedUsername = username.trim();
+
+//     const existingEmail = await User.findOne({ email: normalizedEmail });
+//     if (existingEmail) return res.status(400).json({ message: "Email already in use" });
+
+//     const existingUsername = await User.findOne({ usernameLower: normalizedUsername.toLowerCase() });
+//     if (existingUsername) return res.status(400).json({ message: "Username already taken" });
+
+//     const hashedPassword = await bcrypt.hash(password, 10);
+
+//     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+//     const otpHash = await bcrypt.hash(otp, 10);
+//     const otpExpires = new Date(Date.now() + 15 * 60 * 1000);
+
+//     const newUser = new User({
+//       name,
+//       email: normalizedEmail,
+//       password: hashedPassword,
+//       otp: otpHash,
+//       otpExpires,
+//       username: normalizedUsername,
+//       usernameLower: username.toLowerCase(),
+//       failedOtpAttempts: 0,
+//       otpLockedUntil: null,
+//     });
+
+//     await newUser.save();
+//     await sendOtp(normalizedEmail, otp);
+
+//     res.status(201).json({ message: "Signup successful. OTP sent!" });
+//   } catch (err) {
+//     console.error("signup err:", err);
+//     res.status(500).json({ message: "Error in signup", error: err.message });
+//   }
+// };
+
 exports.signup = async (req, res) => {
   try {
     const { name, email, password, username } = req.body;
@@ -46,13 +89,29 @@ exports.signup = async (req, res) => {
       otp: otpHash,
       otpExpires,
       username: normalizedUsername,
-      usernameLower: username.toLowerCase(),
+      usernameLower: normalizedUsername.toLowerCase(),
       failedOtpAttempts: 0,
       otpLockedUntil: null,
+      isVerified: false,
     });
 
     await newUser.save();
-    await sendOtp(normalizedEmail, otp);
+
+    // send OTP email — improved error handling
+    try {
+      const sendRes = await sendOtp(normalizedEmail, otp);
+      console.log("sendOtp result:", sendRes);
+    } catch (sendErr) {
+      // rollback created user to avoid stuck unverified users without OTP
+      try {
+        await User.deleteOne({ _id: newUser._id });
+        console.warn("Rolled back user after sendOtp failure:", newUser._id);
+      } catch (delErr) {
+        console.error("Failed to rollback user after sendOtp failure:", delErr);
+      }
+      console.error("sendOtp failed:", sendErr.message || sendErr);
+      return res.status(500).json({ message: "Signup failed: OTP not sent", error: sendErr.message });
+    }
 
     res.status(201).json({ message: "Signup successful. OTP sent!" });
   } catch (err) {
