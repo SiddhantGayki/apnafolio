@@ -1,4 +1,4 @@
-// utils/sendOtp.js
+// utils/sendOtp.js old
 const nodemailer = require("nodemailer");
 
 const sendOtp = async (email, otp) => {
@@ -7,32 +7,69 @@ const sendOtp = async (email, otp) => {
       service: "gmail",
       auth: {
         user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS, // Gmail App Password
+        pass: process.env.MAIL_PASS, // app password recommended
       },
     });
 
-    const mailOptions = {
+    const mail = {
       from: `"ApnaFolio" <${process.env.MAIL_USER}>`,
       to: email,
-      subject: "ApnaFolio - Email OTP Verification",
+      subject: "ApnaFolio Email OTP Verification",
       html: `
-        <h3>🔑 ApnaFolio - Email Verification</h3>
-        <p>Your OTP is: <b>${otp}</b></p>
-        <p>This OTP is valid for 15 minutes.</p>
-        <p>Apni Pahchaan, ApnaFolio ke saath 🚀</p>
+        <div style="font-family: Arial, sans-serif;">
+          <h3>ApnaFolio - Email Verification</h3>
+          <p>Your OTP is: <strong>${otp}</strong></p>
+          <p>This OTP is valid for 15 minutes.</p>
+        </div>
       `,
     };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`✅ OTP sent to ${email} (MessageID: ${info.messageId})`);
+    await transporter.sendMail(mail);
     return true;
   } catch (err) {
-    console.error("❌ Nodemailer sendOtp error:", err.message);
+    console.error("sendOtp error:", err);
     throw new Error("Failed to send OTP email");
   }
 };
 
 module.exports = sendOtp;
+
+
+// // utils/sendOtp.js
+// const nodemailer = require("nodemailer");
+
+// const sendOtp = async (email, otp) => {
+//   try {
+//     const transporter = nodemailer.createTransport({
+//       service: "gmail",
+//       auth: {
+//         user: process.env.MAIL_USER,
+//         pass: process.env.MAIL_PASS, // Gmail App Password
+//       },
+//     });
+
+//     const mailOptions = {
+//       from: `"ApnaFolio" <${process.env.MAIL_USER}>`,
+//       to: email,
+//       subject: "ApnaFolio - Email OTP Verification",
+//       html: `
+//         <h3>🔑 ApnaFolio - Email Verification</h3>
+//         <p>Your OTP is: <b>${otp}</b></p>
+//         <p>This OTP is valid for 15 minutes.</p>
+//         <p>Apni Pahchaan, ApnaFolio ke saath 🚀</p>
+//       `,
+//     };
+
+//     const info = await transporter.sendMail(mailOptions);
+//     console.log(`✅ OTP sent to ${email} (MessageID: ${info.messageId})`);
+//     return true;
+//   } catch (err) {
+//     console.error("❌ Nodemailer sendOtp error:", err.message);
+//     throw new Error("Failed to send OTP email");
+//   }
+// };
+
+// module.exports = sendOtp;
 
 // 2
 // // utils/sendOtp.js with BREVO
