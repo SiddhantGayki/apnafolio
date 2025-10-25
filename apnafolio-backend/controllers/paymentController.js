@@ -28,24 +28,42 @@ const razorpay = new Razorpay({
 //   }
 // };
 
+// exports.createOrder = async (req, res) => {
+//   try {
+//     console.log("🟢 Order body:", req.body); // <-- debug
+//     let { amount } = req.body;
+//     if (!amount || isNaN(amount)) {
+//       return res.status(400).json({ success: false, message: "Invalid amount" });
+//     }
+//     amount = parseInt(amount, 10);
+//     const order = await razorpay.orders.create({ amount, currency: "INR", receipt: "rcpt_" + Date.now() });
+//     console.log("✅ Order created:", order); // <-- debug
+//     return res.json({ success: true, order });
+//   } catch (err) {
+//     console.error("createOrder err:", err);
+//     res.status(500).json({ success: false, message: "Error creating order" });
+//   }
+// };
+
+// old
 exports.createOrder = async (req, res) => {
   try {
-    console.log("🟢 Order body:", req.body); // <-- debug
-    let { amount } = req.body;
-    if (!amount || isNaN(amount)) {
-      return res.status(400).json({ success: false, message: "Invalid amount" });
-    }
-    amount = parseInt(amount, 10);
-    const order = await razorpay.orders.create({ amount, currency: "INR", receipt: "rcpt_" + Date.now() });
-    console.log("✅ Order created:", order); // <-- debug
-    return res.json({ success: true, order });
+    const { amount } = req.body;
+    if (!amount || amount <= 0) return res.status(400).json({ message: "Invalid amount" });
+
+    const options = {
+      amount: amount, // in paise
+      currency: "INR",
+      receipt: "receipt_order_" + Math.random().toString(36).substring(2, 9),
+    };
+
+    const order = await razorpay.orders.create(options);
+    res.json(order);
   } catch (err) {
     console.error("createOrder err:", err);
-    res.status(500).json({ success: false, message: "Error creating order" });
+    res.status(500).json({ message: "Error creating order", error: err.message });
   }
 };
-
-
 // ✅ Verify Razorpay Payment
 exports.verifyPayment = async (req, res) => {
   try {
