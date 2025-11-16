@@ -1,18 +1,20 @@
-// utils/sendOtp.js old
+// 16/11/25
 const nodemailer = require("nodemailer");
 
 const sendOtp = async (email, otp) => {
   try {
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: process.env.MAIL_HOST,
+      port: process.env.MAIL_PORT,
+      secure: false,
       auth: {
         user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS, // app password recommended
+        pass: process.env.MAIL_PASS, 
       },
     });
 
-    const mail = {
-      from: `"ApnaFolio" <${process.env.MAIL_USER}>`,
+    const mailOptions = {
+      from: process.env.MAIL_FROM,
       to: email,
       subject: "ApnaFolio Email OTP Verification",
       html: `
@@ -24,8 +26,9 @@ const sendOtp = async (email, otp) => {
       `,
     };
 
-    await transporter.sendMail(mail);
+    await transporter.sendMail(mailOptions);
     return true;
+
   } catch (err) {
     console.error("sendOtp error:", err);
     throw new Error("Failed to send OTP email");
@@ -33,6 +36,43 @@ const sendOtp = async (email, otp) => {
 };
 
 module.exports = sendOtp;
+
+
+// // utils/sendOtp.js old
+// const nodemailer = require("nodemailer");
+
+// const sendOtp = async (email, otp) => {
+//   try {
+//     const transporter = nodemailer.createTransport({
+//       service: "gmail",
+//       auth: {
+//         user: process.env.MAIL_USER,
+//         pass: process.env.MAIL_PASS, // app password recommended
+//       },
+//     });
+
+//     const mail = {
+//       from: `"ApnaFolio" <${process.env.MAIL_USER}>`,
+//       to: email,
+//       subject: "ApnaFolio Email OTP Verification",
+//       html: `
+//         <div style="font-family: Arial, sans-serif;">
+//           <h3>ApnaFolio - Email Verification</h3>
+//           <p>Your OTP is: <strong>${otp}</strong></p>
+//           <p>This OTP is valid for 15 minutes.</p>
+//         </div>
+//       `,
+//     };
+
+//     await transporter.sendMail(mail);
+//     return true;
+//   } catch (err) {
+//     console.error("sendOtp error:", err);
+//     throw new Error("Failed to send OTP email");
+//   }
+// };
+
+// module.exports = sendOtp;
 
 
 // // utils/sendOtp.js
