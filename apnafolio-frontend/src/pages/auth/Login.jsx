@@ -77,7 +77,7 @@ export default function Login() {
             </button>
 
             <p>
-              New here? <Link to="/register" className="register-link">Create Account</Link>
+              New here? <Link to="/signup" className="register-link">Create Account</Link>
             </p>
             <p>
               <Link to="/forgot-password" className="register-link">Forgot Password?</Link>
