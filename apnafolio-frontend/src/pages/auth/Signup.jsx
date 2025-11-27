@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AuthAPI } from "../../utils/api";
 import { useNavigate, Link } from "react-router-dom";
 import GoogleOneTap from "../../components/auth/GoogleOneTap";
+import GoogleButton from "../../components/auth/GoogleButton";
 import "../../styles/AuthPages.css";
 
 export default function Signup() {
@@ -75,6 +76,7 @@ export default function Signup() {
               {loading ? "Registering..." : "Register"}
             </button>
             {msg && <p className="error">{msg}</p>}
+            <GoogleButton />
             <p>
               Already have an account?{" "}
               <Link to="/login" className="register-link">
