@@ -10,19 +10,19 @@ require("dotenv").config();
  */
 const sendOtp = async (email, otp) => {
   try {
-    // ✅ Initialize Brevo client
+    // ✅ Initialize Brevo API instance directly from constructor
     const apiInstance = new brevo.TransactionalEmailsApi();
-    const apiKeyAuth = brevo.ApiClient.instance.authentications["api-key"];
 
-    // ✅ Set Brevo API key
-    apiKeyAuth.apiKey = process.env.BREVO_API_KEY;
+    // ✅ Directly assign API key using defaultApiClient
+    const defaultClient = brevo.ApiClient.instance;
+    defaultClient.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
 
-    if (!apiKeyAuth.apiKey) {
-      console.error("❌ Missing BREVO_API_KEY. Check Render environment variables.");
-      throw new Error("BREVO_API_KEY is not configured");
+    if (!process.env.BREVO_API_KEY) {
+      console.error("❌ Missing BREVO_API_KEY in environment variables!");
+      throw new Error("Missing Brevo API key");
     }
 
-    // ✅ Compose the transactional email
+    // ✅ Prepare email
     const sendSmtpEmail = {
       sender: {
         name: "ApnaFolio",
@@ -44,19 +44,19 @@ const sendOtp = async (email, otp) => {
       `,
     };
 
-    // ✅ Send the email using Brevo
+    // ✅ Send mail
     const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
-
     console.log(`✅ OTP email successfully sent to ${email}`);
-    console.log("📩 Brevo API Response:", response.body || response);
+    console.log("📩 Brevo Response:", response?.body || response);
     return true;
   } catch (error) {
-    console.error("❌ sendOtp error (Brevo API):", error.message);
+    console.error("❌ sendOtp error (Brevo API):", error);
     throw new Error("Failed to send OTP email via Brevo");
   }
 };
 
 module.exports = sendOtp;
+
 
 // // utils/sendOtp.js   final
 // const Brevo = require("@getbrevo/brevo");
