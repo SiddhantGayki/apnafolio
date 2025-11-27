@@ -1,33 +1,50 @@
 // utils/sendOtp.js
 const Brevo = require("@getbrevo/brevo");
 
+/**
+ * Sends a One-Time Password (OTP) email using Brevo API
+ * @param {string} email - Recipient email address
+ * @param {string} otp - The OTP code to send
+ * @returns {Promise<boolean>} - Returns true if sent successfully
+ */
 const sendOtp = async (email, otp) => {
   try {
+    // ✅ Initialize Brevo client
     const client = new Brevo.TransactionalEmailsApi();
     client.setApiKey(
       Brevo.TransactionalEmailsApiApiKeys.apiKey,
-      process.env.MAIL_PASS // हे Brevo ची API key असली पाहिजे
+      process.env.MAIL_PASS // Your Brevo API Key
     );
 
+    // ✅ Email content
     const sendSmtpEmail = {
-      sender: { name: "ApnaFolio", email: process.env.MAIL_USER },
+      sender: {
+        name: "ApnaFolio",
+        email: process.env.MAIL_USER, // Example: no-reply@apnafolio.in
+      },
       to: [{ email }],
-      subject: "ApnaFolio Email OTP Verification",
+      subject: "ApnaFolio OTP Verification",
       htmlContent: `
-        <div style="font-family: Arial, sans-serif;">
-          <h2>ApnaFolio - Email Verification</h2>
-          <p>Your OTP is: <strong>${otp}</strong></p>
-          <p>This OTP is valid for 15 minutes.</p>
+        <div style="font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; border-radius: 10px;">
+          <h2 style="color: #4B0082;">ApnaFolio - Email Verification</h2>
+          <p>Hi there 👋,</p>
+          <p>Your One-Time Password (OTP) for email verification is:</p>
+          <h1 style="color: #FF007F; letter-spacing: 5px;">${otp}</h1>
+          <p>This OTP is valid for <b>15 minutes</b>. Please don’t share it with anyone.</p>
+          <br />
+          <p>With 💜,</p>
+          <p><strong>Team ApnaFolio</strong><br>Apni Pahchaan, ApnaFolio ke saath 🚀</p>
         </div>
       `,
     };
 
-    const res = await client.sendTransacEmail(sendSmtpEmail);
-    console.log("✅ Brevo API mail sent:", res.messageId || "sent");
+    // ✅ Send email using Brevo API
+    const response = await client.sendTransacEmail(sendSmtpEmail);
+    console.log(`✅ OTP email sent to ${email} | Message ID: ${response.messageId || "N/A"}`);
     return true;
-  } catch (err) {
-    console.error("sendOtp error (Brevo API):", err.message);
-    throw new Error("Failed to send OTP email via Brevo API");
+  } catch (error) {
+    console.error("❌ sendOtp error (Brevo API):", error.message);
+    throw new Error("Failed to send OTP email");
   }
 };
 
