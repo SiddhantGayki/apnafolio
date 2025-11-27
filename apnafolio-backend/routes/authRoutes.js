@@ -3,9 +3,6 @@ const express = require("express");
 const router = express.Router();
 const rateLimit = require("express-rate-limit");
 const { signup, login, verifyOtp, googleOneTap } = require("../controllers/authController");
-// routes/authRoutes.js
-const express = require("express");
-const router = express.Router();
 const { googleOneTapLogin } = require("../controllers/googleController");
 
 
