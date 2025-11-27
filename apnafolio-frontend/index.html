@@ -3,6 +3,75 @@
   <head>
     <meta charset="UTF-8" />
 
+    <!-- Viewport + Meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="ApnaFolio – Apni Pahchaan, ApnaFolio ke saath. Build your personal digital portfolio website in minutes."
+    />
+    <meta name="application-name" content="ApnaFolio" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="author" content="ApnaFolio Team" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://apnafolio.in" />
+
+    <!-- Logo + Favicon -->
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+
+    <!-- Title -->
+    <title>ApnaFolio – Apni Pahchaan, ApnaFolio ke saath</title>
+
+    <!-- Open Graph / Social -->
+    <meta property="og:title" content="ApnaFolio – Apni Pahchaan, ApnaFolio ke saath" />
+    <meta
+      property="og:description"
+      content="ApnaFolio lets you create your professional portfolio website with modern templates, animations, and one-click deployment."
+    />
+    <meta property="og:image" content="https://apnafolio.in/logo.png" />
+    <meta property="og:url" content="https://apnafolio.in" />
+    <meta property="og:type" content="website" />
+
+    <!-- Structured Data (Organization Schema) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "ApnaFolio",
+        "url": "https://apnafolio.in",
+        "logo": "https://apnafolio.in/logo.png",
+        "description": "ApnaFolio is an all-in-one digital portfolio and resume builder platform that helps users design stunning online portfolios with modern templates and animations.",
+        "sameAs": [
+          "https://www.linkedin.com/company/apnafolio",
+          "https://www.instagram.com/apnafolio"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer support",
+          "email": "support@apnafolio.in",
+          "availableLanguage": ["English", "Hindi"]
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <!-- Vite entry point -->
+    <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Razorpay payment script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  </body>
+</html>
+
+
+<!-- <!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
     <!-- 🌐 Viewport + base meta -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
@@ -136,4 +205,4 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
   </body>
-</html> --> -->
+</html> --> --> -->
