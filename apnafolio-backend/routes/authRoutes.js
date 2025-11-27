@@ -3,6 +3,12 @@ const express = require("express");
 const router = express.Router();
 const rateLimit = require("express-rate-limit");
 const { signup, login, verifyOtp, googleOneTap } = require("../controllers/authController");
+// routes/authRoutes.js
+const express = require("express");
+const router = express.Router();
+const { googleOneTapLogin } = require("../controllers/googleController");
+
+
 
 // Limit signup/verify to reduce abuse
 const authLimiter = rateLimit({
@@ -23,7 +29,7 @@ router.post("/verify", verifyOtp);
 
 // 🔹 Google One Tap (no rate limit, Google handles abuse)
 router.post("/google-one-tap", googleOneTap);
-
+router.post("/google-one-tap", googleOneTapLogin);
 module.exports = router;
 
 // // routes/authRoutes.js
