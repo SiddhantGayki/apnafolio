@@ -16,6 +16,8 @@ const rawCors = process.env.CORS_ALLOW || "";
 const extraOrigins = rawCors.split(",").map(s => s.trim()).filter(Boolean);
 
 const allowedOrigins = [
+  "http://localhost:5173",
+  "https://apnafolio.vercel.app",
   "http://localhost:3000",
   "https://apnafolio.in",
   "https://www.apnafolio.in",
