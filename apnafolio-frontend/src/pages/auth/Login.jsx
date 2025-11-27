@@ -4,6 +4,8 @@ import { useNavigate, Link } from "react-router-dom";
 import api from "../../utils/api";
 import { setAuth } from "../../utils/auth";
 import GoogleOneTap from "../../components/auth/GoogleOneTap";
+import GoogleButton from "../../components/auth/GoogleButton";
+
 import "../../styles/AuthPages.css";
 
 export default function Login() {
@@ -81,6 +83,7 @@ export default function Login() {
             <button type="submit" disabled={loading}>
               {loading ? "Signing in..." : "Login"}
             </button>
+            <GoogleButton />
 
             <p>
               New here?{" "}
@@ -112,6 +115,7 @@ export default function Login() {
         </div>
       </div>
     </div>
+    
   );
 }
 
