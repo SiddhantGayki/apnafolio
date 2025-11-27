@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const sendOtp = require("../utils/sendOtp");
 const { OAuth2Client } = require("google-auth-library");
 
+require("dotenv").config();
+
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const sanitizeUser = (userDoc) => {
@@ -24,72 +26,68 @@ const sanitizeUser = (userDoc) => {
 const generateToken = (userId) =>
   jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-// -------- Email + OTP signup --------
+// 🟣 SIGNUP (with OTP via Brevo)
 exports.signup = async (req, res) => {
   try {
     const { name, email, password, username } = req.body;
-    if (!name || !email || !password || !username) {
+    if (!name || !email || !password || !username)
       return res.status(400).json({ message: "Missing required fields" });
-    }
 
     const normalizedEmail = email.toLowerCase().trim();
-    const normalizedUsername = username.trim();
+    const normalizedUsername = username.trim().toLowerCase();
 
     const existingEmail = await User.findOne({ email: normalizedEmail });
-    if (existingEmail) return res.status(400).json({ message: "Email already in use" });
+    if (existingEmail)
+      return res.status(400).json({ message: "Email already in use" });
 
     const existingUsername = await User.findOne({
-      usernameLower: normalizedUsername.toLowerCase(),
+      usernameLower: normalizedUsername,
     });
-    if (existingUsername) return res.status(400).json({ message: "Username already taken" });
+    if (existingUsername)
+      return res.status(400).json({ message: "Username already taken" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const otpHash = await bcrypt.hash(otp, 10);
-    const otpExpires = new Date(Date.now() + 15 * 60 * 1000);
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 min
 
-    const newUser = new User({
+    const newUser = await User.create({
       name,
       email: normalizedEmail,
       password: hashedPassword,
       otp: otpHash,
       otpExpires,
-      username: normalizedUsername,
-      usernameLower: normalizedUsername.toLowerCase(),
+      username,
+      usernameLower: normalizedUsername,
       failedOtpAttempts: 0,
       otpLockedUntil: null,
       isVerified: false,
       authProvider: "local",
     });
 
-    await newUser.save();
-
-    // send OTP email
+    // ✅ Send OTP via Brevo
     try {
-      const sendRes = await sendOtp(normalizedEmail, otp);
-      console.log("sendOtp result:", sendRes);
-    } catch (sendErr) {
-      try {
-        await User.deleteOne({ _id: newUser._id });
-        console.warn("Rolled back user after sendOtp failure:", newUser._id);
-      } catch (delErr) {
-        console.error("Failed to rollback user after sendOtp failure:", delErr);
-      }
-      console.error("sendOtp failed:", sendErr.message || sendErr);
+      console.log(`📨 Sending OTP to ${normalizedEmail}...`);
+      await sendOtp(normalizedEmail, otp);
+      console.log(`✅ OTP sent successfully to ${normalizedEmail}`);
+    } catch (err) {
+      console.error("❌ sendOtp error (Brevo):", err.message);
+      await User.deleteOne({ _id: newUser._id });
       return res
         .status(500)
-        .json({ message: "Signup failed: OTP not sent", error: sendErr.message });
+        .json({ message: "Signup failed: Unable to send OTP." });
     }
 
-    res.status(201).json({ message: "Signup successful. OTP sent!" });
+    res.status(201).json({
+      message: "Signup successful! OTP sent to your email for verification.",
+    });
   } catch (err) {
-    console.error("signup err:", err);
-    res.status(500).json({ message: "Error in signup", error: err.message });
+    console.error("❌ signup error:", err);
+    res.status(500).json({ message: "Signup failed", error: err.message });
   }
 };
 
-// -------- OTP verify --------
+// 🟣 VERIFY OTP
 exports.verifyOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
@@ -97,97 +95,61 @@ exports.verifyOtp = async (req, res) => {
       return res.status(400).json({ message: "Missing email or OTP" });
 
     const user = await User.findOne({ email: email.toLowerCase().trim() });
-    if (!user) return res.status(400).json({ message: "User not found" });
-
-    if (user.otpLockedUntil && user.otpLockedUntil > new Date()) {
-      return res.status(429).json({ message: "Too many attempts. Try later." });
-    }
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     if (!user.otpExpires || user.otpExpires < new Date())
       return res.status(400).json({ message: "OTP expired" });
 
     const isMatch = await bcrypt.compare(otp, user.otp);
-    if (!isMatch) {
-      user.failedOtpAttempts = (user.failedOtpAttempts || 0) + 1;
-      if (user.failedOtpAttempts >= 5) {
-        user.otpLockedUntil = new Date(Date.now() + 15 * 60 * 1000);
-        user.failedOtpAttempts = 0;
-      }
-      await user.save();
-      return res.status(400).json({ message: "Invalid OTP" });
-    }
+    if (!isMatch)
+      return res.status(400).json({ message: "Invalid OTP entered" });
 
     user.isVerified = true;
-    user.otp = "";
+    user.otp = null;
     user.otpExpires = null;
-    user.failedOtpAttempts = 0;
-    user.otpLockedUntil = null;
     await user.save();
 
-    res.status(200).json({ message: "Email verified successfully" });
+    res.status(200).json({ message: "Email verified successfully!" });
   } catch (err) {
-    console.error("verifyOtp err:", err);
-    res
-      .status(500)
-      .json({ message: "Verification failed", error: err.message });
+    console.error("❌ verifyOtp error:", err);
+    res.status(500).json({ message: "Verification failed" });
   }
 };
 
-// -------- Normal login --------
+// 🟣 LOGIN (Email + Password)
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password)
-      return res.status(400).json({ message: "Missing email or password" });
+      return res.status(400).json({ message: "Missing credentials" });
 
     const user = await User.findOne({ email: email.toLowerCase().trim() });
     if (!user) return res.status(404).json({ message: "User not found" });
-
     if (!user.isVerified)
       return res.status(403).json({ message: "Please verify your email" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ message: "Invalid password" });
+    if (!isMatch)
+      return res.status(401).json({ message: "Invalid email or password" });
 
     const token = generateToken(user._id);
-
-    res
-      .status(200)
-      .json({ message: "Login successful", token, user: sanitizeUser(user) });
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      user: sanitizeUser(user),
+    });
   } catch (err) {
-    console.error("login err:", err);
-    res.status(500).json({ message: "Login error", error: err.message });
+    console.error("❌ login error:", err);
+    res.status(500).json({ message: "Login failed", error: err.message });
   }
 };
 
-// -------- Helper: unique username for Google users --------
-const generateUniqueUsername = async (baseRaw) => {
-  const base =
-    (baseRaw || "user")
-      .toString()
-      .replace(/[^a-zA-Z0-9_]/g, "")
-      .toLowerCase() || "user";
-
-  let username = base;
-  let counter = 1;
-
-  // ensure unique usernameLower
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
-    const existing = await User.findOne({ usernameLower: username.toLowerCase() });
-    if (!existing) return username;
-    username = `${base}${counter}`;
-    counter++;
-  }
-};
-
-// -------- Google One Tap login/signup --------
+// 🟣 GOOGLE ONE TAP LOGIN/SIGNUP
 exports.googleOneTap = async (req, res) => {
   try {
     const { credential } = req.body;
-    if (!credential) {
+    if (!credential)
       return res.status(400).json({ message: "Missing Google credential" });
-    }
 
     const ticket = await googleClient.verifyIdToken({
       idToken: credential,
@@ -195,29 +157,20 @@ exports.googleOneTap = async (req, res) => {
     });
 
     const payload = ticket.getPayload();
-    const {
-      sub: googleId,
-      email,
-      name,
-      picture,
-      email_verified,
-    } = payload;
+    const { sub: googleId, email, name, picture, email_verified } = payload;
 
-    if (!email || !email_verified) {
+    if (!email_verified)
       return res
         .status(400)
-        .json({ message: "Google email not verified. Try another account." });
-    }
+        .json({ message: "Google account email not verified" });
 
     const normalizedEmail = email.toLowerCase().trim();
     let user = await User.findOne({ email: normalizedEmail });
 
     if (!user) {
       const baseUsername = normalizedEmail.split("@")[0];
-      const username = await generateUniqueUsername(baseUsername);
-
-      const randomPassword = "GOOGLE_" + googleId + "_" + Date.now();
-      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+      const username = `${baseUsername}${Math.floor(Math.random() * 1000)}`;
+      const hashedPassword = await bcrypt.hash("GOOGLE_" + googleId, 10);
 
       user = await User.create({
         name: name || baseUsername,
@@ -231,50 +184,31 @@ exports.googleOneTap = async (req, res) => {
         avatar: picture,
         paid: false,
       });
-    } else {
-      // upgrade existing user with google info
-      let changed = false;
-      if (!user.authProvider) {
-        user.authProvider = "local";
-        changed = true;
-      }
-      if (!user.googleId) {
-        user.googleId = googleId;
-        changed = true;
-      }
-      if (!user.avatar && picture) {
-        user.avatar = picture;
-        changed = true;
-      }
-      if (!user.isVerified) {
-        user.isVerified = true;
-        changed = true;
-      }
-      if (changed) await user.save();
     }
 
     const token = generateToken(user._id);
-
-    return res.status(200).json({
+    res.status(200).json({
       message: "Google login successful",
       token,
       user: sanitizeUser(user),
     });
-  } catch (error) {
-    console.error("Google One Tap error:", error);
-    return res.status(500).json({
-      message: "Failed to login with Google",
-      error: error.message,
+  } catch (err) {
+    console.error("❌ Google One Tap error:", err);
+    res.status(500).json({
+      message: "Google login failed",
+      error: err.message,
     });
   }
 };
-
 
 // // controllers/authController.js
 // const User = require("../models/User");
 // const bcrypt = require("bcryptjs");
 // const jwt = require("jsonwebtoken");
-// const sendOtp = require("../utils/sendOtp"); // ensure exists and uses env MAIL_USER/MAIL_PASS
+// const sendOtp = require("../utils/sendOtp");
+// const { OAuth2Client } = require("google-auth-library");
+
+// const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // const sanitizeUser = (userDoc) => {
 //   if (!userDoc) return null;
@@ -289,6 +223,318 @@ exports.googleOneTap = async (req, res) => {
 //     isVerified: userDoc.isVerified,
 //   };
 // };
+
+// const generateToken = (userId) =>
+//   jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+// // -------- Email + OTP signup --------
+// exports.signup = async (req, res) => {
+//   try {
+//     const { name, email, password, username } = req.body;
+//     if (!name || !email || !password || !username) {
+//       return res.status(400).json({ message: "Missing required fields" });
+//     }
+
+//     const normalizedEmail = email.toLowerCase().trim();
+//     const normalizedUsername = username.trim();
+
+//     const existingEmail = await User.findOne({ email: normalizedEmail });
+//     if (existingEmail) return res.status(400).json({ message: "Email already in use" });
+
+//     const existingUsername = await User.findOne({
+//       usernameLower: normalizedUsername.toLowerCase(),
+//     });
+//     if (existingUsername) return res.status(400).json({ message: "Username already taken" });
+
+//     const hashedPassword = await bcrypt.hash(password, 10);
+
+//     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+//     const otpHash = await bcrypt.hash(otp, 10);
+//     const otpExpires = new Date(Date.now() + 15 * 60 * 1000);
+
+//     const newUser = new User({
+//       name,
+//       email: normalizedEmail,
+//       password: hashedPassword,
+//       otp: otpHash,
+//       otpExpires,
+//       username: normalizedUsername,
+//       usernameLower: normalizedUsername.toLowerCase(),
+//       failedOtpAttempts: 0,
+//       otpLockedUntil: null,
+//       isVerified: false,
+//       authProvider: "local",
+//     });
+
+//     await newUser.save();
+
+//     // send OTP email
+//     try {
+//       const sendRes = await sendOtp(normalizedEmail, otp);
+//       console.log("sendOtp result:", sendRes);
+//     } catch (sendErr) {
+//       try {
+//         await User.deleteOne({ _id: newUser._id });
+//         console.warn("Rolled back user after sendOtp failure:", newUser._id);
+//       } catch (delErr) {
+//         console.error("Failed to rollback user after sendOtp failure:", delErr);
+//       }
+//       console.error("sendOtp failed:", sendErr.message || sendErr);
+//       return res
+//         .status(500)
+//         .json({ message: "Signup failed: OTP not sent", error: sendErr.message });
+//     }
+
+//     res.status(201).json({ message: "Signup successful. OTP sent!" });
+//   } catch (err) {
+//     console.error("signup err:", err);
+//     res.status(500).json({ message: "Error in signup", error: err.message });
+//   }
+// };
+
+// // -------- OTP verify --------
+// exports.verifyOtp = async (req, res) => {
+//   try {
+//     const { email, otp } = req.body;
+//     if (!email || !otp)
+//       return res.status(400).json({ message: "Missing email or OTP" });
+
+//     const user = await User.findOne({ email: email.toLowerCase().trim() });
+//     if (!user) return res.status(400).json({ message: "User not found" });
+
+//     if (user.otpLockedUntil && user.otpLockedUntil > new Date()) {
+//       return res.status(429).json({ message: "Too many attempts. Try later." });
+//     }
+
+//     if (!user.otpExpires || user.otpExpires < new Date())
+//       return res.status(400).json({ message: "OTP expired" });
+
+//     const isMatch = await bcrypt.compare(otp, user.otp);
+//     if (!isMatch) {
+//       user.failedOtpAttempts = (user.failedOtpAttempts || 0) + 1;
+//       if (user.failedOtpAttempts >= 5) {
+//         user.otpLockedUntil = new Date(Date.now() + 15 * 60 * 1000);
+//         user.failedOtpAttempts = 0;
+//       }
+//       await user.save();
+//       return res.status(400).json({ message: "Invalid OTP" });
+//     }
+
+//     user.isVerified = true;
+//     user.otp = "";
+//     user.otpExpires = null;
+//     user.failedOtpAttempts = 0;
+//     user.otpLockedUntil = null;
+//     await user.save();
+
+//     res.status(200).json({ message: "Email verified successfully" });
+//   } catch (err) {
+//     console.error("verifyOtp err:", err);
+//     res
+//       .status(500)
+//       .json({ message: "Verification failed", error: err.message });
+//   }
+// };
+
+// // -------- Normal login --------
+// exports.login = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+//     if (!email || !password)
+//       return res.status(400).json({ message: "Missing email or password" });
+
+//     const user = await User.findOne({ email: email.toLowerCase().trim() });
+//     if (!user) return res.status(404).json({ message: "User not found" });
+
+//     if (!user.isVerified)
+//       return res.status(403).json({ message: "Please verify your email" });
+
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if (!isMatch) return res.status(401).json({ message: "Invalid password" });
+
+//     const token = generateToken(user._id);
+
+//     res
+//       .status(200)
+//       .json({ message: "Login successful", token, user: sanitizeUser(user) });
+//   } catch (err) {
+//     console.error("login err:", err);
+//     res.status(500).json({ message: "Login error", error: err.message });
+//   }
+// };
+
+// // -------- Helper: unique username for Google users --------
+// const generateUniqueUsername = async (baseRaw) => {
+//   const base =
+//     (baseRaw || "user")
+//       .toString()
+//       .replace(/[^a-zA-Z0-9_]/g, "")
+//       .toLowerCase() || "user";
+
+//   let username = base;
+//   let counter = 1;
+
+//   // ensure unique usernameLower
+//   // eslint-disable-next-line no-constant-condition
+//   while (true) {
+//     const existing = await User.findOne({ usernameLower: username.toLowerCase() });
+//     if (!existing) return username;
+//     username = `${base}${counter}`;
+//     counter++;
+//   }
+// };
+
+// // -------- Google One Tap login/signup --------
+// exports.googleOneTap = async (req, res) => {
+//   try {
+//     const { credential } = req.body;
+//     if (!credential) {
+//       return res.status(400).json({ message: "Missing Google credential" });
+//     }
+
+//     const ticket = await googleClient.verifyIdToken({
+//       idToken: credential,
+//       audience: process.env.GOOGLE_CLIENT_ID,
+//     });
+
+//     const payload = ticket.getPayload();
+//     const {
+//       sub: googleId,
+//       email,
+//       name,
+//       picture,
+//       email_verified,
+//     } = payload;
+
+//     if (!email || !email_verified) {
+//       return res
+//         .status(400)
+//         .json({ message: "Google email not verified. Try another account." });
+//     }
+
+//     const normalizedEmail = email.toLowerCase().trim();
+//     let user = await User.findOne({ email: normalizedEmail });
+
+//     if (!user) {
+//       const baseUsername = normalizedEmail.split("@")[0];
+//       const username = await generateUniqueUsername(baseUsername);
+
+//       const randomPassword = "GOOGLE_" + googleId + "_" + Date.now();
+//       const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+//       user = await User.create({
+//         name: name || baseUsername,
+//         email: normalizedEmail,
+//         password: hashedPassword,
+//         username,
+//         usernameLower: username.toLowerCase(),
+//         isVerified: true,
+//         authProvider: "google",
+//         googleId,
+//         avatar: picture,
+//         paid: false,
+//       });
+//     } else {
+//       // upgrade existing user with google info
+//       let changed = false;
+//       if (!user.authProvider) {
+//         user.authProvider = "local";
+//         changed = true;
+//       }
+//       if (!user.googleId) {
+//         user.googleId = googleId;
+//         changed = true;
+//       }
+//       if (!user.avatar && picture) {
+//         user.avatar = picture;
+//         changed = true;
+//       }
+//       if (!user.isVerified) {
+//         user.isVerified = true;
+//         changed = true;
+//       }
+//       if (changed) await user.save();
+//     }
+
+//     const token = generateToken(user._id);
+
+//     return res.status(200).json({
+//       message: "Google login successful",
+//       token,
+//       user: sanitizeUser(user),
+//     });
+//   } catch (error) {
+//     console.error("Google One Tap error:", error);
+//     return res.status(500).json({
+//       message: "Failed to login with Google",
+//       error: error.message,
+//     });
+//   }
+// };
+
+
+// // // controllers/authController.js
+// // const User = require("../models/User");
+// // const bcrypt = require("bcryptjs");
+// // const jwt = require("jsonwebtoken");
+// // const sendOtp = require("../utils/sendOtp"); // ensure exists and uses env MAIL_USER/MAIL_PASS
+
+// // const sanitizeUser = (userDoc) => {
+// //   if (!userDoc) return null;
+// //   return {
+// //     _id: userDoc._id,
+// //     name: userDoc.name,
+// //     email: userDoc.email,
+// //     username: userDoc.username,
+// //     isAdmin: userDoc.isAdmin,
+// //     paid: userDoc.paid,
+// //     selectedTemplate: userDoc.selectedTemplate,
+// //     isVerified: userDoc.isVerified,
+// //   };
+// // };
+
+// // // exports.signup = async (req, res) => {
+// // //   try {
+// // //     const { name, email, password, username } = req.body;
+// // //     if (!name || !email || !password || !username) {
+// // //       return res.status(400).json({ message: "Missing required fields" });
+// // //     }
+// // //     const normalizedEmail = email.toLowerCase().trim();
+// // //     const normalizedUsername = username.trim();
+
+// // //     const existingEmail = await User.findOne({ email: normalizedEmail });
+// // //     if (existingEmail) return res.status(400).json({ message: "Email already in use" });
+
+// // //     const existingUsername = await User.findOne({ usernameLower: normalizedUsername.toLowerCase() });
+// // //     if (existingUsername) return res.status(400).json({ message: "Username already taken" });
+
+// // //     const hashedPassword = await bcrypt.hash(password, 10);
+
+// // //     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+// // //     const otpHash = await bcrypt.hash(otp, 10);
+// // //     const otpExpires = new Date(Date.now() + 15 * 60 * 1000);
+
+// // //     const newUser = new User({
+// // //       name,
+// // //       email: normalizedEmail,
+// // //       password: hashedPassword,
+// // //       otp: otpHash,
+// // //       otpExpires,
+// // //       username: normalizedUsername,
+// // //       usernameLower: username.toLowerCase(),
+// // //       failedOtpAttempts: 0,
+// // //       otpLockedUntil: null,
+// // //     });
+
+// // //     await newUser.save();
+// // //     await sendOtp(normalizedEmail, otp);
+
+// // //     res.status(201).json({ message: "Signup successful. OTP sent!" });
+// // //   } catch (err) {
+// // //     console.error("signup err:", err);
+// // //     res.status(500).json({ message: "Error in signup", error: err.message });
+// // //   }
+// // // };
 
 // // exports.signup = async (req, res) => {
 // //   try {
@@ -318,13 +564,29 @@ exports.googleOneTap = async (req, res) => {
 // //       otp: otpHash,
 // //       otpExpires,
 // //       username: normalizedUsername,
-// //       usernameLower: username.toLowerCase(),
+// //       usernameLower: normalizedUsername.toLowerCase(),
 // //       failedOtpAttempts: 0,
 // //       otpLockedUntil: null,
+// //       isVerified: false,
 // //     });
 
 // //     await newUser.save();
-// //     await sendOtp(normalizedEmail, otp);
+
+// //     // send OTP email — improved error handling
+// //     try {
+// //       const sendRes = await sendOtp(normalizedEmail, otp);
+// //       console.log("sendOtp result:", sendRes);
+// //     } catch (sendErr) {
+// //       // rollback created user to avoid stuck unverified users without OTP
+// //       try {
+// //         await User.deleteOne({ _id: newUser._id });
+// //         console.warn("Rolled back user after sendOtp failure:", newUser._id);
+// //       } catch (delErr) {
+// //         console.error("Failed to rollback user after sendOtp failure:", delErr);
+// //       }
+// //       console.error("sendOtp failed:", sendErr.message || sendErr);
+// //       return res.status(500).json({ message: "Signup failed: OTP not sent", error: sendErr.message });
+// //     }
 
 // //     res.status(201).json({ message: "Signup successful. OTP sent!" });
 // //   } catch (err) {
@@ -333,152 +595,138 @@ exports.googleOneTap = async (req, res) => {
 // //   }
 // // };
 
-// exports.signup = async (req, res) => {
-//   try {
-//     const { name, email, password, username } = req.body;
-//     if (!name || !email || !password || !username) {
-//       return res.status(400).json({ message: "Missing required fields" });
-//     }
-//     const normalizedEmail = email.toLowerCase().trim();
-//     const normalizedUsername = username.trim();
+// // exports.verifyOtp = async (req, res) => {
+// //   try {
+// //     const { email, otp } = req.body;
+// //     if (!email || !otp) return res.status(400).json({ message: "Missing email or OTP" });
 
-//     const existingEmail = await User.findOne({ email: normalizedEmail });
-//     if (existingEmail) return res.status(400).json({ message: "Email already in use" });
+// //     const user = await User.findOne({ email: email.toLowerCase().trim() });
+// //     if (!user) return res.status(400).json({ message: "User not found" });
 
-//     const existingUsername = await User.findOne({ usernameLower: normalizedUsername.toLowerCase() });
-//     if (existingUsername) return res.status(400).json({ message: "Username already taken" });
+// //     // rate-limit lock check
+// //     if (user.otpLockedUntil && user.otpLockedUntil > new Date()) {
+// //       return res.status(429).json({ message: "Too many attempts. Try later." });
+// //     }
 
-//     const hashedPassword = await bcrypt.hash(password, 10);
+// //     if (!user.otpExpires || user.otpExpires < new Date()) return res.status(400).json({ message: "OTP expired" });
 
-//     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-//     const otpHash = await bcrypt.hash(otp, 10);
-//     const otpExpires = new Date(Date.now() + 15 * 60 * 1000);
+// //     const isMatch = await bcrypt.compare(otp, user.otp);
+// //     if (!isMatch) {
+// //       user.failedOtpAttempts = (user.failedOtpAttempts || 0) + 1;
+// //       if (user.failedOtpAttempts >= 5) {
+// //         user.otpLockedUntil = new Date(Date.now() + 15 * 60 * 1000); // lock 15 minutes
+// //         user.failedOtpAttempts = 0;
+// //       }
+// //       await user.save();
+// //       return res.status(400).json({ message: "Invalid OTP" });
+// //     }
 
-//     const newUser = new User({
-//       name,
-//       email: normalizedEmail,
-//       password: hashedPassword,
-//       otp: otpHash,
-//       otpExpires,
-//       username: normalizedUsername,
-//       usernameLower: normalizedUsername.toLowerCase(),
-//       failedOtpAttempts: 0,
-//       otpLockedUntil: null,
-//       isVerified: false,
-//     });
+// //     user.isVerified = true;
+// //     user.otp = "";
+// //     user.otpExpires = null;
+// //     user.failedOtpAttempts = 0;
+// //     user.otpLockedUntil = null;
+// //     await user.save();
 
-//     await newUser.save();
+// //     res.status(200).json({ message: "Email verified successfully" });
+// //   } catch (err) {
+// //     console.error("verifyOtp err:", err);
+// //     res.status(500).json({ message: "Verification failed", error: err.message });
+// //   }
+// // };
 
-//     // send OTP email — improved error handling
-//     try {
-//       const sendRes = await sendOtp(normalizedEmail, otp);
-//       console.log("sendOtp result:", sendRes);
-//     } catch (sendErr) {
-//       // rollback created user to avoid stuck unverified users without OTP
-//       try {
-//         await User.deleteOne({ _id: newUser._id });
-//         console.warn("Rolled back user after sendOtp failure:", newUser._id);
-//       } catch (delErr) {
-//         console.error("Failed to rollback user after sendOtp failure:", delErr);
-//       }
-//       console.error("sendOtp failed:", sendErr.message || sendErr);
-//       return res.status(500).json({ message: "Signup failed: OTP not sent", error: sendErr.message });
-//     }
+// // exports.login = async (req, res) => {
+// //   try {
+// //     const { email, password } = req.body;
+// //     if (!email || !password) return res.status(400).json({ message: "Missing email or password" });
 
-//     res.status(201).json({ message: "Signup successful. OTP sent!" });
-//   } catch (err) {
-//     console.error("signup err:", err);
-//     res.status(500).json({ message: "Error in signup", error: err.message });
-//   }
-// };
+// //     const user = await User.findOne({ email: email.toLowerCase().trim() });
+// //     if (!user) return res.status(404).json({ message: "User not found" });
 
-// exports.verifyOtp = async (req, res) => {
-//   try {
-//     const { email, otp } = req.body;
-//     if (!email || !otp) return res.status(400).json({ message: "Missing email or OTP" });
+// //     if (!user.isVerified) return res.status(403).json({ message: "Please verify your email" });
 
-//     const user = await User.findOne({ email: email.toLowerCase().trim() });
-//     if (!user) return res.status(400).json({ message: "User not found" });
+// //     const isMatch = await bcrypt.compare(password, user.password);
+// //     if (!isMatch) return res.status(401).json({ message: "Invalid password" });
 
-//     // rate-limit lock check
-//     if (user.otpLockedUntil && user.otpLockedUntil > new Date()) {
-//       return res.status(429).json({ message: "Too many attempts. Try later." });
-//     }
+// //     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-//     if (!user.otpExpires || user.otpExpires < new Date()) return res.status(400).json({ message: "OTP expired" });
+// //     res.status(200).json({ message: "Login successful", token, user: sanitizeUser(user) });
+// //   } catch (err) {
+// //     console.error("login err:", err);
+// //     res.status(500).json({ message: "Login error", error: err.message });
+// //   }
+// // };
 
-//     const isMatch = await bcrypt.compare(otp, user.otp);
-//     if (!isMatch) {
-//       user.failedOtpAttempts = (user.failedOtpAttempts || 0) + 1;
-//       if (user.failedOtpAttempts >= 5) {
-//         user.otpLockedUntil = new Date(Date.now() + 15 * 60 * 1000); // lock 15 minutes
-//         user.failedOtpAttempts = 0;
-//       }
-//       await user.save();
-//       return res.status(400).json({ message: "Invalid OTP" });
-//     }
+// // // controllers/authController.js
+// // const User = require("../models/User");
+// // const bcrypt = require("bcryptjs");
+// // const jwt = require("jsonwebtoken");
+// // const sendOtp = require("../utils/sendOtp"); // ensure exists and uses env MAIL_USER/MAIL_PASS
 
-//     user.isVerified = true;
-//     user.otp = "";
-//     user.otpExpires = null;
-//     user.failedOtpAttempts = 0;
-//     user.otpLockedUntil = null;
-//     await user.save();
+// // const sanitizeUser = (userDoc) => {
+// //   if (!userDoc) return null;
+// //   return {
+// //     _id: userDoc._id,
+// //     name: userDoc.name,
+// //     email: userDoc.email,
+// //     username: userDoc.username,
+// //     isAdmin: userDoc.isAdmin,
+// //     paid: userDoc.paid,
+// //     selectedTemplate: userDoc.selectedTemplate,
+// //     isVerified: userDoc.isVerified,
+// //   };
+// // };
 
-//     res.status(200).json({ message: "Email verified successfully" });
-//   } catch (err) {
-//     console.error("verifyOtp err:", err);
-//     res.status(500).json({ message: "Verification failed", error: err.message });
-//   }
-// };
+// // // exports.signup = async (req, res) => {
+// // //       const { name, email, password, username } = req.body;
+// // //   if (!name || !email || !password || !username) {
+// // //     return res.status(400).json({ message: "All fields required" });
+// // //   }
+// // //     const normalizedEmail = email.toLowerCase().trim();
+// // //     const normalizedUsername = username.trim();
 
-// exports.login = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-//     if (!email || !password) return res.status(400).json({ message: "Missing email or password" });
+// // //     const existingEmail = await User.findOne({ email: normalizedEmail });
+// // //     if (existingEmail) return res.status(400).json({ message: "Email already in use" });
 
-//     const user = await User.findOne({ email: email.toLowerCase().trim() });
-//     if (!user) return res.status(404).json({ message: "User not found" });
+// // //     const existingUsername = await User.findOne({ usernameLower: normalizedUsername.toLowerCase() });
+// // //     if (existingUsername) return res.status(400).json({ message: "Username already taken" });
 
-//     if (!user.isVerified) return res.status(403).json({ message: "Please verify your email" });
+// // //     const hashedPassword = await bcrypt.hash(password, 10);
 
-//     const isMatch = await bcrypt.compare(password, user.password);
-//     if (!isMatch) return res.status(401).json({ message: "Invalid password" });
+// // //     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+// // //     const otpHash = await bcrypt.hash(otp, 10);
+// // //     const otpExpires = new Date(Date.now() + 15 * 60 * 1000);
 
-//     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+// // //     const newUser = new User({
+// // //       name,
+// // //       email: normalizedEmail,
+// // //       password: hashedPassword,
+// // //       otp: otpHash,
+// // //       otpExpires,
+// // //       username: normalizedUsername,
+// // //       usernameLower: username.toLowerCase(),
+// // //       failedOtpAttempts: 0,
+// // //       otpLockedUntil: null,
+// // //     });
 
-//     res.status(200).json({ message: "Login successful", token, user: sanitizeUser(user) });
-//   } catch (err) {
-//     console.error("login err:", err);
-//     res.status(500).json({ message: "Login error", error: err.message });
-//   }
-// };
+// // //     await newUser.save();
+// // //     await sendOtp(normalizedEmail, otp);
 
-// // controllers/authController.js
-// const User = require("../models/User");
-// const bcrypt = require("bcryptjs");
-// const jwt = require("jsonwebtoken");
-// const sendOtp = require("../utils/sendOtp"); // ensure exists and uses env MAIL_USER/MAIL_PASS
-
-// const sanitizeUser = (userDoc) => {
-//   if (!userDoc) return null;
-//   return {
-//     _id: userDoc._id,
-//     name: userDoc.name,
-//     email: userDoc.email,
-//     username: userDoc.username,
-//     isAdmin: userDoc.isAdmin,
-//     paid: userDoc.paid,
-//     selectedTemplate: userDoc.selectedTemplate,
-//     isVerified: userDoc.isVerified,
-//   };
-// };
+// // //     res.status(201).json({ message: "Signup successful. OTP sent!" });
+// // //   } catch (err) {
+// // //     console.error("signup err:", err);
+// // //     res.status(500).json({ message: "Error in signup", error: err.message });
+// // //   }
+// // // };
 
 // // exports.signup = async (req, res) => {
-// //       const { name, email, password, username } = req.body;
-// //   if (!name || !email || !password || !username) {
-// //     return res.status(400).json({ message: "All fields required" });
-// //   }
+// //   try {
+// //     console.log("📩 Signup body:", req.body);
+// //     const { name, email, password, username } = req.body;
+// //     if (!name || !email || !password || !username) {
+// //       return res.status(400).json({ message: "All fields required" });
+// //     }
+
 // //     const normalizedEmail = email.toLowerCase().trim();
 // //     const normalizedUsername = username.trim();
 
@@ -501,7 +749,7 @@ exports.googleOneTap = async (req, res) => {
 // //       otp: otpHash,
 // //       otpExpires,
 // //       username: normalizedUsername,
-// //       usernameLower: username.toLowerCase(),
+// //       usernameLower: normalizedUsername.toLowerCase(),
 // //       failedOtpAttempts: 0,
 // //       otpLockedUntil: null,
 // //     });
@@ -516,109 +764,64 @@ exports.googleOneTap = async (req, res) => {
 // //   }
 // // };
 
-// exports.signup = async (req, res) => {
-//   try {
-//     console.log("📩 Signup body:", req.body);
-//     const { name, email, password, username } = req.body;
-//     if (!name || !email || !password || !username) {
-//       return res.status(400).json({ message: "All fields required" });
-//     }
+// // exports.verifyOtp = async (req, res) => {
+// //   try {
+// //     const { email, otp } = req.body;
+// //     if (!email || !otp) return res.status(400).json({ message: "Missing email or OTP" });
 
-//     const normalizedEmail = email.toLowerCase().trim();
-//     const normalizedUsername = username.trim();
+// //     const user = await User.findOne({ email: email.toLowerCase().trim() });
+// //     if (!user) return res.status(400).json({ message: "User not found" });
 
-//     const existingEmail = await User.findOne({ email: normalizedEmail });
-//     if (existingEmail) return res.status(400).json({ message: "Email already in use" });
+// //     // rate-limit lock check
+// //     if (user.otpLockedUntil && user.otpLockedUntil > new Date()) {
+// //       return res.status(429).json({ message: "Too many attempts. Try later." });
+// //     }
 
-//     const existingUsername = await User.findOne({ usernameLower: normalizedUsername.toLowerCase() });
-//     if (existingUsername) return res.status(400).json({ message: "Username already taken" });
+// //     if (!user.otpExpires || user.otpExpires < new Date()) return res.status(400).json({ message: "OTP expired" });
 
-//     const hashedPassword = await bcrypt.hash(password, 10);
+// //     const isMatch = await bcrypt.compare(otp, user.otp);
+// //     if (!isMatch) {
+// //       user.failedOtpAttempts = (user.failedOtpAttempts || 0) + 1;
+// //       if (user.failedOtpAttempts >= 5) {
+// //         user.otpLockedUntil = new Date(Date.now() + 15 * 60 * 1000); // lock 15 minutes
+// //         user.failedOtpAttempts = 0;
+// //       }
+// //       await user.save();
+// //       return res.status(400).json({ message: "Invalid OTP" });
+// //     }
 
-//     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-//     const otpHash = await bcrypt.hash(otp, 10);
-//     const otpExpires = new Date(Date.now() + 15 * 60 * 1000);
+// //     user.isVerified = true;
+// //     user.otp = "";
+// //     user.otpExpires = null;
+// //     user.failedOtpAttempts = 0;
+// //     user.otpLockedUntil = null;
+// //     await user.save();
 
-//     const newUser = new User({
-//       name,
-//       email: normalizedEmail,
-//       password: hashedPassword,
-//       otp: otpHash,
-//       otpExpires,
-//       username: normalizedUsername,
-//       usernameLower: normalizedUsername.toLowerCase(),
-//       failedOtpAttempts: 0,
-//       otpLockedUntil: null,
-//     });
+// //     res.status(200).json({ message: "Email verified successfully" });
+// //   } catch (err) {
+// //     console.error("verifyOtp err:", err);
+// //     res.status(500).json({ message: "Verification failed", error: err.message });
+// //   }
+// // };
 
-//     await newUser.save();
-//     await sendOtp(normalizedEmail, otp);
+// // exports.login = async (req, res) => {
+// //   try {
+// //     const { email, password } = req.body;
+// //     if (!email || !password) return res.status(400).json({ message: "Missing email or password" });
 
-//     res.status(201).json({ message: "Signup successful. OTP sent!" });
-//   } catch (err) {
-//     console.error("signup err:", err);
-//     res.status(500).json({ message: "Error in signup", error: err.message });
-//   }
-// };
+// //     const user = await User.findOne({ email: email.toLowerCase().trim() });
+// //     if (!user) return res.status(404).json({ message: "User not found" });
 
-// exports.verifyOtp = async (req, res) => {
-//   try {
-//     const { email, otp } = req.body;
-//     if (!email || !otp) return res.status(400).json({ message: "Missing email or OTP" });
+// //     if (!user.isVerified) return res.status(403).json({ message: "Please verify your email" });
 
-//     const user = await User.findOne({ email: email.toLowerCase().trim() });
-//     if (!user) return res.status(400).json({ message: "User not found" });
+// //     const isMatch = await bcrypt.compare(password, user.password);
+// //     if (!isMatch) return res.status(401).json({ message: "Invalid password" });
 
-//     // rate-limit lock check
-//     if (user.otpLockedUntil && user.otpLockedUntil > new Date()) {
-//       return res.status(429).json({ message: "Too many attempts. Try later." });
-//     }
+// //     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-//     if (!user.otpExpires || user.otpExpires < new Date()) return res.status(400).json({ message: "OTP expired" });
-
-//     const isMatch = await bcrypt.compare(otp, user.otp);
-//     if (!isMatch) {
-//       user.failedOtpAttempts = (user.failedOtpAttempts || 0) + 1;
-//       if (user.failedOtpAttempts >= 5) {
-//         user.otpLockedUntil = new Date(Date.now() + 15 * 60 * 1000); // lock 15 minutes
-//         user.failedOtpAttempts = 0;
-//       }
-//       await user.save();
-//       return res.status(400).json({ message: "Invalid OTP" });
-//     }
-
-//     user.isVerified = true;
-//     user.otp = "";
-//     user.otpExpires = null;
-//     user.failedOtpAttempts = 0;
-//     user.otpLockedUntil = null;
-//     await user.save();
-
-//     res.status(200).json({ message: "Email verified successfully" });
-//   } catch (err) {
-//     console.error("verifyOtp err:", err);
-//     res.status(500).json({ message: "Verification failed", error: err.message });
-//   }
-// };
-
-// exports.login = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-//     if (!email || !password) return res.status(400).json({ message: "Missing email or password" });
-
-//     const user = await User.findOne({ email: email.toLowerCase().trim() });
-//     if (!user) return res.status(404).json({ message: "User not found" });
-
-//     if (!user.isVerified) return res.status(403).json({ message: "Please verify your email" });
-
-//     const isMatch = await bcrypt.compare(password, user.password);
-//     if (!isMatch) return res.status(401).json({ message: "Invalid password" });
-
-//     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
-
-//     res.status(200).json({ message: "Login successful", token, user: sanitizeUser(user) });
-//   } catch (err) {
-//     console.error("login err:", err);
-//     res.status(500).json({ message: "Login error", error: err.message });
-//   }
-// };
+// //     res.status(200).json({ message: "Login successful", token, user: sanitizeUser(user) });
+// //   } catch (err) {
+// //     console.error("login err:", err);
+// //     res.status(500).json({ message: "Login error", error: err.message });
+// //   }
+// // };
