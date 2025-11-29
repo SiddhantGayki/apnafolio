@@ -17,7 +17,7 @@ exports.createOrder = async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid amount" });
 
     const options = {
-      amount: parseInt(amount, 10),
+      amount: parseInt(amount, 100),
       currency: "INR",
       receipt: "receipt_" + Date.now(),
     };
