@@ -18,44 +18,48 @@ export default function Login() {
     setMsg("");
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await api.post("/auth/login", form);
-      const { token, user } = res.data;
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-      if (!user.isVerified) {
-        setMsg("⚠️ Please verify your email before logging in.");
-        setLoading(false);
-        return;
-      }
+  try {
+    const res = await api.post("/auth/login", form);
+    const { token, user } = res.data;
 
-      setAuth({ token, username: user.username });
-
-      if (user.isAdmin) {
-        navigate("/admin");
-      } else {
-        navigate("/form");
-      }
-      
-      if(user.paid) {
-        navigate("/dashboard");
-      } else {
-        navigate("/form");
-      }
-
-
-    } catch (err) {
-      console.error("Login error:", err);
-      setMsg(
-        err.response?.data?.message ||
-          "Invalid credentials or not verified."
-      );
-    } finally {
+    if (!user.isVerified) {
+      setMsg("⚠️ Please verify your email before logging in.");
       setLoading(false);
+      return;
     }
-  };
+
+    setAuth({ token, username: user.username });
+
+    // 1️⃣ ADMIN CHECK
+    if (user.isAdmin) {
+      navigate("/admin");
+      return;
+    }
+
+    // 2️⃣ USER PAID CHECK
+    if (user.paid) {
+      navigate("/dashboard");
+      return;
+    }
+
+    // 3️⃣ NOT PAID → GO TO FORM
+    navigate("/form");
+
+  } catch (err) {
+    console.error("Login error:", err);
+    setMsg(
+      err.response?.data?.message ||
+      "Invalid credentials or not verified."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="auth-container">
