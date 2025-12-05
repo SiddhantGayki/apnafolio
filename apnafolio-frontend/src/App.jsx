@@ -14,6 +14,7 @@ import IntroPage from "./pages/IntroPage";
 
 // Admin
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import UserDashboard from "./pages/dashboard/UserDashboard";
 
 // Resume Builder
 import ResumePage from "./pages/form/ResumePage";
@@ -46,6 +47,8 @@ export default function App() {
 
         {/* Admin */}
         <Route path="/admin" element={<AdminDashboard />} />
+        {/* User Paid */}
+        <Route path="/dashboard" element={<UserDashboard />} />
 
         {/* Protected */}
         <Route
