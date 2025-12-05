@@ -30,11 +30,21 @@ export default function GoogleOneTap() {
 
         setAuth({ token, username: user.username });
 
-        if (user.isAdmin) {
-          navigate("/admin");
-        } else {
-          navigate("/form");
-        }
+        // 1️⃣ ADMIN CHECK
+    if (user.isAdmin) {
+      navigate("/admin");
+      return;
+    }
+
+    // 2️⃣ USER PAID CHECK
+    if (user.paid) {
+      navigate("/dashboard");
+      return;
+    }
+
+    // 3️⃣ NOT PAID → GO TO FORM
+    navigate("/form");
+
       } catch (err) {
         console.error("Google one tap error:", err);
         alert(
