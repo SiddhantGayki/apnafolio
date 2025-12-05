@@ -38,6 +38,14 @@ export default function Login() {
       } else {
         navigate("/form");
       }
+      
+      if(user.paid) {
+        navigate("/dashboard");
+      } else {
+        navigate("/form");
+      }
+
+
     } catch (err) {
       console.error("Login error:", err);
       setMsg(
