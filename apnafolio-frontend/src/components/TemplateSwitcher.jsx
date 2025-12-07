@@ -68,7 +68,7 @@ const templates = [
     id: "template11",
     name: "Dark Premium Motion",
     price: 1299
-  }
+  },
 
 ];
 
