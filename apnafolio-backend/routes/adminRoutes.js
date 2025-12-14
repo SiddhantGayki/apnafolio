@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const adminAuth = require("../middleware/adminAuth");
 const User = require("../models/User");
-const adminController = require("../controllers/adminController"); // जोडायला विसरू नको
+const adminController = require("../controllers/adminController");
 
 // Stats
 router.get("/stats", adminAuth, adminController.getStats);

@@ -17,10 +17,13 @@ const storage = new CloudinaryStorage({
   },
 });
 
+console.log("this are the cloudinary objects--1", storage)
+
 const upload = multer({ storage });
 
 module.exports = upload;
 
+console.log("this are the cloudinary objects--2", upload)
 // const cloudinary = require("cloudinary").v2;
 
 // cloudinary.config({

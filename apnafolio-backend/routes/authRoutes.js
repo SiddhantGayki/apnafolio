@@ -5,8 +5,6 @@ const rateLimit = require("express-rate-limit");
 const { signup, login, verifyOtp, googleOneTap } = require("../controllers/authController");
 const { googleOneTapLogin } = require("../controllers/googleController");
 
-
-
 // Limit signup/verify to reduce abuse
 const authLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour

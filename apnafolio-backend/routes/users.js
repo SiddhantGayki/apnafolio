@@ -29,7 +29,6 @@ router.get("/:username", async (req, res) => {
   }
 });
 
-
 router.post("/resume", auth, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
