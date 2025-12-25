@@ -4,6 +4,8 @@ console.log("User controller loaded");
 
 exports.saveResume = async (req, res) => {
   console.log("saveResume called with userId:", req.userId);
+  console.log("Resume data:", req.body);
+  console.log("image files:", req.files);
   try {
     const user = await User.findById(req.userId);
     if (!user) {
@@ -50,17 +52,26 @@ exports.getPublicPortfolio = async (req, res) => {
 };
 
 exports.switchTemplate = async (req, res) => {
+  console.log("switchTemplate called with body:", req.body);
   try {
     const { templateId } = req.body;
-    if (!templateId) return res.status(400).json({ success: false, message: "Template ID required" });
+    if (!templateId) {
+      console.log("Template ID missing in request body");
+      return res.status(400).json({ success: false, message: "Template ID required" });
+    }
 
+    console.log("Fetching user with ID:", req.userId);
     const user = await User.findById(req.userId);
-    if (!user) return res.status(404).json({ success: false, message: "User not found" });
+    if (!user) {
+      console.log("User not found with ID:", req.userId);
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
 
-    // For now allow free switch; integrate payment if needed
+    console.log("Switching template for user:", req.userId, "to template:", templateId);
     user.selectedTemplate = templateId;
     await user.save();
 
+    console.log("Template switched successfully for user:", req.userId);
     res.json({ success: true, message: "Template switched", selectedTemplate: templateId });
   } catch (err) {
     console.error("switchTemplate err:", err);
