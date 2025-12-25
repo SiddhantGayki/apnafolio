@@ -1,6 +1,7 @@
 // models/Transaction.js
 const mongoose = require("mongoose");
 
+console.log("Defining transaction schema");
 const transactionSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   orderId: { type: String, required: true },
@@ -11,4 +12,5 @@ const transactionSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
+console.log("Exporting transaction model");
 module.exports = mongoose.model("Transaction", transactionSchema);

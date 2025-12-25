@@ -1,10 +1,16 @@
 // models/User.js
 const mongoose = require("mongoose");
 
+console.log("Defining education schema");
 const educationSchema = new mongoose.Schema({ degree: String, school: String, year: String });
+
+console.log("Defining project schema");
 const projectSchema = new mongoose.Schema({ title: String, description: String, link: String });
+
+console.log("Defining experience schema");
 const experienceSchema = new mongoose.Schema({ title: String, company: String, duration: String });
 
+console.log("Defining resume schema");
 const resumeSchema = new mongoose.Schema({
   name: String,
   role: String,
@@ -20,11 +26,13 @@ const resumeSchema = new mongoose.Schema({
   extras: [String],
 });
 
+console.log("Defining analytics schema");
 const analyticsSchema = new mongoose.Schema({
   views: { type: Number, default: 0 },
   lastViewedAt: Date,
 });
 
+console.log("Defining payment schema");
 const paymentSchema = new mongoose.Schema({
   amount: Number, // paise
   status: { type: String, default: "success" },
@@ -33,6 +41,7 @@ const paymentSchema = new mongoose.Schema({
   templateId: String,
 });
 
+console.log("Defining user schema");
 const userSchema = new mongoose.Schema(
   {
     name: String,

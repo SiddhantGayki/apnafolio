@@ -1,13 +1,21 @@
 const User = require("../models/User");
 
+console.log("User controller loaded");
+
 exports.saveResume = async (req, res) => {
+  console.log("saveResume called with userId:", req.userId);
   try {
     const user = await User.findById(req.userId);
-    if (!user) return res.status(404).json({ success: false, message: "User not found" });
+    if (!user) {
+      console.log("User not found");
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
 
+    console.log("Saving resume data for user");
     user.resumeData = req.body;
     await user.save();
 
+    console.log("Resume saved successfully");
     res.json({ success: true, message: "Resume saved" });
   } catch (err) {
     console.error("saveResume err:", err);
@@ -16,15 +24,20 @@ exports.saveResume = async (req, res) => {
 };
 
 exports.getPublicPortfolio = async (req, res) => {
+  console.log("getPublicPortfolio called with username:", req.params.username);
   try {
     const user = await User.findOne({ username: req.params.username });
-    if (!user || !user.paid) return res.status(404).json({ success: false, message: "Not found" });
+    if (!user || !user.paid) {
+      console.log("User not found or unpaid");
+      return res.status(404).json({ success: false, message: "Not found" });
+    }
 
-    // increment analytics
+    console.log("Incrementing analytics for user");
     user.analytics.views = (user.analytics.views || 0) + 1;
     user.analytics.lastViewedAt = new Date();
     await user.save();
 
+    console.log("Returning public portfolio");
     res.json({
       success: true,
       resume: user.resumeData || {},

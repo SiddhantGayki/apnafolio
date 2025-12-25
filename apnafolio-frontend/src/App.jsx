@@ -1,6 +1,8 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
+console.log("App component loaded");
+
 // Auth Pages
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
@@ -22,14 +24,18 @@ import TemplateList from "./templates/TemplateList";
 import TemplatesExplore from "./templates/TemplatesExplore"
 import TemplatesPreview from "./templates/TemplatesPreview";
 
+console.log("Imported all components");
+
 // ------------------- Private Route -------------------
 function PrivateRoute({ children }) {
+  console.log("PrivateRoute accessed");
   const token = localStorage.getItem("token");
   return token ? children : <Navigate to="/login" replace />;
 }
 
 // ------------------- App Component -------------------
 export default function App() {
+  console.log("Rendering App component");
   return (
     <BrowserRouter>
       <Routes>
@@ -71,7 +77,7 @@ export default function App() {
           path="/templateE"
           element={
             <PrivateRoute>
-              <TemplatesExplore/>
+              <TemplatesExplore />
             </PrivateRoute>
           }
         />
