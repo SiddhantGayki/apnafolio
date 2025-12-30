@@ -42,15 +42,17 @@ export default function App() {
 
         {/* Public */}
         <Route path="/" element={<IntroPage />} />
-        <Route path="/u/:username" element={<Portfolio />} />
+        {/* <Route path="/u/:username" element={<Portfolio />} /> */}
         <Route path="/templates/preview/:templateId" element={<TemplatesPreview />} />
-        <Route path="/portfolio/:username" element={<PortfolioPage />} />
+        {/* <Route path="/portfolio/:username" element={<PortfolioPage />} /> */}
+        <Route path="/portfolio/:username" element={<Navigate to="/u/:username" replace />}/>
+
 
         {/* Admin */}
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
         {/* User Paid */}
-        <Route path="/dashboard" element={<UserDashboard />} />
-        <Route path="/edit-resume" element={<EditResume />} />
+        <Route path="/dashboard" element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
+        <Route path="/edit-resume" element={<PrivateRoute><EditResume /></PrivateRoute>} />
 
         {/* Protected */}
         <Route
@@ -69,14 +71,7 @@ export default function App() {
             </PrivateRoute>
           }
         />
-        <Route
-          path="/templateE"
-          element={
-            <PrivateRoute>
-              <TemplatesExplore/>
-            </PrivateRoute>
-          }
-        />
+        <Route path="/E-template" element={<TemplatesExplore/>}/>
       </Routes>
     </BrowserRouter>
   );

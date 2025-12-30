@@ -225,7 +225,7 @@ export default function IntroPage() {
 
           <div className="hero-buttons">
             <Link to="/signup" className="btn-primary">Get Started</Link>
-            <Link to="/templateE" className="btn-secondary">Explore Templates</Link>
+            <Link to="/E-template" className="btn-secondary">Explore Templates</Link>
           </div>
 
           <p className="hero-price">
