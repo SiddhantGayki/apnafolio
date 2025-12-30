@@ -197,7 +197,7 @@ export default function IntroPage() {
         </div>
         <div className="nav-right">
           <Link to="/" className="nav-link">Home</Link>
-          <Link to="/templateE" className="nav-link">Templates</Link>
+          <Link to="/E-template" className="nav-link">Templates</Link>
           <Link to="/login" className="nav-btn outline">Login</Link>
           <Link to="/signup" className="nav-btn">Register</Link>
         </div>
