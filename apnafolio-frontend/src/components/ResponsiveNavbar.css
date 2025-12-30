@@ -1,0 +1,84 @@
+/* ResponsiveNavbar.css - used by all templates */
+.nav-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1200;
+  transition: background 0.3s, backdrop-filter 0.3s, box-shadow 0.3s;
+  background: var(--nav-bg, rgba(0,0,0,0.55));
+  backdrop-filter: blur(6px);
+}
+
+/* when scrolled a bit, add subtle shadow */
+.nav-header.scrolled {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* left */
+.nav-left { display:flex; align-items:center; gap:12px; flex: 1; }
+.nav-logo { font-weight: 700; font-size: 1.15rem; color: var(--accent, #00aaff); }
+
+/* links (desktop) */
+.nav-links {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* each link */
+.nav-links a {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 8px 6px;
+  transition: color .2s, transform .15s;
+}
+.nav-links a:hover { transform: translateY(-2px); color: var(--accent, #00aaff); }
+
+/* hamburger (hidden on desktop) */
+.nav-hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* theme toggle */
+.nav-theme {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: inherit;
+}
+
+/* MOBILE behavior */
+@media (max-width: 768px) {
+  .nav-hamburger { display: block; }
+  .nav-links {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: 60px;
+    background: var(--nav-bg, rgba(0,0,0,0.85));
+    border-radius: 10px;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.28s ease;
+    padding: 0 12px;
+  }
+  .nav-links.open {
+    max-height: 420px;
+    padding: 8px 12px;
+  }
+  .nav-links a { padding: 12px 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.04); }
+}
