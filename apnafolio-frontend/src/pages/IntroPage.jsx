@@ -315,7 +315,6 @@ export default function IntroPage() {
       <nav className="navbar">
         <div className="nav-logo">
           <img src="/logo.png" alt="ApnaFolio" className="logo-img" />
-          <span className="logo-text">Apna<span>Folio</span></span>
         </div>
         <div className="nav-menu">
           <Link to="/" className="menu-link">Home</Link>
