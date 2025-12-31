@@ -1,87 +1,189 @@
-// // // src/pages/IntroPage.jsx
+// // // // src/pages/IntroPage.jsx
+// // // import { Link } from "react-router-dom";
+// // // import "../styles/IntroPage.css";
+
+// // // export default function IntroPage() {
+// // //   return (
+// // //     <div className="intro-container">
+// // //       {/* Navbar */}
+// // //       <nav className="navbar">
+// // //         <div className="nav-left">
+// // //           <img src="/logo.png" alt="ApnaFolio" className="logo" />
+// // //           {/* <span className="nav-title">ApnaFolio</span> */}
+// // //         </div>
+// // //         <div className="nav-right">
+// // //           <Link to="/" className="nav-link">Home</Link>
+// // //           <Link to="/templateE" className="nav-link">Templates</Link>
+// // //           <Link to="/login" className="nav-btn">Login</Link>
+// // //           <Link to="/signup" className="nav-btn">Register</Link>
+// // //         </div>
+// // //       </nav>
+      
+// // //         {/* <p className="hero-text">Apni Pahchaan, Apna<span>Folio</span> ke Saath</p> */}
+      
+
+// // //       {/* Hero Section */}
+// // //       <section className="hero">
+// // //         <div className="hero-left">
+// // //           <p className="hero-text">Apni Pahchaan, Apna<span>Folio</span> ke Saath</p>
+// // //           <h1 className="hero-title">Build Your <span>Portfolio</span> in Minutes</h1>
+// // //           <p className="hero-subtext">
+// // //             Showcase your skills, experience & projects with stunning templates.
+// // //           </p>
+// // //           <div className="hero-buttons">
+// // //             <Link to="/signup" className="btn btn-primary">Get Started</Link>
+// // //             <Link to="/templateE" className="btn btn-primary">Explore Templates</Link>
+// // //           </div>
+// // //         </div>
+// // //       </section>
+
+// // //       {/* Features Section */}
+// // //       <section className="features">
+// // //         <div className="feature-card">⚡ Quick & Easy Builder</div>
+// // //         <div className="feature-card">🎨 Modern Templates</div>
+// // //         <div className="feature-card">📱 Mobile Friendly</div>
+// // //         <div className="feature-card">☁️ Cloud Save</div>
+// // //       </section>
+
+// // //       {/* Description Section */}
+// // //       <section className="description">
+// // //         <h1>🚀<span>Why Choose ApnaFolio?</span></h1>
+// // //         <p>
+// // //           ApnaFolio is your all-in-one portfolio and resume builder. Whether you are a student, fresher, 
+// // //           or working professional, you can design a stunning digital portfolio in just a few minutes. 
+// // //           With modern templates, customizable sections, and a clean dashboard — your skills and 
+// // //           achievements get the spotlight they deserve.
+// // //         </p>
+
+// // //         <div className="desc-highlights">
+// // //           <div className="desc-card">
+// // //             <h3>✨ No Coding Needed</h3>
+// // //             <p>Simple drag-and-drop builder for everyone.</p>
+// // //           </div>
+// // //           <div className="desc-card">
+// // //             <h3>🎨 Beautiful Templates</h3>
+// // //             <p>Designed for modern professionals.</p>
+// // //           </div>
+// // //           <div className="desc-card">
+// // //             <h3>📱 Responsive & Shareable</h3>
+// // //             <p>Works perfectly on mobile, tablet, and desktop.</p>
+// // //           </div>
+// // //         </div>
+// // //       </section>
+
+// // //       {/* Call to Action */}
+// // //       <section className="cta">
+// // //         <h2>Start your journey now🚀</h2>
+// // //         <Link to="/signup" className="btn btn-primary">Create Your Portfolio</Link>
+// // //       </section>
+// // //     </div>
+// // //   );
+// // // }
+
+
 // // import { Link } from "react-router-dom";
 // // import "../styles/IntroPage.css";
 
 // // export default function IntroPage() {
 // //   return (
 // //     <div className="intro-container">
-// //       {/* Navbar */}
+
+// //       {/* NAVBAR */}
 // //       <nav className="navbar">
 // //         <div className="nav-left">
 // //           <img src="/logo.png" alt="ApnaFolio" className="logo" />
-// //           {/* <span className="nav-title">ApnaFolio</span> */}
 // //         </div>
 // //         <div className="nav-right">
 // //           <Link to="/" className="nav-link">Home</Link>
 // //           <Link to="/templateE" className="nav-link">Templates</Link>
-// //           <Link to="/login" className="nav-btn">Login</Link>
+// //           <Link to="/login" className="nav-btn outline">Login</Link>
 // //           <Link to="/signup" className="nav-btn">Register</Link>
 // //         </div>
 // //       </nav>
-      
-// //         {/* <p className="hero-text">Apni Pahchaan, Apna<span>Folio</span> ke Saath</p> */}
-      
 
-// //       {/* Hero Section */}
+// //       {/* HERO */}
 // //       <section className="hero">
-// //         <div className="hero-left">
-// //           <p className="hero-text">Apni Pahchaan, Apna<span>Folio</span> ke Saath</p>
-// //           <h1 className="hero-title">Build Your <span>Portfolio</span> in Minutes</h1>
-// //           <p className="hero-subtext">
-// //             Showcase your skills, experience & projects with stunning templates.
+
+// //         {/* CIRCULAR AURA */}
+// //         <div className="aura blue"></div>
+// //         <div className="aura yellow"></div>
+
+// //         <div className="hero-content">
+// //           <h1>
+// //             Your <span>Portfolio</span>,<br />
+// //             Your Digital <span>Identity</span>
+// //           </h1>
+
+// //           <p className="hero-desc">
+// //             Build a clean, professional portfolio website using modern templates.
+// //             Simple, affordable, and designed for everyone.
 // //           </p>
-// //           <div className="hero-buttons">
-// //             <Link to="/signup" className="btn btn-primary">Get Started</Link>
-// //             <Link to="/templateE" className="btn btn-primary">Explore Templates</Link>
+
+// //           <div className="hero-actions">
+// //             <Link to="/templateE" className="btn-secondary">
+// //               Explore Templates
+// //             </Link>
+// //             <Link to="/signup" className="btn-primary">
+// //               Get Started
+// //             </Link>
 // //           </div>
+
+// //           <p className="hero-price">
+// //             11 Premium Templates · ₹299 – ₹1299 · One-time payment
+// //           </p>
 // //         </div>
 // //       </section>
 
-// //       {/* Features Section */}
-// //       <section className="features">
-// //         <div className="feature-card">⚡ Quick & Easy Builder</div>
-// //         <div className="feature-card">🎨 Modern Templates</div>
-// //         <div className="feature-card">📱 Mobile Friendly</div>
-// //         <div className="feature-card">☁️ Cloud Save</div>
-// //       </section>
-
-// //       {/* Description Section */}
+// //       {/* DESCRIPTION */}
 // //       <section className="description">
-// //         <h1>🚀<span>Why Choose ApnaFolio?</span></h1>
-// //         <p>
-// //           ApnaFolio is your all-in-one portfolio and resume builder. Whether you are a student, fresher, 
-// //           or working professional, you can design a stunning digital portfolio in just a few minutes. 
-// //           With modern templates, customizable sections, and a clean dashboard — your skills and 
-// //           achievements get the spotlight they deserve.
+// //         <h2>Why <span>ApnaFolio</span>?</h2>
+
+// //         <p className="description-text">
+// //           ApnaFolio is built for students, freshers, and working professionals
+// //           who want a strong digital presence without complexity.
+// //           <br /><br />
+// //           Instead of juggling resumes, links, and profiles, ApnaFolio brings
+// //           everything together in one simple, shareable portfolio website.
 // //         </p>
 
-// //         <div className="desc-highlights">
+// //         <div className="desc-grid">
 // //           <div className="desc-card">
-// //             <h3>✨ No Coding Needed</h3>
-// //             <p>Simple drag-and-drop builder for everyone.</p>
+// //             <h4>No Coding Required</h4>
+// //             <p>Just fill your details and publish.</p>
 // //           </div>
 // //           <div className="desc-card">
-// //             <h3>🎨 Beautiful Templates</h3>
-// //             <p>Designed for modern professionals.</p>
+// //             <h4>Recruiter Friendly</h4>
+// //             <p>Clean layout that highlights what matters.</p>
 // //           </div>
 // //           <div className="desc-card">
-// //             <h3>📱 Responsive & Shareable</h3>
-// //             <p>Works perfectly on mobile, tablet, and desktop.</p>
+// //             <h4>One Link Identity</h4>
+// //             <p>Your complete profile in one place.</p>
 // //           </div>
 // //         </div>
 // //       </section>
 
-// //       {/* Call to Action */}
+// //       {/* CTA */}
 // //       <section className="cta">
-// //         <h2>Start your journey now🚀</h2>
-// //         <Link to="/signup" className="btn btn-primary">Create Your Portfolio</Link>
+// //         <h2>Create Your Portfolio Today</h2>
+// //         <p>Professional · Affordable · Easy</p>
+// //         <Link to="/signup" className="btn-primary big">
+// //           Start with ApnaFolio
+// //         </Link>
 // //       </section>
+
+// //       {/* FOOTER */}
+// //       <footer className="footer">
+// //         © {new Date().getFullYear()} ApnaFolio · Apni Pahchaan, ApnaFolio ke Saath
+// //       </footer>
+
 // //     </div>
 // //   );
 // // }
 
 
 // import { Link } from "react-router-dom";
+// import Lottie from "lottie-react";
+// import aiFlow from "../assets/ai-flow.json";
 // import "../styles/IntroPage.css";
 
 // export default function IntroPage() {
@@ -102,35 +204,43 @@
 //       </nav>
 
 //       {/* HERO */}
-//       <section className="hero">
+//       <section className="hero hero-split">
 
-//         {/* CIRCULAR AURA */}
-//         <div className="aura blue"></div>
-//         <div className="aura yellow"></div>
+//         {/* LEFT CONTENT */}
+//         <div className="hero-left">
+//           <p className="hero-tagline">
+//             Apni Pahchaan, Apna<span>Folio</span> ke Saath
+//           </p>
 
-//         <div className="hero-content">
-//           <h1>
-//             Your <span>Portfolio</span>,<br />
-//             Your Digital <span>Identity</span>
+//           <h1 className="hero-title">
+//             Build Your <span>Portfolio</span><br />
+//             Like a Modern Professional
 //           </h1>
 
 //           <p className="hero-desc">
-//             Build a clean, professional portfolio website using modern templates.
-//             Simple, affordable, and designed for everyone.
+//             Create a clean, professional portfolio website that truly represents
+//             you. Simple to build, affordable to own, and designed for students,
+//             freshers, and professionals.
 //           </p>
 
-//           <div className="hero-actions">
-//             <Link to="/templateE" className="btn-secondary">
-//               Explore Templates
-//             </Link>
-//             <Link to="/signup" className="btn-primary">
-//               Get Started
-//             </Link>
+//           <div className="hero-buttons">
+//             <Link to="/signup" className="btn-primary">Get Started</Link>
+//             <Link to="/templateE" className="btn-secondary">Explore Templates</Link>
 //           </div>
 
 //           <p className="hero-price">
 //             11 Premium Templates · ₹299 – ₹1299 · One-time payment
 //           </p>
+//         </div>
+
+//         {/* RIGHT – AI LOTTIE ACTIVITY */}
+//         <div className="hero-right">
+//           <Lottie
+//             animationData={aiFlow}
+//             loop
+//             autoplay
+//             className="hero-lottie"
+//           />
 //         </div>
 //       </section>
 
@@ -139,35 +249,36 @@
 //         <h2>Why <span>ApnaFolio</span>?</h2>
 
 //         <p className="description-text">
-//           ApnaFolio is built for students, freshers, and working professionals
-//           who want a strong digital presence without complexity.
+//           Most people struggle to present themselves professionally online.
+//           Resumes get ignored, links are scattered, and profiles feel incomplete.
 //           <br /><br />
-//           Instead of juggling resumes, links, and profiles, ApnaFolio brings
-//           everything together in one simple, shareable portfolio website.
+//           ApnaFolio solves this by giving you one clean portfolio website
+//           that brings everything together — your skills, projects, experience,
+//           and achievements — in a format recruiters actually like.
 //         </p>
 
 //         <div className="desc-grid">
 //           <div className="desc-card">
 //             <h4>No Coding Required</h4>
-//             <p>Just fill your details and publish.</p>
+//             <p>Fill a simple form and your portfolio is ready.</p>
 //           </div>
 //           <div className="desc-card">
-//             <h4>Recruiter Friendly</h4>
-//             <p>Clean layout that highlights what matters.</p>
+//             <h4>Designed for Recruiters</h4>
+//             <p>Clean layouts that highlight what matters.</p>
 //           </div>
 //           <div className="desc-card">
-//             <h4>One Link Identity</h4>
-//             <p>Your complete profile in one place.</p>
+//             <h4>Affordable for Everyone</h4>
+//             <p>Premium templates starting at ₹299.</p>
 //           </div>
 //         </div>
 //       </section>
 
 //       {/* CTA */}
 //       <section className="cta">
-//         <h2>Create Your Portfolio Today</h2>
-//         <p>Professional · Affordable · Easy</p>
+//         <h2>Create Your Digital Identity Today</h2>
+//         <p>Professional · Affordable · Easy to use</p>
 //         <Link to="/signup" className="btn-primary big">
-//           Start with ApnaFolio
+//           Create My Portfolio
 //         </Link>
 //       </section>
 
@@ -175,10 +286,16 @@
 //       <footer className="footer">
 //         © {new Date().getFullYear()} ApnaFolio · Apni Pahchaan, ApnaFolio ke Saath
 //       </footer>
-
 //     </div>
 //   );
 // }
+
+
+
+
+
+
+
 
 
 import { Link } from "react-router-dom";
@@ -189,102 +306,147 @@ import "../styles/IntroPage.css";
 export default function IntroPage() {
   return (
     <div className="intro-container">
+      {/* TECH BACKGROUND ELEMENTS */}
+      <div className="bg-aura blue-glow"></div>
+      <div className="bg-aura yellow-glow"></div>
+      <div className="grid-lines"></div>
 
       {/* NAVBAR */}
       <nav className="navbar">
-        <div className="nav-left">
-          <img src="/logo.png" alt="ApnaFolio" className="logo" />
+        <div className="nav-logo">
+          <img src="/logo.png" alt="ApnaFolio" className="logo-img" />
+          <span className="logo-text">Apna<span>Folio</span></span>
         </div>
-        <div className="nav-right">
-          <Link to="/" className="nav-link">Home</Link>
-          <Link to="/templateE" className="nav-link">Templates</Link>
-          <Link to="/login" className="nav-btn outline">Login</Link>
-          <Link to="/signup" className="nav-btn">Register</Link>
+        <div className="nav-menu">
+          <Link to="/" className="menu-link">Home</Link>
+          <Link to="/E-template" className="menu-link">Templates</Link>
+          <Link to="/login" className="login-btn">Login</Link>
+          <Link to="/signup" className="register-btn">Get Started</Link>
         </div>
       </nav>
 
-      {/* HERO */}
-      <section className="hero hero-split">
-
-        {/* LEFT CONTENT */}
+      {/* HERO SECTION */}
+      <section className="hero-section">
         <div className="hero-left">
-          <p className="hero-tagline">
-            Apni Pahchaan, Apna<span>Folio</span> ke Saath
-          </p>
-
-          <h1 className="hero-title">
-            Build Your <span>Portfolio</span><br />
-            Like a Modern Professional
+          {/* <div className="tag-badge">
+            <span className="pulse"></span> AI-Powered Portfolio Builder
+          </div> */}
+          <div className="hero-tagline">
+            ✨ Apni Pahchaan, Apna<span>Folio</span> ke Saath
+          </div>
+          <h1 className="hero-main-title">
+          Your Career Needs a <br />
+            <span className="gradient-text">Digital Home.</span>
           </h1>
-
-          <p className="hero-desc">
-            Create a clean, professional portfolio website that truly represents
-            you. Simple to build, affordable to own, and designed for students,
-            freshers, and professionals.
+          <p className="hero-description">
+            Ditch the old-school resumes. Create a stunning, high-performance 
+            portfolio website that highlights your journey, projects, and 
+            potential in the tech world.
           </p>
-
-          <div className="hero-buttons">
-            <Link to="/signup" className="btn-primary">Get Started</Link>
-            <Link to="/templateE" className="btn-secondary">Explore Templates</Link>
+          <div className="hero-btns-group">
+            <Link to="/signup" className="btn-main">Build My Portfolio — Free</Link>
+            <Link to="/E-template" className="btn-outline">Explore Themes</Link>
           </div>
-
-          <p className="hero-price">
-            11 Premium Templates · ₹299 – ₹1299 · One-time payment
-          </p>
+          <div className="tech-stack-icons">
+            <span>React</span> • <span>Next.js</span> • <span>Tailwind</span> • <span>Vite</span>
+          </div>
         </div>
 
-        {/* RIGHT – AI LOTTIE ACTIVITY */}
         <div className="hero-right">
-          <Lottie
-            animationData={aiFlow}
-            loop
-            autoplay
-            className="hero-lottie"
-          />
-        </div>
-      </section>
-
-      {/* DESCRIPTION */}
-      <section className="description">
-        <h2>Why <span>ApnaFolio</span>?</h2>
-
-        <p className="description-text">
-          Most people struggle to present themselves professionally online.
-          Resumes get ignored, links are scattered, and profiles feel incomplete.
-          <br /><br />
-          ApnaFolio solves this by giving you one clean portfolio website
-          that brings everything together — your skills, projects, experience,
-          and achievements — in a format recruiters actually like.
-        </p>
-
-        <div className="desc-grid">
-          <div className="desc-card">
-            <h4>No Coding Required</h4>
-            <p>Fill a simple form and your portfolio is ready.</p>
-          </div>
-          <div className="desc-card">
-            <h4>Designed for Recruiters</h4>
-            <p>Clean layouts that highlight what matters.</p>
-          </div>
-          <div className="desc-card">
-            <h4>Affordable for Everyone</h4>
-            <p>Premium templates starting at ₹299.</p>
+          <div className="lottie-container">
+            <Lottie animationData={aiFlow} loop={true} className="main-lottie" />
+            <div className="glass-card card-top">⚡ Ultra Fast Hosting</div>
+            <div className="glass-card card-bottom">🛡️ SEO Optimized</div>
+            <div className="glass-card card-mid">🎨 Custom Domains</div>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="cta">
-        <h2>Create Your Digital Identity Today</h2>
-        <p>Professional · Affordable · Easy to use</p>
-        <Link to="/signup" className="btn-primary big">
-          Create My Portfolio
-        </Link>
+      {/* FEATURES BENTO GRID */}
+      <section className="features-section">
+        {/* <div className="section-header">
+          <h2 className="section-title">Designed for the <span>Future.</span></h2>
+          <p>Everything you need to get hired by top tech companies.</p>
+        </div> */}
+        
+        {/* FEATURES BENTO GRID */}
+      <section className="features-section">
+        <div className="section-header">
+          <h2 className="section-title">Everything You Need to <span>Stand Out.</span></h2>
+          <p>Professional, Fast, and Recruiter-Optimized portfolios for the modern developer.</p>
+        </div>
+        
+        <div className="bento-grid">
+          {/* LARGE CARD: SPEED & DEPLOYMENT */}
+          <div className="bento-card large">
+            <div className="icon-box">🚀</div>
+            <h3>Instant Deployment & Speed</h3>
+            <p>
+              Your portfolio goes live in seconds. No terminal, no Git commands, no hassle. 
+              <b> Fakt details bhara ani tumchi website ready </b> — we handle the coding and global hosting for you.
+            </p>
+          </div>
+
+          {/* HIGHLIGHT CARD: DESIGN & THEMES */}
+          <div className="bento-card highlight">
+            <div className="icon-box">💎</div>
+            <h3>Premium UI Themes</h3>
+            <p>
+              Hand-crafted templates designed by industry experts. Choose from 11+ high-end layouts 
+              to showcase your projects like a pro.
+            </p>
+          </div>
+
+          {/* MEDIUM CARD: RECRUITER FOCUS */}
+          <div className="bento-card medium">
+            <div className="icon-box">🎯</div>
+            <h3>Recruiter Friendly</h3>
+            <p>
+              Layouts optimized for readability. HRs and technical leads can find your 
+              core skills and project links instantly.
+            </p>
+          </div>
+
+          {/* NEW ADDITION: ANALYTICS (Optional if you want 4 cards) */}
+          <div className="bento-card small">
+            <div className="icon-box">📊</div>
+            <h3>Live Analytics</h3>
+            <p>
+              Track visitors and project clicks to see how your portfolio is performing.
+            </p>
+          </div>
+        </div>
+      </section>
+      </section>
+
+      {/* HOW IT WORKS (REPLACED PRICING) */}
+      <section className="process-section">
+         <h2 className="section-title">Three Steps to <span>Success.</span></h2>
+         <div className="process-grid">
+            <div className="step">
+               <span className="step-num">01</span>
+               <h4>Choose Template</h4>
+               <p>Pick from 11+ professional, responsive designs.</p>
+            </div>
+            <div className="step">
+               <span className="step-num">02</span>
+               <h4>Add Content</h4>
+               <p>Fill in your projects, skills, and experience easily.</p>
+            </div>
+            <div className="step">
+               <span className="step-num">03</span>
+               <h4>Go Live</h4>
+               <p>Hit publish and share your custom link with the world.</p>
+            </div>
+         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="footer">
-        © {new Date().getFullYear()} ApnaFolio · Apni Pahchaan, ApnaFolio ke Saath
+      <footer className="footer-bar">
+        <div className="footer-content">
+          <p>© {new Date().getFullYear()} ApnaFolio • Apni Pahchaan, ApnaFolio ke Saath</p>
+          <p className="brand">By SHiVYANT Technologies</p>
+        </div>
       </footer>
     </div>
   );

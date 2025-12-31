@@ -49,7 +49,6 @@ export default function App() {
 
 
         {/* Admin */}
-        {/* <Route path="/admin" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} /> */}
         <Route path="/admin" element={<AdminDashboard />} />
         {/* User Paid */}
         <Route path="/dashboard" element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
