@@ -127,7 +127,7 @@
 }
 
 /* BENTO GRID */
-.features-section { padding: 120px 8%; text-align: center; }
+.features-section { padding: 10px 8%; text-align: center; }
 .section-title { font-size: 3rem; font-weight: 800; margin-bottom: 60px; }
 .section-title span { color: var(--blue); }
 .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; text-align: left; }
