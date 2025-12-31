@@ -75,17 +75,16 @@ const razorpay = new Razorpay({
 // gemini code
 exports.createOrder = async (req, res) => {
   try {
-    let { amount } = req.body; // फ्रंटएंडकडून २९९ रुपये आले आहेत
+    let { amount } = req.body; 
 
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
       return res.status(400).json({ success: false, message: "Invalid amount" });
     }
 
-    // ✅ मुख्य बदल: रुपयांचे पैशात रूपांतर करा
     const amountInPaise = Math.round(Number(amount) * 100); 
 
     const order = await razorpay.orders.create({
-      amount: amountInPaise, // आता इथे २९९०० जाईल (म्हणजे ₹२९९.००)
+      amount: amountInPaise, 
       currency: "INR",
       receipt: "receipt_" + Date.now(),
     });
