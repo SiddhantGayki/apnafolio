@@ -44,8 +44,8 @@ export default function App() {
         <Route path="/" element={<IntroPage />} />
         {/* <Route path="/u/:username" element={<Portfolio />} /> */}
         <Route path="/templates/preview/:templateId" element={<TemplatesPreview />} />
-        {/* <Route path="/portfolio/:username" element={<PortfolioPage />} /> */}
-        <Route path="/portfolio/:username" element={<Navigate to="/u/:username" replace />}/>
+        <Route path="/portfolio/:username" element={<PortfolioPage />} />
+        {/* <Route path="/portfolio/:username" element={<Navigate to="/u/:username" replace />}/> */}
 
 
         {/* Admin */}

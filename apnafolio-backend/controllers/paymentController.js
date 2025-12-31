@@ -47,19 +47,45 @@ const razorpay = new Razorpay({
 //   }
 // };
 
+// exports.createOrder = async (req, res) => {
+//   try {
+//     let { amount } = req.body; // 👈 EXPECT PAISE
+//     if (!amount || isNaN(amount) || Number(amount) <= 0) {
+//       return res
+//         .status(400)
+//         .json({ success: false, message: "Invalid amount" });
+//     }
+
+//     amount = parseInt(amount, 10);
+
+//     const order = await razorpay.orders.create({
+//       amount, // ✅ already in paise
+//       currency: "INR",
+//       receipt: "receipt_" + Date.now(),
+//     });
+
+//     return res.json({ success: true, order });
+//   } catch (err) {
+//     console.error("❌ createOrder err:", err);
+//     return res
+//       .status(500)
+//       .json({ success: false, message: err.message });
+//   }
+// };
+// gemini code
 exports.createOrder = async (req, res) => {
   try {
-    let { amount } = req.body; // 👈 EXPECT PAISE
+    let { amount } = req.body; // फ्रंटएंडकडून २९९ रुपये आले आहेत
+
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid amount" });
+      return res.status(400).json({ success: false, message: "Invalid amount" });
     }
 
-    amount = parseInt(amount, 10);
+    // ✅ मुख्य बदल: रुपयांचे पैशात रूपांतर करा
+    const amountInPaise = Math.round(Number(amount) * 100); 
 
     const order = await razorpay.orders.create({
-      amount, // ✅ already in paise
+      amount: amountInPaise, // आता इथे २९९०० जाईल (म्हणजे ₹२९९.००)
       currency: "INR",
       receipt: "receipt_" + Date.now(),
     });
@@ -67,9 +93,7 @@ exports.createOrder = async (req, res) => {
     return res.json({ success: true, order });
   } catch (err) {
     console.error("❌ createOrder err:", err);
-    return res
-      .status(500)
-      .json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: err.message });
   }
 };
 

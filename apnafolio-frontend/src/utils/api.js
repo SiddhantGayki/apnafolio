@@ -64,18 +64,32 @@ export const loadRazorpay = (order, templateId) => {
         amount: order.amount,
         currency: order.currency,
         order_id: order.id,
-        handler: async (response) => {
-          try {
-            await PaymentAPI.verifyPayment({
-              ...response,
-              amount: order.amount,
-              templateId,
-            });
-            resolve(response);
-          } catch (err) {
-            reject(err);
-          }
-        },
+        // handler: async (response) => {
+        //   try {
+        //     await PaymentAPI.verifyPayment({
+        //       ...response,
+        //       amount: order.amount,
+        //       templateId,
+        //     });
+        //     resolve(response);
+        //   } catch (err) {
+        //     reject(err);
+        //   }
+        // },
+        // loadRazorpay फंक्शनमध्ये handler च्या आत हा बदल कर:
+handler: async (response) => {
+  try {
+    await PaymentAPI.verifyPayment({
+      ...response,
+      templateId,
+      // ✅ पैशाचे पुन्हा रुपयांत रूपांतर करून बॅकएंडला पाठवा
+      amount: order.amount / 100, 
+    });
+    resolve(response);
+  } catch (err) {
+    reject(err);
+  }
+},
       };
       const rzp = new window.Razorpay(options);
       rzp.open();
