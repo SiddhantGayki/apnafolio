@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AuthAPI } from "../../utils/api";
 import "../../styles/AuthPages.css";
+import Lottie from "lottie-react";
+import techAnimation from "../../assets/tech-animation.json";
 
 export default function ResetPassword() {
   const location = useLocation();
@@ -48,13 +50,16 @@ export default function ResetPassword() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <button type="submit" disabled={loading}>
+            <button type="submit" className="auth-main-btn" disabled={loading}>
               {loading ? "Resetting..." : "Reset Password"}
             </button>
             {msg && <p className="info">{msg}</p>}
           </form>
         </div>
-        <div className="auth-right">
+              <div className="auth-right">
+  <Lottie animationData={techAnimation} loop={true} style={{ width: '80%' }} />
+</div>
+        {/* <div className="auth-right">
           <video
             src="/animation.mp4"
             autoPlay
@@ -63,7 +68,7 @@ export default function ResetPassword() {
             playsInline
             className="auth-video"
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { AuthAPI } from "../../utils/api";
 import "../../styles/AuthPages.css";
+import Lottie from "lottie-react";
+import techAnimation from "../../assets/tech-animation.json";
 
 export default function Verify() {
   const [otp, setOtp] = useState("");
@@ -34,16 +36,19 @@ export default function Verify() {
           <p className="tagline">Check your email for the OTP</p>
           <form onSubmit={handleVerify} className="auth-form">
             <input placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} required />
-            <button type="submit" disabled={loading}>
+            <button type="submit" className="auth-main-btn" disabled={loading}>
               {loading ? "Verifying..." : "Verify"}
             </button>
             {msg && <p className="error">{msg}</p>}
             <p>Need to register? <Link to="/signup" className="register-link">Create Account</Link></p>
           </form>
         </div>
-        <div className="auth-right">
+        {/* <div className="auth-right">
           <video src="/education.mp4" autoPlay muted loop playsInline className="auth-video" />
-        </div>
+        </div> */}
+              <div className="auth-right">
+  <Lottie animationData={techAnimation} loop={true} style={{ width: '80%' }} />
+</div>
       </div>
     </div>
   );
