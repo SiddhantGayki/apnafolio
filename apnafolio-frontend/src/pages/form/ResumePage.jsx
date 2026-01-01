@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import ResumeForm from "./ResumeForm";
 import { UserAPI } from "../../utils/api";
 import { uploadFile } from "../../utils/cloudinaryUpload";
+import Spinner from "../../components/Spinner";
+import Toast from "../../components/Toast";
 
 export default function ResumePage() {
   const [saving, setSaving] = useState(false);
@@ -100,11 +102,12 @@ export default function ResumePage() {
     <div className="resume-page">
       <ResumeForm onSubmit={handleSave} />
       {saving && (
-        <div className="saving-overlay">
-          <div className="spinner"></div>
-          <p>{progress || "Saving... please wait"}</p>
-        </div>
-      )}
+  <div className="saving-overlay">
+    <Spinner size={56} />
+    <p>{progress || "Saving... please wait"}</p>
+  </div>
+)}
+
     </div>
   );
 }

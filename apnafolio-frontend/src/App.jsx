@@ -24,6 +24,7 @@ import EditResume from "./pages/form/EditResume";
 import TemplateList from "./templates/TemplateList";
 import TemplatesExplore from "./templates/TemplatesExplore"
 import TemplatesPreview from "./templates/TemplatesPreview";
+// import TemplatesPreviewE from "./templates/TemplatesPreviewE";
 
 // ------------------- Private Route -------------------
 function PrivateRoute({ children }) {
@@ -78,7 +79,13 @@ export default function App() {
             </PrivateRoute>
           }
         />
-        <Route path="/E-template" element={<TemplatesExplore/>}/>
+        {/* <Route path="/Etemplate" element={<TemplatesExplore/>}/> */}
+
+        {/* Public Explore */}
+        <Route path="/explore" element={<TemplatesExplore />} />
+
+        {/* Public Preview (NO DATA SWITCH) */}
+        {/* <Route path="/explore/preview/:templateId" element={<TemplatesPreviewE />}/> */}
       </Routes>
     </BrowserRouter>
   );

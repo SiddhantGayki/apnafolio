@@ -347,7 +347,7 @@ export default function IntroPage() {
           </p>
           <div className="hero-btns-group">
             <Link to="/signup" className="btn-main">Build My Portfolio — Free</Link>
-            <Link to="/E-template" className="btn-outline">Explore Themes</Link>
+            <Link to="/explore" className="btn-outline">Explore Themes</Link>
           </div>
           <div className="tech-stack-icons">
             <span>React</span> • <span>Next.js</span> • <span>Tailwind</span> • <span>Vite</span>

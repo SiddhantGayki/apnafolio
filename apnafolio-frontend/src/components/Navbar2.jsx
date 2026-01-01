@@ -16,7 +16,7 @@ export default function Navbar2() {
       {/* DESKTOP MENU */}
       <div className="nav-menu desktop">
         <Link to="/" className="menu-link">Home</Link>
-        <Link to="/E-template" className="menu-link">Templates</Link>
+        <Link to="/explore" className="menu-link">Templates</Link>
         <Link to="/login" className="login-btn">Login</Link>
         <Link to="/signup" className="register-btn">Get Started</Link>
       </div>
@@ -35,7 +35,7 @@ export default function Navbar2() {
       {open && (
         <div className="mobile-menu">
           <Link to="/" onClick={() => setOpen(false)}>Home</Link>
-          <Link to="/E-template" onClick={() => setOpen(false)}>Templates</Link>
+          <Link to="/explore" onClick={() => setOpen(false)}>Templates</Link>
           <Link to="/login" onClick={() => setOpen(false)}>Login</Link>
           <Link
             to="/signup"

@@ -2,46 +2,134 @@ import { useEffect, useState } from "react";
 import ResumeForm from "./ResumeForm";
 import api from "../../utils/api";
 import { uploadFile } from "../../utils/cloudinaryUpload";
+import Spinner from "../../components/Spinner";
 
 export default function ResumeEditPage() {
   const [resume, setResume] = useState(null);
+
+  // ✅ missing states added
+  const [saving, setSaving] = useState(false);
+  const [progress, setProgress] = useState("");
 
   useEffect(() => {
     api.get("/user/resume").then((res) => setResume(res.data));
   }, []);
 
   const saveSection = async (section, sectionData) => {
-    let payload = structuredClone(sectionData);
+    try {
+      setSaving(true);
+      setProgress(`Saving ${section}...`);
 
-    if (Array.isArray(payload)) {
-      for (const item of payload) {
-        if (item.document instanceof File)
-          item.document = await uploadFile(item.document);
+      let payload = structuredClone(sectionData);
+
+      if (Array.isArray(payload)) {
+        for (const item of payload) {
+          if (item.document instanceof File) {
+            item.document = await uploadFile(item.document);
+          }
+        }
       }
+
+      if (section === "resumeFile" && payload instanceof File) {
+        payload = await uploadFile(payload);
+      }
+
+      await api.patch("/user/resume/section", {
+        section,
+        data: payload,
+      });
+
+      alert(`${section} saved`);
+    } catch (err) {
+      console.error("Edit save error:", err);
+      alert("Failed to save section");
+    } finally {
+      setSaving(false);
+      setProgress("");
     }
-
-    if (section === "resumeFile" && payload instanceof File) {
-      payload = await uploadFile(payload);
-    }
-
-    await api.patch("/user/resume/section", {
-      section,
-      data: payload,
-    });
-
-    alert(`${section} saved`);
   };
 
-  if (!resume) return <p>Loading...</p>;
+  if (!resume) {
+    return (
+      <div style={{ padding: 40, textAlign: "center" }}>
+        <Spinner size={40} />
+        <p>Loading resume...</p>
+      </div>
+    );
+  }
 
   return (
-    <ResumeForm
-      mode="edit"
-      initialData={resume}
-      onSectionSave={saveSection}
-    />
+    <>
+      <ResumeForm
+        mode="edit"
+        initialData={resume}
+        onSectionSave={saveSection}
+      />
+
+      {/* ✅ Saving overlay */}
+      {saving && (
+        <div className="saving-overlay">
+          <Spinner size={56} />
+          <p>{progress || "Saving... please wait"}</p>
+        </div>
+      )}
+    </>
   );
 }
+
+
+
+// import { useEffect, useState } from "react";
+// import ResumeForm from "./ResumeForm";
+// import api from "../../utils/api";
+// import { uploadFile } from "../../utils/cloudinaryUpload";
+// import Spinner from "../../components/Spinner";
+
+// export default function ResumeEditPage() {
+//   const [resume, setResume] = useState(null);
+
+//   useEffect(() => {
+//     api.get("/user/resume").then((res) => setResume(res.data));
+//   }, []);
+
+//   const saveSection = async (section, sectionData) => {
+//     let payload = structuredClone(sectionData);
+
+//     if (Array.isArray(payload)) {
+//       for (const item of payload) {
+//         if (item.document instanceof File)
+//           item.document = await uploadFile(item.document);
+//       }
+//     }
+
+//     if (section === "resumeFile" && payload instanceof File) {
+//       payload = await uploadFile(payload);
+//     }
+
+//     await api.patch("/user/resume/section", {
+//       section,
+//       data: payload,
+//     });
+
+//     alert(`${section} saved`);
+//   };
+
+//   if (!resume) return <p>Loading...</p>;
+
+//   return (
+//     <ResumeForm
+//       mode="edit"
+//       initialData={resume}
+//       onSectionSave={saveSection}
+//     />
+//           {saving && (
+//       <div className="saving-overlay">
+//         <Spinner size={48} />
+//         <p>{progress || "Saving... please wait"}</p>
+//       </div>
+//     )}
+//   );
+// }
 
 // import { useEffect, useState } from "react";
 // import api from "../../utils/api";
