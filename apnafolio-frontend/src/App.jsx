@@ -1,6 +1,8 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-
+// Google Pages
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Terms from "./pages/terms";
 // Auth Pages
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
@@ -8,7 +10,7 @@ import Verify from "./pages/auth/Verify";
 import ForgotPassword from "./pages/auth/ForgetPassword";
 
 // Public Pages
-import Portfolio from "./pages/public/Portfolio";
+// import Portfolio from "./pages/public/Portfolio";
 import PortfolioPage from "./pages/PortfolioPage";
 import IntroPage from "./pages/IntroPage";
 
@@ -34,6 +36,11 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+
+        {/* Google */}
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<Terms />} />
+
         {/* Auth */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

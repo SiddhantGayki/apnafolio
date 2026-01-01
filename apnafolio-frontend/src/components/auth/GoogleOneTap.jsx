@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../utils/api";
-import { setAuth } from "../../utils/auth";
+import { setAuth,getAuth } from "../../utils/auth";
 
 export default function GoogleOneTap() {
   const navigate = useNavigate();
@@ -35,6 +35,8 @@ export default function GoogleOneTap() {
       navigate("/admin");
       return;
     }
+    console.log("AUTH STATE:", getAuth());
+
 
     // 2️⃣ USER PAID CHECK
     if (user.paid) {

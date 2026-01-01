@@ -58,8 +58,8 @@ app.get("/", (req, res) => res.send("ApnaFolio API Running 🚀"));
 // ✅ Auto-create admin if not exists
 const ensureAdmin = async () => {
   try {
-    const adminEmail = process.env.ADMIN_EMAIL || "tayyariplus9009@gmail.com";
-    const adminPass = process.env.ADMIN_INITIAL_PASSWORD || "Admin@123";
+    const adminEmail = process.env.ADMIN_EMAIL || "apnafolio9009@gmail.com";
+    const adminPass = process.env.ADMIN_INITIAL_PASSWORD || "Siddhant@03";
 
     let admin = await User.findOne({ email: adminEmail });
     if (!admin) {
@@ -71,8 +71,8 @@ const ensureAdmin = async () => {
         username: "tayyari_admin",
         isAdmin: true,
         isVerified: true,
-        paid: true,
-        selectedTemplate: "template1",
+        paid: false,
+        selectedTemplate: "",
       });
       await admin.save();
       console.log("✅ Admin user created:", adminEmail);

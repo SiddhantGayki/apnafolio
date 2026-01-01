@@ -302,9 +302,11 @@ import { Link } from "react-router-dom";
 import Lottie from "lottie-react";
 import aiFlow from "../assets/ai-flow.json";
 import "../styles/IntroPage.css";
+import Navbar2 from "../components/Navbar2";
 
 export default function IntroPage() {
   return (
+    <>
     <div className="intro-container">
       {/* TECH BACKGROUND ELEMENTS */}
       <div className="bg-aura blue-glow"></div>
@@ -312,7 +314,7 @@ export default function IntroPage() {
       <div className="grid-lines"></div>
 
       {/* NAVBAR */}
-      <nav className="navbar">
+      {/* <nav className="navbar">
         <div className="nav-logo">
           <img src="/logo.png" alt="ApnaFolio" className="logo-img" />
         </div>
@@ -322,7 +324,8 @@ export default function IntroPage() {
           <Link to="/login" className="login-btn">Login</Link>
           <Link to="/signup" className="register-btn">Get Started</Link>
         </div>
-      </nav>
+      </nav> */}
+      <Navbar2 />
 
       {/* HERO SECTION */}
       <section className="hero-section">
@@ -440,13 +443,47 @@ export default function IntroPage() {
          </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="footer-bar">
+      
+      {/* <footer className="footer-bar">
         <div className="footer-content">
           <p>© {new Date().getFullYear()} ApnaFolio • Apni Pahchaan, ApnaFolio ke Saath</p>
           <p className="brand">By SHiVYANT Technologies</p>
         </div>
-      </footer>
+      </footer> */}
+      {/* <footer className="footer-bar">
+        <p>
+          © {new Date().getFullYear()} ApnaFolio • Apni Pahchaan, ApnaFolio ke Saath
+        </p>
+        <p className="brand">By SHiVYANT Technologies</p>
+
+        <div style={{ marginTop: "10px" }}>
+          <Link to="/privacy-policy" className="menu-link">
+            Privacy Policy
+          </Link>
+          {" · "}
+          <Link to="/terms" className="menu-link">
+            Terms of Service
+          </Link>
+        </div>
+      </footer> */}
     </div>
+    {/* FOOTER */}
+    <footer className="footer-bar">
+        <p>
+          © {new Date().getFullYear()} ApnaFolio • Apni Pahchaan, ApnaFolio ke Saath
+        </p>
+        <p className="brand">By SHiVYANT Technologies</p>
+
+        <div style={{ marginTop: "10px" }}>
+          <Link to="/privacy-policy" className="menu-link">
+            Privacy Policy
+          </Link>
+          {" · "}
+          <Link to="/terms" className="menu-link">
+            Terms of Service
+          </Link>
+        </div>
+      </footer>
+      </>
   );
 }

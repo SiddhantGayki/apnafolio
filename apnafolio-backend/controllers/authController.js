@@ -23,8 +23,15 @@ const sanitizeUser = (userDoc) => {
   };
 };
 
-const generateToken = (userId) =>
-  jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
+// const generateToken = (userId) =>
+//   jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
+const generateToken = (user) =>
+  jwt.sign(
+    { userId: user._id, isAdmin: user.isAdmin },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+
 
 // 🟣 SIGNUP (with OTP via Brevo)
 exports.signup = async (req, res) => {
