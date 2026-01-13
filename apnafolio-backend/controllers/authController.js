@@ -139,7 +139,9 @@ exports.login = async (req, res) => {
     if (!isMatch)
       return res.status(401).json({ message: "Invalid email or password" });
 
-    const token = generateToken(user._id);
+    // const token = generateToken(user._id);
+    const token = generateToken(user);
+    
     res.status(200).json({
       message: "Login successful",
       token,
@@ -193,7 +195,8 @@ exports.googleOneTap = async (req, res) => {
       });
     }
 
-    const token = generateToken(user._id);
+    // const token = generateToken(user._id);
+    const token = generateToken(user);
     res.status(200).json({
       message: "Google login successful",
       token,

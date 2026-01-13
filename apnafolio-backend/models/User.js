@@ -75,6 +75,7 @@ const userSchema = new mongoose.Schema(
     password: String,
 
     isVerified: { type: Boolean, default: false },
+    isAdmin: { type: Boolean, default: false },
 
     resumeData: { type: resumeSchema, default: {} },
     selectedTemplate: { type: String, default: "" },

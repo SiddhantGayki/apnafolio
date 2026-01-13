@@ -12,6 +12,8 @@ const auth = (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.userId;
+    req.isAdmin = decoded.isAdmin;
+
     next();
   } catch (err) {
     console.error("auth middleware err:", err);

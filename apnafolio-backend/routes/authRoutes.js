@@ -24,6 +24,6 @@ router.post("/verify", verifyOtp);
 
 // 🔹 Google One Tap (no rate limit, Google handles abuse)
 router.post("/google-one-tap", googleOneTap);
-router.post("/google-one-tap", googleOneTapLogin);
+// router.post("/google-one-tap", googleOneTapLogin);
 module.exports = router;
 
