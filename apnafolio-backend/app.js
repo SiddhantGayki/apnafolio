@@ -72,7 +72,7 @@ const ensureAdmin = async () => {
         isAdmin: true,
         isVerified: true,
         paid: false,
-        selectedTemplate: "",
+        selectedTemplate: "2",
       });
       await admin.save();
       console.log("✅ Admin user created:", adminEmail);
