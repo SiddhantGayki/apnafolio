@@ -68,7 +68,7 @@ const ensureAdmin = async () => {
         name: "ApnaFolio Admin",
         email: adminEmail,
         password: hashed,
-        username: "tayyari_admin",
+        username: "mr_raje",
         isAdmin: true,
         isVerified: true,
         paid: false,
