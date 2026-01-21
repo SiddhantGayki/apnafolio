@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import "../styles/legal.css";
 import Navbar2 from "../components/Navbar2";
+import Footer from "../components/Footer";
 
 export default function Terms() {
   return (
@@ -49,27 +50,5 @@ export default function Terms() {
 
       <Footer />
     </>
-  );
-}
-
-/* FOOTER (same as Privacy) */
-function Footer() {
-  return (
-    <footer className="footer-bar">
-      <p>
-        © {new Date().getFullYear()} ApnaFolio • Apni Pahchaan, ApnaFolio ke Saath
-      </p>
-      <p className="brand">By SHiVYANT Technologies</p>
-
-      <div style={{ marginTop: "10px" }}>
-        <Link to="/privacy-policy" className="menu-link">
-          Privacy Policy
-        </Link>
-        {" · "}
-        <Link to="/terms" className="menu-link">
-          Terms of Service
-        </Link>
-      </div>
-    </footer>
   );
 }
