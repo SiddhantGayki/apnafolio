@@ -31,7 +31,7 @@ export default function Footer() {
             <a href="https://instagram.com/shivyant.technologies" target="_blank" rel="noreferrer">
               <FaInstagram />
             </a>
-            <a href="https://linkedin.com/company/YOUR_ID" target="_blank" rel="noreferrer">
+            <a href="https://linkedin.com/shivyant.technologies" target="_blank" rel="noreferrer">
               <FaLinkedinIn />
             </a>
           </div>
