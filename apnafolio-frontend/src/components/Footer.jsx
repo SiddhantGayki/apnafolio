@@ -61,7 +61,7 @@ export default function Footer() {
           <p>support@apnafolio.in</p>
           <p>Mon–Sat · 10AM – 7PM IST</p>
         </div> */}
-        {/* <div className="footer-contact">
+        <div className="footer-contact">
   <h4>Contact & Support</h4>
 
   <p className="contact-purpose">
@@ -69,8 +69,8 @@ export default function Footer() {
   </p>
 
   <p className="contact-email">
-    <a href="mailto:support@apnafolio.in" className="menu-link">
-    support@apnafolio.in
+    <a href="mailto:apnafolio9009@gmail.com" className="menu-link">
+    apnafolio9009@gmail.com
     </a>
   </p>
 
@@ -81,7 +81,7 @@ export default function Footer() {
   <p className="response-time">
     Response within 24 working hours
   </p>
-</div> */}
+</div>
 
 
       </div>
