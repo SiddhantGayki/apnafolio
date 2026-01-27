@@ -15,11 +15,25 @@ export default function IntroPage() {
       <div className="grid-lines"></div>
 
       {/* NAVBAR */}
+      {/* <nav className="navbar">
+        <div className="nav-logo">
+          <img src="/logo.png" alt="ApnaFolio" className="logo-img" />
+        </div>
+        <div className="nav-menu">
+          <Link to="/" className="menu-link">Home</Link>
+          <Link to="/E-template" className="menu-link">Templates</Link>
+          <Link to="/login" className="login-btn">Login</Link>
+          <Link to="/signup" className="register-btn">Get Started</Link>
+        </div>
+      </nav> */}
       <Navbar2 />
 
       {/* HERO SECTION */}
       <section className="hero-section">
         <div className="hero-left">
+          {/* <div className="tag-badge">
+            <span className="pulse"></span> AI-Powered Portfolio Builder
+          </div> */}
           <div className="hero-tagline">
             ✨ Apni Pahchaan, Apna<span>Folio</span> ke Saath
           </div>
@@ -50,6 +64,13 @@ export default function IntroPage() {
           </div>
         </div>
       </section>
+
+      {/* FEATURES BENTO GRID */}
+      <section className="features-section">
+        {/* <div className="section-header">
+          <h2 className="section-title">Designed for the <span>Future.</span></h2>
+          <p>Everything you need to get hired by top tech companies.</p>
+        </div> */}
         
         {/* FEATURES BENTO GRID */}
       <section className="features-section">
@@ -99,6 +120,7 @@ export default function IntroPage() {
           </div>
         </div>
       </section>
+      </section>
 
       {/* HOW IT WORKS (REPLACED PRICING) */}
       <section className="process-section">
@@ -121,8 +143,86 @@ export default function IntroPage() {
             </div>
          </div>
       </section>
-      <Footer />
+
+      
+      {/* <footer className="footer-bar">
+        <div className="footer-content">
+          <p>© {new Date().getFullYear()} ApnaFolio • Apni Pahchaan, ApnaFolio ke Saath</p>
+          <p className="brand">By SHiVYANT Technologies</p>
+        </div>
+      </footer> */}
+      {/* <footer className="footer-bar">
+        <p>
+          © {new Date().getFullYear()} ApnaFolio • Apni Pahchaan, ApnaFolio ke Saath
+        </p>
+        <p className="brand">By SHiVYANT Technologies</p>
+
+        <div style={{ marginTop: "10px" }}>
+          <Link to="/privacy-policy" className="menu-link">
+            Privacy Policy
+          </Link>
+          {" · "}
+          <Link to="/terms" className="menu-link">
+            Terms of Service
+          </Link>
+        </div>
+      </footer> */}
     </div>
+    {/* FOOTER */}
+
+{/* FOOTER */}
+{/* <footer className="footer-bar">
+  <div className="footer-grid">
+
+
+    <div className="footer-col">
+      <h4>ApnaFolio</h4>
+      <p>Apni Pahchaan, ApnaFolio ke Saath</p>
+      <p className="brand">By SHiVYANT Technologies</p>
+    </div>
+
+    <div className="footer-col">
+      <h4>Contact</h4>
+      <p>
+        Email:
+        <a href="mailto:support@apnafolio.in" className="menu-link">
+          sapnafolio9009@gmail.com
+        </a>
+      </p>
+      <p>
+        WhatsApp:
+        <a
+          href="https://wa.me/919119449744"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="menu-link"
+        >
+          +91 9119449744
+        </a>
+      </p>
+      <p className="support-time">
+        Mon–Sat · 10AM–7PM IST
+      </p>
+    </div>
+    <div className="footer-col">
+      <h4>Legal</h4>
+      <Link to="/privacy-policy" className="menu-link block">
+        Privacy Policy
+      </Link>
+      <Link to="/terms" className="menu-link block">
+        Terms of Service
+      </Link>
+    </div>
+
+  </div>
+
+
+  <p className="footer-bottom">
+    © {new Date().getFullYear()} ApnaFolio. All rights reserved.
+  </p>
+</footer> */}
+    <Footer />
+
 
       </>
   );
