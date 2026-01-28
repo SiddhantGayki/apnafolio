@@ -52,7 +52,7 @@ export default function Template1({ data }) {
         <img
           src={d.contact?.photo || "/default-avatar.png"}
           alt={d.name}
-          className="hero-photo"
+          className="herophoto"
           onError={(e) => (e.currentTarget.src = "/default-avatar.png")}
         />
         <h1 className="neon-text">{d.name || "Your Name"}</h1>

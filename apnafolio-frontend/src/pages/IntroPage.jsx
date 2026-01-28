@@ -34,7 +34,7 @@ export default function IntroPage() {
             potential in the tech world.
           </p>
           <div className="hero-btns-group">
-            <Link to="/signup" className="btn-main">Build My Portfolio — Free</Link>
+            <Link to="/signup" className="btn-main">Build My Portfolio — Starting at 499</Link>
             <Link to="/explore" className="btn-outline">Explore Themes</Link>
           </div>
           <div className="tech-stack-icons">
