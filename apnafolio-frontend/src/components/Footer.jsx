@@ -91,7 +91,7 @@ export default function Footer() {
         <p>
           © {new Date().getFullYear()} ApnaFolio • Apni Pahchaan, ApnaFolio ke Saath
         </p>
-        <p className="brand">By SHiVYANT Technologies</p>
+        <p className="brandf">By SHiVYANT Technologies</p>
       </div>
 
     </footer>

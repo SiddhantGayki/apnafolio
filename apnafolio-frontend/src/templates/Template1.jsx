@@ -24,7 +24,7 @@ export default function Template1({ data }) {
 
       {/* Navbar */}
       <header className="tpl4-nav">
-        <div className="brand">{d.name || "Your Name"}</div>
+        <div className="brand1">{d.name || "Your Name"}</div>
         <nav className={`tpl4-links ${menuOpen ? "open" : ""}`}>
           {[
             "hero",

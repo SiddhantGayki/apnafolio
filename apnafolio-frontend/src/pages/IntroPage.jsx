@@ -34,7 +34,7 @@ export default function IntroPage() {
             potential in the tech world.
           </p>
           <div className="hero-btns-group">
-            <Link to="/signup" className="btn-main">Build My Portfolio — Starting at 499</Link>
+            <Link to="/signup" className="btn-main">Build My Portfolio — Starting at ₹499</Link>
             <Link to="/explore" className="btn-outline">Explore Themes</Link>
           </div>
           <div className="tech-stack-icons">
@@ -77,6 +77,15 @@ export default function IntroPage() {
             <p>
               Hand-crafted templates designed by industry experts. Choose from 11+ high-end layouts 
               to showcase your projects like a pro.
+            </p>
+          </div>
+
+           {/* HIGHLIGHT CARD: DESIGN & THEMES */}
+          <div className="bento-card highlight">
+            <div className="icon-box">💵</div>
+            <h3>Affordable To all</h3>
+            <p>
+              Starting from just ₹499, ApnaFolio offers premium portfolio websites at prices anyone can afford.
             </p>
           </div>
 
