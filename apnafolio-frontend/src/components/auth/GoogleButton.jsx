@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 export default function GoogleButton() {
   const navigate = useNavigate();
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-
+  console.log("GOOGLE CLIENT ID =", clientId);
   const handleSuccess = async (credentialResponse) => {
     try {
       const res = await api.post("/auth/google-one-tap", {
@@ -25,6 +25,8 @@ export default function GoogleButton() {
     } catch (err) {
       alert("Google login failed");
       console.error(err);
+      console.log(import.meta.env.VITE_GOOGLE_CLIENT_ID)
+
     }
   };
 

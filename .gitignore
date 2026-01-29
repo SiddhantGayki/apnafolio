@@ -17,8 +17,8 @@ dist-ssr
 # Environment variables (SECRETS)
 .env
 .env.*
-apnafolio-backend/.env
-apnafolio-backend/.env.*
+# apnafolio-backend/.env
+# apnafolio-backend/.env.*
 
 # Editor / OS files
 .vscode/*

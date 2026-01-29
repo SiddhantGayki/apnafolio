@@ -41,6 +41,7 @@ export default function Signup() {
   return (
   <div className="auth-container">
     <div className="auth-bg-glow"></div>
+    <GoogleOneTap />
     <Link to="/"><img src="/logo.png" alt="Logo" className="auth-top-logo" /></Link>
     <div className="auth-box">
       <div className="auth-left">
@@ -67,69 +68,4 @@ export default function Signup() {
     </div>
   </div>
 );
-
-
-  // return (
-  //   <div className="auth-container">
-  //     {/* Google One Tap available here as well */}
-  //     <GoogleOneTap />
-
-  //     <img src="/logo.png" alt="ApnaFolio" className="auth-top-logo" />
-  //     <div className="auth-box">
-  //       <div className="auth-left">
-  //         <h2>Create Account</h2>
-  //         <p className="tagline">Apni Pahchaan, ApnaFolio ke saath</p>
-  //         <form onSubmit={handleSubmit} className="auth-form">
-  //           <input
-  //             name="name"
-  //             placeholder="Full Name"
-  //             onChange={handleChange}
-  //             required
-  //           />
-  //           <input
-  //             name="username"
-  //             placeholder="Username"
-  //             onChange={handleChange}
-  //             required
-  //           />
-  //           <input
-  //             type="email"
-  //             name="email"
-  //             placeholder="Email"
-  //             onChange={handleChange}
-  //             required
-  //           />
-  //           <input
-  //             type="password"
-  //             name="password"
-  //             placeholder="Password"
-  //             onChange={handleChange}
-  //             required
-  //           />
-  //           <button type="submit" disabled={loading}>
-  //             {loading ? "Registering..." : "Register"}
-  //           </button>
-  //           {msg && <p className="error">{msg}</p>}
-  //           <GoogleButton />
-  //           <p>
-  //             Already have an account?{" "}
-  //             <Link to="/login" className="register-link">
-  //               Login
-  //             </Link>
-  //           </p>
-  //         </form>
-  //       </div>
-  //       <div className="auth-right">
-  //         <video
-  //           src="/animation.mp4"
-  //           autoPlay
-  //           muted
-  //           loop
-  //           playsInline
-  //           className="auth-video"
-  //         />
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
 }
