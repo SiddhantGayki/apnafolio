@@ -57,7 +57,7 @@ export default function Template1({ data }) {
         />
         <h1 className="neon-text">{d.name || "Your Name"}</h1>
         <h2>{d.role || "Your Role"}</h2>
-        <p>{d.summary || "Short tagline goes here."}</p>
+        {/* <p>{d.summary || "Short tagline goes here."}</p> */}
         <div className="hero-socials">
           {d.contact?.github && (
             <a href={d.contact.github} target="_blank" rel="noreferrer">

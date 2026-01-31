@@ -13,7 +13,7 @@ const dummyResume = {
     github: "https://github.com/johndoe",
     linkedin: "https://linkedin.com/in/johndoe",
     website: "https://johndoe.dev",
-    photo: "https://i.pravatar.cc/150?img=11"
+    photo: "https://i.pravatar.cc/150?img=12"
   },
 
   frontendSkills: ["React", "Next.js", "Redux", "HTML", "CSS", "Tailwind", "Framer Motion"],

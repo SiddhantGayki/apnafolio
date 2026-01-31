@@ -10,7 +10,6 @@ import Verify from "./pages/auth/Verify";
 import ForgotPassword from "./pages/auth/ForgetPassword";
 
 // Public Pages
-// import Portfolio from "./pages/public/Portfolio";
 import PortfolioPage from "./pages/PortfolioPage";
 import IntroPage from "./pages/IntroPage";
 
@@ -24,9 +23,9 @@ import EditResume from "./pages/form/EditResume";
 import TemplateList from "./templates/TemplateList";
 import TemplatesExplore from "./templates/TemplatesExplore"
 import TemplatesPreview from "./templates/TemplatesPreview";
-// import TemplatesPreviewE from "./templates/TemplatesPreviewE";
 
 // ------------------- Private Route -------------------
+
 function PrivateRoute({ children }) {
   const token = localStorage.getItem("token");
   return token ? children : <Navigate to="/login" replace />;
@@ -58,6 +57,7 @@ export default function App() {
 
         {/* Admin */}
         <Route path="/admin" element={<AdminDashboard />} />
+        
         {/* User Paid */}
         <Route path="/dashboard" element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
         <Route path="/edit-resume" element={<PrivateRoute><EditResume /></PrivateRoute>} />
@@ -79,13 +79,9 @@ export default function App() {
             </PrivateRoute>
           }
         />
-        {/* <Route path="/Etemplate" element={<TemplatesExplore/>}/> */}
-
         {/* Public Explore */}
         <Route path="/explore" element={<TemplatesExplore />} />
-
-        {/* Public Preview (NO DATA SWITCH) */}
-        {/* <Route path="/explore/preview/:templateId" element={<TemplatesPreviewE />}/> */}
+        
       </Routes>
     </BrowserRouter>
   );
