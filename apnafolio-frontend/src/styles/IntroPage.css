@@ -33,7 +33,7 @@
   opacity: 0.2;
 }
 .blue-glow { top: -10%; left: -5%; background: var(--blue); }
-.yellow-glow { bottom: -0.1%; right: -5%; background: var(--yellow); }
+/* .yellow-glow { bottom: -0.1%; right: -5%; background: var(--yellow); } */
 
 /* NAVBAR */
 .navbar {

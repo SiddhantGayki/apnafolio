@@ -31,8 +31,10 @@ function PrivateRoute({ children }) {
   return token ? children : <Navigate to="/login" replace />;
 }
 
+
 // ------------------- App Component -------------------
 export default function App() {
+  
   return (
     <BrowserRouter>
       <Routes>

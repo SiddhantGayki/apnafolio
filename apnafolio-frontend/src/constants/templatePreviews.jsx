@@ -9,6 +9,7 @@ import Template8 from "../templates/Template8";
 import Template9 from "../templates/Template9";
 import Template10 from "../templates/Template10";
 import Template11 from "../templates/Template11";
+// import Template12 from "../templates/Template12";
 
 // ✅ Named exports — EXACTLY what templates.js expects
 export const Template1Preview = Template1;
@@ -22,3 +23,4 @@ export const Template8Preview = Template8;
 export const Template9Preview = Template9;
 export const Template10Preview = Template10;
 export const Template11Preview = Template11;
+// export const Template12Preview = Template12;
