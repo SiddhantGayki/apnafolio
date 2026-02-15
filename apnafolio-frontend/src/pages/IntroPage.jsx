@@ -47,7 +47,8 @@ export default function IntroPage() {
             <Lottie animationData={aiFlow} loop={true} className="main-lottie" />
             <div className="glass-card card-top">⚡ Ultra Fast Hosting</div>
             <div className="glass-card card-bottom">🛡️ SEO Optimized</div>
-            <div className="glass-card card-mid">💸 Low Cost</div>
+            <div className="glass-card card-mid1">💸 Low Cost</div>
+            <div className="glass-card card-mid2">📊 Live Analytic</div>
           </div>
         </div>
       </section>

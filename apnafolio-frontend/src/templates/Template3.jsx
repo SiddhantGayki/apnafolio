@@ -153,7 +153,7 @@ export default function Template3({ data }) {
                 <div key={i} className="proj-card">
                   <div className="proj-body">
                     <h3>{p.title}</h3>
-                    <p className="proj-desc">{p.description}</p>
+                    <p className="proj-desc1">{p.description}</p>
                     <div className="proj-tags">
                       {(p.tags || []).map((t, idx) => (
                         <span key={idx} className="tag">

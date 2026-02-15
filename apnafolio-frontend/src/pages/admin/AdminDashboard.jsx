@@ -20,6 +20,7 @@ export default function AdminDashboard() {
   const [userChart, setUserChart] = useState([]);
   const [earningChart, setEarningChart] = useState([]);
 
+
   const fetchUsers = async (p = 1, s = "") => {
     setLoading(true);
     try {

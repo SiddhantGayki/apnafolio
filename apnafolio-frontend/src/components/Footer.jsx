@@ -16,16 +16,16 @@ export default function Footer() {
         {/* LEFT: BRAND + SOCIAL */}
         <div className="footer-brand">
                   <Link to="/" className="logo-wrap">
-                    <img src={logo} alt="ApnaFolio Logo" className="logo-img" />
+                    <img src={logo} alt="ApnaFolio Logo" className="logo-footer" />
                   </Link>
           {/* <h3>ApnaFolio</h3> */}
           <p>Apni Pahchaan, ApnaFolio ke Saath</p>
 
           <div className="social-icons">
-            <a href="https://facebook.com/YOUR_ID" target="_blank" rel="noreferrer">
+            <a href="https://www.facebook.com/share/1AQa2UAEUX/" target="_blank" rel="noreferrer">
               <FaFacebookF />
             </a>
-            <a href="https://twitter.com/YOUR_ID" target="_blank" rel="noreferrer">
+            <a href="https://x.com/SHiVYANT_Tech" target="_blank" rel="noreferrer">
               <FaTwitter />
             </a>
             <a href="https://instagram.com/shivyant.technologies" target="_blank" rel="noreferrer">
@@ -43,7 +43,7 @@ export default function Footer() {
                 <Link to="/">Home</Link>
           <Link to="/templates">Templates</Link>
           <Link to="/login">Login</Link>
-          <Link to="/register">Register</Link>
+          <Link to="/signup">Register</Link>
             </div>
             <div className="footer-links">
           <h4>Legal</h4>

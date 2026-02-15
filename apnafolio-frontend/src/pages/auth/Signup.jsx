@@ -41,7 +41,7 @@ export default function Signup() {
   return (
   <div className="auth-container">
     <div className="auth-bg-glow"></div>
-    <GoogleOneTap />
+    {/* <GoogleOneTap /> */}
     <Link to="/"><img src="/logo.png" alt="Logo" className="auth-top-logo" /></Link>
     <div className="auth-box">
       <div className="auth-left">

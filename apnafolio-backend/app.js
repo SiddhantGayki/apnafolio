@@ -46,6 +46,9 @@ app.use(morgan("dev"));
 // ✅ Connect MongoDB
 connectDB(process.env.MONGO_URI);
 
+// s3 upload route (for presigned URLs)
+app.use("/api/upload", require("./routes/upload"));
+
 // ✅ Mount routes
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/user", require("./routes/userRoutes"));

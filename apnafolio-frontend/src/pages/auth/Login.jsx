@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import api from "../../utils/api";
 import { setAuth } from "../../utils/auth";
 import GoogleButton from "../../components/auth/GoogleButton";
-import GoogleOneTap from "../../components/auth/GoogleOneTap";
+// import GoogleOneTap from "../../components/auth/GoogleOneTap";
 import "../../styles/AuthPages.css";
 import Lottie from "lottie-react";
 import techAnimation from "../../assets/tech-animation.json";
@@ -62,7 +62,7 @@ export default function Login() {
   return (
     <div className="auth-container">
       <div className="auth-bg-glow" />
-      <GoogleOneTap />
+      {/* <GoogleOneTap /> */}
       <Link to="/">
         <img src="/logo.png" alt="ApnaFolio" className="auth-top-logo" />
       </Link>

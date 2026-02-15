@@ -3,17 +3,17 @@ import { UserAPI, PaymentAPI } from "../utils/api";
 import { loadRazorpay } from "../utils/payments"; 
 
 const templates = [
-  { id: "template1", name: "Modern Neon", price: 299 },
-  { id: "template2", name: "Glassy Gradient", price: 399 },
-  { id: "template3", name: "Split Layout", price: 499 },
-  { id: "template4", name: "Minimal Clean", price: 599 },
-  { id: "template5", name: "Premium Glass", price: 699 },
-  { id: "template6", name: "Diagonal Hero", price: 799 },
-  { id: "template7", name: "Blob Design", price: 899 },
-  { id: "template8", name: "Smooth Motion", price: 999 },
-  { id: "template9", name: "Clean Resume", price: 1099 },
-  { id: "template10", name: "Pro Gradient", price: 1199 },
-  { id: "template11", name: "Premium Motion", price: 1299 },
+  { id: "template1", name: "Modern Neon", price: 499 },
+  { id: "template2", name: "Glassy Gradient", price: 599 },
+  { id: "template3", name: "Split Layout", price: 699 },
+  { id: "template4", name: "Minimal Clean", price: 799 },
+  { id: "template5", name: "Premium Glass", price: 899 },
+  { id: "template6", name: "Diagonal Hero", price: 999 },
+  { id: "template7", name: "Blob Design", price: 1099 },
+  { id: "template8", name: "Smooth Motion", price: 1199 },
+  { id: "template9", name: "Clean Resume", price: 1299 },
+  { id: "template10", name: "Pro Gradient", price: 1399 },
+  { id: "template11", name: "Premium Motion", price: 1499 },
 ];
 
 export default function TemplateSwitcher({ current }) {

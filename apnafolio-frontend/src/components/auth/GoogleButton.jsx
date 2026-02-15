@@ -25,7 +25,7 @@ export default function GoogleButton() {
     } catch (err) {
       alert("Google login failed");
       console.error(err);
-      console.log(import.meta.env.VITE_GOOGLE_CLIENT_ID)
+      // console.log(import.meta.env.VITE_GOOGLE_CLIENT_ID)
 
     }
   };

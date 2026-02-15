@@ -5,7 +5,7 @@ body.dark {--bg:#0d0d0d;--text:#eee;--accent:#6a11cb;--card-bg:#1a1a1a}
 .t2-container{background:var(--bg);color:var(--text);transition:background .5s,color .5s;font-family:Poppins,sans-serif}
 
 /* Navbar */
-.t2-navbar{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:15px 30px;transition:.3s}
+.t2-navbar{position:fixed;top:1;left:0;right:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:15px 30px;transition:.3s}
 .t2-navbar.transparent{background:transparent}
 .t2-navbar.solid{background:var(--bg);border-bottom:1px solid #ccc}
 .nav-logo{font-weight:700;font-size:1.2rem;color:var(--accent)}

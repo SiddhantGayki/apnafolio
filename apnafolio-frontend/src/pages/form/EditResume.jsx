@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import ResumeForm from "./ResumeForm";
 import api from "../../utils/api";
-import { uploadFile } from "../../utils/cloudinaryUpload";
+// import { uploadFile } from "../../utils/cloudinaryUpload";
 import Spinner from "../../components/Spinner";
+import { uploadFile } from "../../utils/s3Upload";
 
 export default function ResumeEditPage() {
   const [resume, setResume] = useState(null);

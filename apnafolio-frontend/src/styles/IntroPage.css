@@ -176,7 +176,8 @@
 .lottie-container { width: 100%; position: relative; filter: drop-shadow(0 0 50px rgba(79,111,255,0.15)); }
 .glass-card { position: absolute; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); padding: 16px 22px; border-radius: 18px; border: 1px solid var(--border-glass); font-weight: 600; font-size: 0.9rem; z-index: 2; animation: floatAnim 4s ease-in-out infinite; }
 .card-top { top: 10%; right: -10px; border-left: 4px solid var(--blue); }
-.card-mid { top: 50%; right: -40px; animation-delay: 1s;border-left: 4px solid var(--bg-dark); }
+.card-mid1 { top: 50%; right: -40px; animation-delay: 1s;border-left: 4px solid var(--bg-dark); }
+.card-mid2 { top: 40%; left: -40px; animation-delay: 2s;border-left: 4px solid var(--text-secondary); }
 .card-bottom { bottom: 15%; left: -20px; animation-delay: 2s; border-left: 4px solid var(--yellow); }
 
 .tech-stack-icons {
