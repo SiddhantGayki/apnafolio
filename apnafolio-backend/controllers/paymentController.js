@@ -10,69 +10,6 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZOR_SECRET,
 });
 
-// ------------------------------------------------
-// CREATE ORDER (NO AUTH)
-// ------------------------------------------------
-
-// exports.createOrder = async (req, res) => {
-//   try {
-//     // 🔐 Safety check
-//     if (!process.env.RAZOR_KEY_ID || !process.env.RAZOR_SECRET) {
-//       return res.status(500).json({ message: "Razorpay keys missing" });
-//     }
-
-//     const { amount } = req.body;
-//     if (!amount || Number(amount) <= 0) {
-//       return res.status(400).json({ message: "Invalid amount" });
-//     }
-
-//     const options = {
-//       amount: Number(amount) * 100, // ₹ → paise
-//       currency: "INR",
-//       receipt: `receipt_${Date.now()}`,
-//     };
-
-//     const order = await razorpay.orders.create(options);
-
-//     return res.status(200).json({
-//       success: true,
-//       order,
-//     });
-//   } catch (err) {
-//     console.error("❌ CREATE ORDER ERROR:", err);
-//     return res.status(500).json({
-//       success: false,
-//       message: err.message || "Order creation failed",
-//     });
-//   }
-// };
-
-// exports.createOrder = async (req, res) => {
-//   try {
-//     let { amount } = req.body; // 👈 EXPECT PAISE
-//     if (!amount || isNaN(amount) || Number(amount) <= 0) {
-//       return res
-//         .status(400)
-//         .json({ success: false, message: "Invalid amount" });
-//     }
-
-//     amount = parseInt(amount, 10);
-
-//     const order = await razorpay.orders.create({
-//       amount, // ✅ already in paise
-//       currency: "INR",
-//       receipt: "receipt_" + Date.now(),
-//     });
-
-//     return res.json({ success: true, order });
-//   } catch (err) {
-//     console.error("❌ createOrder err:", err);
-//     return res
-//       .status(500)
-//       .json({ success: false, message: err.message });
-//   }
-// };
-// gemini code
 exports.createOrder = async (req, res) => {
   try {
     let { amount } = req.body; 
@@ -96,9 +33,6 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-// ------------------------------------------------
-// VERIFY PAYMENT (AUTH REQUIRED)
-// ------------------------------------------------
 exports.verifyPayment = async (req, res) => {
   try {
     const {
@@ -107,20 +41,17 @@ exports.verifyPayment = async (req, res) => {
       razorpay_signature,
       templateId,
       amount,
+      purchaseType
     } = req.body;
 
-    if (
-      !razorpay_order_id ||
-      !razorpay_payment_id ||
-      !razorpay_signature
-    ) {
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return res.status(400).json({
         success: false,
         message: "Missing Razorpay fields",
       });
     }
 
-    // ✅ Verify signature
+    // ✅ Verify Signature
     const body = `${razorpay_order_id}|${razorpay_payment_id}`;
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZOR_SECRET)
@@ -134,31 +65,137 @@ exports.verifyPayment = async (req, res) => {
       });
     }
 
-    // ✅ Update user (if logged in)
-    let user = null;
-    if (req.userId) {
-      user = await User.findById(req.userId);
-      if (user) {
-        user.paid = true;
-        user.selectedTemplate = templateId;
-        await user.save();
-      }
+    const user = await User.findById(req.userId);
+    if (!user)
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+
+    // const now = new Date();
+
+    // // Helper: Add 1 Year safely
+    // const addOneYear = (date) => {
+    //   const d = new Date(date);
+    //   d.setFullYear(d.getFullYear() + 1);
+    //   return d;
+    // };
+
+    // // Helper: Add 1 Month safely
+    // const addOneMonth = (date) => {
+    //   const d = new Date(date);
+    //   d.setMonth(d.getMonth() + 1);
+    //   return d;
+    // };
+
+    // // =================================================
+    // // 🎯 TEMPLATE PURCHASE
+    // // =================================================
+    // if (purchaseType === "template") {
+
+    //   user.paid = true;
+    //   user.selectedTemplate = templateId;
+    //   user.planType = "template";
+
+    //   // 🔥 Extend if active, else start fresh
+    //   if (user.planExpiry && user.planExpiry > now) {
+    //     user.planExpiry = addOneYear(user.planExpiry);
+    //   } else {
+    //     user.planExpiry = addOneYear(now);
+    //   }
+
+    //   // 🎁 Add 3 Free Credits (stacking allowed)
+    //   user.freeEditCredits = (user.freeEditCredits || 0) + 3;
+    //   user.freeEditExpiry = addOneMonth(now);
+    // }
+
+    // // =================================================
+    // // 🎯 YEARLY SUBSCRIPTION
+    // // =================================================
+    // if (purchaseType === "yearly") {
+
+    //   user.paid = true;
+    //   user.planType = "yearly";
+
+    //   if (user.planExpiry && user.planExpiry > now) {
+    //     user.planExpiry = addOneYear(user.planExpiry);
+    //   } else {
+    //     user.planExpiry = addOneYear(now);
+    //   }
+    // }
+const now = new Date();
+
+const add45Days = (date) =>
+  new Date(date.getTime() + 45 * 24 * 60 * 60 * 1000);
+
+// ================= TEMPLATE =================
+if (purchaseType === "template") {
+
+  user.paid = true;
+  user.selectedTemplate = templateId;
+  user.planType = "yearly";
+
+  // 🔥 RESET FROM TODAY (NO MERGE)
+  user.planExpiry = new Date(
+    Date.now() + 365 * 24 * 60 * 60 * 1000
+  );
+// user.planExpiry = new Date("2030-01-01");
+
+  user.isBlocked = false;
+
+  // Free credits only first time
+  if (!user.hasReceivedFreeCredits) {
+    user.freeEditCredits = 3;
+    user.freeEditExpiry = add45Days(now);
+    user.hasReceivedFreeCredits = true;
+  }
+}
+
+// ================= YEARLY =================
+if (purchaseType === "yearly") {
+
+  user.paid = true;
+  user.planType = "yearly";
+
+  // 🔥 RESET FROM TODAY
+  user.planExpiry = new Date(
+    Date.now() + 365 * 24 * 60 * 60 * 1000
+  );
+
+  user.isBlocked = false;
+}
+
+    // =================================================
+    // 🎯 BUY 1 CREDIT
+    // =================================================
+    if (purchaseType === "credit1") {
+      user.paidEditCredits = (user.paidEditCredits || 0) + 1;
     }
 
-    // ✅ Save transaction
+    // =================================================
+    // 🎯 BUY 3 CREDITS
+    // =================================================
+    if (purchaseType === "credit3") {
+      user.paidEditCredits = (user.paidEditCredits || 0) + 3;
+    }
+
+    await user.save();
+
+    // ✅ Save Transaction
     await Transaction.create({
-      userId: user?._id || null,
+      userId: user._id,
       orderId: razorpay_order_id,
       paymentId: razorpay_payment_id,
       amount: Number(amount),
       status: "success",
-      meta: { templateId },
+      meta: { purchaseType, templateId },
     });
 
     return res.status(200).json({
       success: true,
       message: "Payment verified successfully",
     });
+
   } catch (err) {
     console.error("❌ VERIFY PAYMENT ERROR:", err);
     return res.status(500).json({
@@ -168,78 +205,6 @@ exports.verifyPayment = async (req, res) => {
   }
 };
 
-// // controllers/paymentController.js
-// const Razorpay = require("razorpay");
-// const crypto = require("crypto");
-// const User = require("../models/User");
-// const Transaction = require("../models/Transaction");
-
-// const razorpay = new Razorpay({
-//   key_id: process.env.RAZOR_KEY_ID,
-//   key_secret: process.env.RAZOR_SECRET,
-// });
-
-// // ------------------------------------------------
-// // CREATE ORDER
-// // ------------------------------------------------
-
-// // exports.createOrder = async (req, res) => {
-// //   try {
-// //     const { amount } = req.body;
-// //     if (!amount || amount <= 0)
-// //       return res.status(400).json({ success: false, message: "Invalid amount" });
-
-// //     const options = {
-// //       amount: Number(amount) * 100,   // 👈 FIXED
-// //       currency: "INR",
-// //       receipt: "receipt_" + Date.now(),
-// //     };
-
-// //     const order = await razorpay.orders.create(options);
-
-// //     return res.status(200).json({ success: true, order });
-// //   } catch (err) {
-// //     console.error("❌ createOrder error:", err);
-// //     return res.status(500).json({ success: false, message: "Order create failed" });
-// //   }
-// // };
-
-// exports.createOrder = async (req, res) => {
-//   try {
-//     // ✅ STEP 1: Razorpay keys check (हेच तू विचारतोयस)
-//     if (!process.env.RAZOR_KEY_ID || !process.env.RAZOR_SECRET) {
-//       throw new Error("Razorpay keys missing");
-//     }
-
-//     // ✅ STEP 2: Amount check
-//     const { amount } = req.body;
-//     if (!amount) {
-//       return res.status(400).json({ message: "Amount is required" });
-//     }
-
-//     // ✅ STEP 3: Create order
-//     const options = {
-//       amount: Number(amount) * 100, // rupees → paise
-//       currency: "INR",
-//       receipt: "receipt_" + Date.now(),
-//     };
-
-//     const order = await razorpay.orders.create(options);
-
-//     // ✅ STEP 4: Send response
-//     res.status(200).json({ success: true, order });
-
-//   } catch (err) {
-//     console.error("RAZORPAY ORDER ERROR:", err.message);
-//     res.status(500).json({ message: err.message });
-//   }
-// };
-
-
-
-// // ------------------------------------------------
-// // VERIFY PAYMENT
-// // ------------------------------------------------
 // exports.verifyPayment = async (req, res) => {
 //   try {
 //     const {
@@ -248,59 +213,106 @@ exports.verifyPayment = async (req, res) => {
 //       razorpay_signature,
 //       templateId,
 //       amount,
+//       purchaseType // "template" | "yearly" | "credit1" | "credit3"
 //     } = req.body;
 
-//     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature)
-//       return res.status(400).json({ success: false, message: "Missing fields" });
-
-//     // CHECK SIGNATURE
-//     const body = razorpay_order_id + "|" + razorpay_payment_id;
-//     const expectedSignature = crypto
-//       .createHmac("sha256", process.env.RAZOR_SECRET) // 👈 FIXED
-//       .update(body.toString())
-//       .digest("hex");
-
-//     if (expectedSignature !== razorpay_signature)
-//       return res.status(400).json({ success: false, message: "Invalid signature" });
-
-//     // UPDATE USER
-//     let user = null;
-//     if (req.userId) {
-//       user = await User.findById(req.userId);
-
-//       if (user) {
-//         user.paid = true;
-//         user.selectedTemplate = templateId;
-
-//         user.payments.push({
-//           amount: Number(amount),
-//           status: "success",
-//           txnId: razorpay_payment_id,
-//           templateId,
-//           date: new Date(),
-//         });
-
-//         await user.save();
-//       }
+//     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Missing Razorpay fields",
+//       });
 //     }
 
-//     // SAVE TRANSACTION
+//     // ✅ Signature Verification
+//     const body = `${razorpay_order_id}|${razorpay_payment_id}`;
+//     const expectedSignature = crypto
+//       .createHmac("sha256", process.env.RAZOR_SECRET)
+//       .update(body)
+//       .digest("hex");
+
+//     if (expectedSignature !== razorpay_signature) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Invalid signature",
+//       });
+//     }
+
+//     const user = await User.findById(req.userId);
+//     if (!user)
+//       return res.status(404).json({ success: false, message: "User not found" });
+
+//     const now = new Date();
+
+//     // =========================================
+//     // 🎯 TEMPLATE PURCHASE
+//     // =========================================
+//     if (purchaseType === "template") {
+//       user.paid = true;
+//       user.selectedTemplate = templateId;
+//       user.planType = "template";
+
+//       // ✅ 1 Year Validity
+//       user.planExpiry = new Date(
+//         now.setFullYear(now.getFullYear() + 1)
+//       );
+
+//       // ✅ 3 Free Credits (1 Month Valid)
+//       user.freeEditCredits = 3;
+//       user.freeEditExpiry = new Date(
+//         new Date().setMonth(new Date().getMonth() + 1)
+//       );
+//     }
+
+//     // =========================================
+//     // 🎯 YEARLY SUBSCRIPTION
+//     // =========================================
+//     if (purchaseType === "yearly") {
+//       user.paid = true;
+//       user.planType = "yearly";
+
+//       user.planExpiry = new Date(
+//         now.setFullYear(now.getFullYear() + 1)
+//       );
+//     }
+
+//     // =========================================
+//     // 🎯 BUY 1 CREDIT (₹49)
+//     // =========================================
+//     if (purchaseType === "credit1") {
+//       user.paidEditCredits =
+//         (user.paidEditCredits || 0) + 1;
+//     }
+
+//     // =========================================
+//     // 🎯 BUY 3 CREDITS (₹99)
+//     // =========================================
+//     if (purchaseType === "credit3") {
+//       user.paidEditCredits =
+//         (user.paidEditCredits || 0) + 3;
+//     }
+
+//     await user.save();
+
+//     // ✅ Save Transaction
 //     await Transaction.create({
-//       userId: user?._id || null,
+//       userId: user._id,
 //       orderId: razorpay_order_id,
 //       paymentId: razorpay_payment_id,
 //       amount: Number(amount),
 //       status: "success",
-//       meta: { templateId },
+//       meta: { purchaseType, templateId },
 //     });
 
 //     return res.status(200).json({
 //       success: true,
-//       message: "Payment verified",
+//       message: "Payment verified successfully",
 //     });
+
 //   } catch (err) {
-//     console.error("verifyPayment error:", err);
-//     res.status(500).json({ success: false, message: "Verification failed" });
+//     console.error("❌ VERIFY PAYMENT ERROR:", err);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Payment verification failed",
+//     });
 //   }
 // };
-

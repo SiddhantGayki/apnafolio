@@ -40,6 +40,7 @@ export const AuthAPI = {
 
 // ✅ USER
 export const UserAPI = {
+  getResume: () => api.get("/user/resume"),
   saveResume: (data) => api.post("/user/resume", data),
   getPortfolio: (username) => api.get(`/user/portfolio/${username}`),
   switchTemplate: (templateId) => api.post("/user/switch-template", { templateId }),
@@ -54,46 +55,118 @@ export const PaymentAPI = {
 };
 
 // ✅ Razorpay loader
-export const loadRazorpay = (order, templateId) => {
+// export const loadRazorpay = (order, templateId) => {
+export const loadRazorpay = (order, templateId, purchaseType) => {
+
+//   return new Promise((resolve, reject) => {
+//     const script = document.createElement("script");
+//     script.src = "https://checkout.razorpay.com/v1/checkout.js";
+//     script.onload = () => {
+//       const options = {
+//         key: import.meta.env.VITE_RAZORPAY_KEY,
+//         amount: order.amount,
+//         currency: order.currency,
+//         order_id: order.id,
+//         // handler: async (response) => {
+//         //   try {
+//         //     await PaymentAPI.verifyPayment({
+//         //       ...response,
+//         //       amount: order.amount,
+//         //       templateId,
+//         //     });
+//         //     resolve(response);
+//         //   } catch (err) {
+//         //     reject(err);
+//         //   }
+//         // },
+//         // loadRazorpay फंक्शनमध्ये handler च्या आत हा बदल कर:
+// // handler: async (response) => {
+// //   try {
+// //     await PaymentAPI.verifyPayment({
+// //       ...response,
+// //       templateId,
+// //       // ✅ पैशाचे पुन्हा रुपयांत रूपांतर करून बॅकएंडला पाठवा
+// //       amount: order.amount / 100, 
+// //     });
+// //     resolve(response);
+// //   } catch (err) {
+// //     reject(err);
+// //   }
+// // },
+
+// handler: async (response) => {
+//   try {
+//     // await PaymentAPI.verifyPayment({
+//     //   ...response,
+//     //   templateId,
+//     //   amount: order.amount / 100,
+//     //   purchaseType: "template", // 🔥 add this
+//     // });
+//     await PaymentAPI.verifyPayment({
+//   ...response,
+//   templateId,
+//   amount: order.amount / 100,
+//   purchaseType,
+// });
+
+
+//     resolve(response);
+//   } catch (err) {
+//     reject(err);
+//   }
+// },
+//       };
+//       const rzp = new window.Razorpay(options);
+//       rzp.open();
+//     };
+//     script.onerror = reject;
+//     document.body.appendChild(script);
+//   });
+// };
+
+// export const loadRazorpay = (order, templateId) => {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
+
     script.onload = () => {
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY,
         amount: order.amount,
         currency: order.currency,
         order_id: order.id,
-        // handler: async (response) => {
-        //   try {
-        //     await PaymentAPI.verifyPayment({
-        //       ...response,
-        //       amount: order.amount,
-        //       templateId,
-        //     });
-        //     resolve(response);
-        //   } catch (err) {
-        //     reject(err);
-        //   }
-        // },
-        // loadRazorpay फंक्शनमध्ये handler च्या आत हा बदल कर:
-handler: async (response) => {
-  try {
-    await PaymentAPI.verifyPayment({
-      ...response,
-      templateId,
-      // ✅ पैशाचे पुन्हा रुपयांत रूपांतर करून बॅकएंडला पाठवा
-      amount: order.amount / 100, 
-    });
-    resolve(response);
-  } catch (err) {
-    reject(err);
-  }
-},
+        name: "ApnaFolio",
+        description: "Template Purchase",
+        theme: { color: "#5e17eb" },
+
+        handler: async (response) => {
+          try {
+            await fetch(
+              `${import.meta.env.VITE_API_URL}/payment/verify`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: JSON.stringify({
+                  ...response,
+                  templateId,
+                  amount: order.amount / 100, // / 100, // convert paise to rupees
+                  purchaseType,
+                }),
+              }
+            );
+            resolve(response);
+          } catch (err) {
+            reject(err);
+          }
+        },
       };
-      const rzp = new window.Razorpay(options);
-      rzp.open();
+
+      new window.Razorpay(options).open();
     };
+
     script.onerror = reject;
     document.body.appendChild(script);
   });

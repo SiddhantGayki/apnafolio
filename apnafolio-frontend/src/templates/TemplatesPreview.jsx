@@ -31,20 +31,33 @@ export default function TemplatePreview() {
   // ✅ popup control
   const [showLoginPopup, setShowLoginPopup] = useState(false);
 
-  const loadMyData = async () => {
-    try {
-      setLoading(true);
-      const res = await UserAPI.getDashboard();
-      setResume(res.data.user.resume || {});
-      setMode("real");
-    } catch (err) {
-      // ❌ alert हटवला
-      setShowLoginPopup(true); // ✅ popup दाखव
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const loadMyData = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const res = await UserAPI.getDashboard();
+  //     setResume(res.data.user.resume || {});
+  //     setMode("real");
+  //   } catch (err) {
+  //     // ❌ alert हटवला
+  //     setShowLoginPopup(true); // ✅ popup दाखव
+  //     console.error(err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+const loadMyData = async () => {
+  try {
+    setLoading(true);
+    const res = await UserAPI.getResume();
+    setResume(res.data || {});
+    setMode("real");
+  } catch (err) {
+    setShowLoginPopup(true);
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const renderTemplate = () => {
     switch (templateId) {

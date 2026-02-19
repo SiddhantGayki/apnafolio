@@ -1,55 +1,221 @@
+// import { useEffect, useState } from "react";
+// import ResumeForm from "./ResumeForm";
+// import api from "../../utils/api";
+// // import { uploadFile } from "../../utils/cloudinaryUpload";
+// import Spinner from "../../components/Spinner";
+// import { uploadFile } from "../../utils/s3Upload";
+
+// export default function ResumeEditPage() {
+//   const [resume, setResume] = useState(null);
+
+//   // ✅ missing states added
+//   const [saving, setSaving] = useState(false);
+//   const [progress, setProgress] = useState("");
+
+//   useEffect(() => {
+//     api.get("/user/resume").then((res) => setResume(res.data));
+//   }, []);
+
+//   const saveSection = async (section, sectionData) => {
+//     try {
+//       setSaving(true);
+//       setProgress(`Saving ${section}...`);
+
+//       let payload = structuredClone(sectionData);
+
+//       if (Array.isArray(payload)) {
+//         for (const item of payload) {
+//           if (item.document instanceof File) {
+//             item.document = await uploadFile(item.document);
+//           }
+//         }
+//       }
+
+//       if (section === "resumeFile" && payload instanceof File) {
+//         payload = await uploadFile(payload);
+//       }
+
+//       // await api.patch("/user/resume/section", {
+//       //   section,
+//       //   data: payload,
+//       // });
+//       await api.post("/user/resume", {
+//   ...resume,
+//   [section]: payload
+// });
+
+
+//       alert(`${section} saved`);
+//     } catch (err) {
+//       console.error("Edit save error:", err);
+//       alert("Failed to save section");
+//     } finally {
+//       setSaving(false);
+//       setProgress("");
+//     }
+//   };
+
+//   if (!resume) {
+//     return (
+//       <div style={{ padding: 40, textAlign: "center" }}>
+        
+//         <Spinner size={40} />
+//         <p>Loading resume...</p>
+//       </div>
+//     );
+//   }
+// const handleFullSave = async (data) => {
+//   await UserAPI.saveResume(data);
+// };
+
+//   return (
+//     <>
+//       {/* <ResumeForm
+//         mode="edit"
+//         initialData={resume}
+//         onSectionSave={saveSection}
+//       /> */}
+//       <ResumeForm
+//   mode="edit"
+//   initialData={resume}
+//   onSubmit={handleFullSave}
+// />
+
+
+//       {/* ✅ Saving overlay */}
+//       {saving && (
+//         <div className="saving-overlay">
+//           <Spinner size={56} />
+//           <p>{progress || "Saving... please wait"}</p>
+//         </div>
+//       )}
+//     </>
+//   );
+// }
+
+
+
+
+
+
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ResumeForm from "./ResumeForm";
-import api from "../../utils/api";
-// import { uploadFile } from "../../utils/cloudinaryUpload";
+import { UserAPI } from "../../utils/api";
 import Spinner from "../../components/Spinner";
 import { uploadFile } from "../../utils/s3Upload";
 
 export default function ResumeEditPage() {
   const [resume, setResume] = useState(null);
-
-  // ✅ missing states added
   const [saving, setSaving] = useState(false);
   const [progress, setProgress] = useState("");
+  const navigate = useNavigate();
 
+  // 🔥 Fetch existing resume
   useEffect(() => {
-    api.get("/user/resume").then((res) => setResume(res.data));
+    const fetchResume = async () => {
+      try {
+        const res = await UserAPI.getResume();
+        setResume(res.data);
+      } catch (err) {
+        console.error("Failed to load resume:", err);
+      }
+    };
+
+    fetchResume();
   }, []);
 
-  const saveSection = async (section, sectionData) => {
+  // 🔥 Full Save (Same logic as ResumePage)
+  const handleSave = async (data) => {
     try {
       setSaving(true);
-      setProgress(`Saving ${section}...`);
+      setProgress("Preparing your portfolio...");
 
-      let payload = structuredClone(sectionData);
+      // Deep copy
+      const payload = {
+        ...data,
+        contact: { ...(data.contact || {}) },
+        projects: (data.projects || []).map((p) => ({ ...p })),
+        education: (data.education || []).map((e) => ({ ...e })),
+        experience: (data.experience || []).map((x) => ({ ...x })),
+        certifications: (data.certifications || []).map((c) => ({ ...c })),
+      };
 
-      if (Array.isArray(payload)) {
-        for (const item of payload) {
-          if (item.document instanceof File) {
-            item.document = await uploadFile(item.document);
+      // Upload profile photo
+      if (payload.contact?.photo instanceof File) {
+        setProgress("Uploading profile photo...");
+        payload.contact.photo = await uploadFile(payload.contact.photo);
+      }
+
+      // Upload resume file
+      if (payload.resumeFile instanceof File) {
+        setProgress("Uploading resume file...");
+        payload.resumeFile = await uploadFile(payload.resumeFile);
+      }
+
+      // Upload project documents
+      if (payload.projects.some((p) => p.document instanceof File)) {
+        setProgress("Uploading project documents...");
+      }
+      await Promise.all(
+        payload.projects.map(async (p, i) => {
+          if (p.document instanceof File) {
+            payload.projects[i].document = await uploadFile(p.document);
           }
-        }
+        })
+      );
+
+      // Upload experience documents
+      if (payload.experience.some((ex) => ex.document instanceof File)) {
+        setProgress("Uploading experience documents...");
+      }
+      await Promise.all(
+        payload.experience.map(async (ex, i) => {
+          if (ex.document instanceof File) {
+            payload.experience[i].document = await uploadFile(ex.document);
+          }
+        })
+      );
+
+      // Upload certification documents
+      if (payload.certifications.some((c) => c.document instanceof File)) {
+        setProgress("Uploading certification documents...");
+      }
+      await Promise.all(
+        payload.certifications.map(async (c, i) => {
+          if (c.document instanceof File) {
+            payload.certifications[i].document = await uploadFile(c.document);
+          }
+        })
+      );
+
+      // Clean empty skills
+      payload.frontendSkills = payload.frontendSkills?.filter(Boolean) || [];
+      payload.backendSkills = payload.backendSkills?.filter(Boolean) || [];
+      payload.tools = payload.tools?.filter(Boolean) || [];
+      payload.programmingLanguages = payload.programmingLanguages?.filter(Boolean) || [];
+
+      // 🔥 Save to backend
+      setProgress("Saving changes...");
+      const res = await UserAPI.saveResume(payload);
+
+      if (res?.data?.success) {
+        alert("✅ Portfolio updated successfully!");
+        navigate("/dashboard");
+      } else {
+        alert("❌ Something went wrong while updating!");
       }
 
-      if (section === "resumeFile" && payload instanceof File) {
-        payload = await uploadFile(payload);
-      }
-
-      await api.patch("/user/resume/section", {
-        section,
-        data: payload,
-      });
-
-      alert(`${section} saved`);
     } catch (err) {
-      console.error("Edit save error:", err);
-      alert("Failed to save section");
+      console.error("Update error:", err);
+      alert("❌ Failed to update portfolio.");
     } finally {
       setSaving(false);
       setProgress("");
     }
   };
 
+  // 🔄 Loading UI
   if (!resume) {
     return (
       <div style={{ padding: 40, textAlign: "center" }}>
@@ -60,186 +226,19 @@ export default function ResumeEditPage() {
   }
 
   return (
-    <>
+    <div className="resume-edit-page">
       <ResumeForm
         mode="edit"
         initialData={resume}
-        onSectionSave={saveSection}
+        onSubmit={handleSave}
       />
 
-      {/* ✅ Saving overlay */}
       {saving && (
         <div className="saving-overlay">
           <Spinner size={56} />
           <p>{progress || "Saving... please wait"}</p>
         </div>
       )}
-    </>
+    </div>
   );
 }
-
-
-
-// import { useEffect, useState } from "react";
-// import ResumeForm from "./ResumeForm";
-// import api from "../../utils/api";
-// import { uploadFile } from "../../utils/cloudinaryUpload";
-// import Spinner from "../../components/Spinner";
-
-// export default function ResumeEditPage() {
-//   const [resume, setResume] = useState(null);
-
-//   useEffect(() => {
-//     api.get("/user/resume").then((res) => setResume(res.data));
-//   }, []);
-
-//   const saveSection = async (section, sectionData) => {
-//     let payload = structuredClone(sectionData);
-
-//     if (Array.isArray(payload)) {
-//       for (const item of payload) {
-//         if (item.document instanceof File)
-//           item.document = await uploadFile(item.document);
-//       }
-//     }
-
-//     if (section === "resumeFile" && payload instanceof File) {
-//       payload = await uploadFile(payload);
-//     }
-
-//     await api.patch("/user/resume/section", {
-//       section,
-//       data: payload,
-//     });
-
-//     alert(`${section} saved`);
-//   };
-
-//   if (!resume) return <p>Loading...</p>;
-
-//   return (
-//     <ResumeForm
-//       mode="edit"
-//       initialData={resume}
-//       onSectionSave={saveSection}
-//     />
-//           {saving && (
-//       <div className="saving-overlay">
-//         <Spinner size={48} />
-//         <p>{progress || "Saving... please wait"}</p>
-//       </div>
-//     )}
-//   );
-// }
-
-// import { useEffect, useState } from "react";
-// import api from "../../utils/api";
-// import { uploadFile } from "../../utils/cloudinaryUpload";
-
-// export default function ResumeEditForm() {
-//   const [resume, setResume] = useState(null);
-//   const [saving, setSaving] = useState(false);
-
-//   useEffect(() => {
-//     api.get("/user/resume").then((res) => setResume(res.data));
-//   }, []);
-
-//   const saveSection = async (section) => {
-//     try {
-//       setSaving(true);
-//       const payload = structuredClone(resume[section]);
-
-//       if (Array.isArray(payload)) {
-//         for (const item of payload) {
-//           if (item.document instanceof File) {
-//             item.document = await uploadFile(item.document);
-//           }
-//         }
-//       }
-
-//       await api.patch("/user/resume/section", { section, data: payload });
-//       alert(`${section} saved`);
-//     } catch {
-//       alert("Save failed");
-//     } finally {
-//       setSaving(false);
-//     }
-//   };
-
-//   if (!resume) return <p>Loading...</p>;
-
-//   return (
-//     <div>
-//       <h2>Edit Resume</h2>
-
-//       <h3>Experience</h3>
-//       {resume.experience.map((ex, i) => (
-//         <div key={i}>
-//           <input
-//             value={ex.title}
-//             onChange={(e) => {
-//               const arr = [...resume.experience];
-//               arr[i].title = e.target.value;
-//               setResume({ ...resume, experience: arr });
-//             }}
-//           />
-//           {typeof ex.document === "string" && (
-//             <button onClick={() => {
-//               const arr = [...resume.experience];
-//               arr[i].document = null;
-//               setResume({ ...resume, experience: arr });
-//             }}>
-//               Delete Doc
-//             </button>
-//           )}
-//           <input type="file" onChange={(e) => {
-//             const arr = [...resume.experience];
-//             arr[i].document = e.target.files[0];
-//             setResume({ ...resume, experience: arr });
-//           }} />
-//         </div>
-//       ))}
-
-//       <button disabled={saving} onClick={() => saveSection("experience")}>
-//         Save Experience
-//       </button>
-//     </div>
-//   );
-// }
-
-// // import { useEffect, useState } from "react";
-// // import ResumeForm from "./ResumeForm";
-// // import api from "../../utils/api";
-// // import { uploadFile } from "../../utils/cloudinaryUpload";
-// // import { useNavigate } from "react-router-dom";
-
-// // export default function EditResume() {
-// //   const [data, setData] = useState(null);
-// //   const navigate = useNavigate();
-
-// //   useEffect(() => {
-// //     api.get("/user/profile").then((res) => setData(res.data));
-// //   }, []);
-
-// //   const handleUpdate = async (formData) => {
-// //     const payload = structuredClone(formData);
-
-// //     if (payload.contact.photo instanceof File) {
-// //       payload.contact.photoUrl = await uploadFile(payload.contact.photo);
-// //     }
-// //     delete payload.contact.photo;
-
-// //     if (payload.resumeFile instanceof File) {
-// //       payload.resumeFileUrl = await uploadFile(payload.resumeFile);
-// //     }
-// //     delete payload.resumeFile;
-
-// //     await api.put("/user/profile", payload);
-// //     alert("✅ Updated successfully");
-// //     navigate("/dashboard");
-// //   };
-
-// //   if (!data) return <p>Loading...</p>;
-
-// //   return <ResumeForm initialData={data} onSubmit={handleUpdate} />;
-// // }

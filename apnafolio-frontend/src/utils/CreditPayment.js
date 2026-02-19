@@ -10,8 +10,9 @@ export const loadRazorpay = (order, templateId, purchaseType) => {
         currency: order.currency,
         order_id: order.id,
         name: "ApnaFolio",
-        description: "Template Purchase",
+        description: "Edit Credit Purchase",
         theme: { color: "#5e17eb" },
+
 
         handler: async (response) => {
           try {
@@ -24,18 +25,22 @@ export const loadRazorpay = (order, templateId, purchaseType) => {
                   Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
                 body: JSON.stringify({
-                  ...response,
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
                   templateId,
-                  amount: order.amount / 100, // / 100, // convert paise to rupees
-                  purchaseType: "template",
+                  amount: order.amount / 100,
+                  purchaseType, // ✅ USE PASSED VALUE
                 }),
               }
             );
+
             resolve(response);
           } catch (err) {
             reject(err);
           }
         },
+
       };
 
       new window.Razorpay(options).open();

@@ -335,3 +335,284 @@
   .template-scroll-grid { grid-template-columns: 1fr; }
   .action-flex { flex-direction: column; align-items: flex-start; gap: 20px; }
 }
+
+
+/* PLAN & CREDITS CARD */
+.dash-card.compact-link.data {
+  background: linear-gradient(
+    145deg,
+    rgba(10, 20, 60, 0.8),
+    rgba(5, 10, 30, 0.95)
+  );
+  border: 1px solid rgba(79, 111, 255, 0.15);
+  backdrop-filter: blur(14px);
+  border-radius: 22px;
+  padding: 25px;
+  position: relative;
+  overflow: hidden;
+  transition: 0.3s ease;
+}
+
+.dash-card.compact-link:hover {
+  border-color: rgba(79, 111, 255, 0.4);
+  transform: translateY(-4px);
+}
+
+/* Credit Rows */
+.credit-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.credit-row:last-child {
+  border-bottom: none;
+}
+
+.credit-row p {
+  color: #a1a1aa;
+  margin: 0;
+}
+
+.credit-row strong {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* Status Colors */
+.credit-row strong.expired {
+  color: #ff4d4f;
+}
+
+.credit-row strong.active {
+  color: #22c55e;
+}
+
+/* Buttons Container */
+.dash-card.compact-link button {
+  flex: 1;
+}
+
+/* BUY BUTTON */
+.btn-buy {
+  background: linear-gradient(90deg, #4f6fff, #5e17eb);
+  border: none;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btn-buy:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(79, 111, 255, 0.4);
+}
+
+/* RENEW BUTTON */
+.btn-renew {
+  background: linear-gradient(90deg, #ff8c00, #ff3d00);
+  border: none;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btn-renew:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 77, 0, 0.4);
+}
+
+
+
+
+
+/* ================= OVERLAY ================= */
+
+.credit-modal-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 10, 30, 0.85);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+/* ================= MODAL BOX ================= */
+
+.credit-modal {
+  width: 450px;
+  max-width: 90%;
+  background: linear-gradient(
+    145deg,
+    rgba(10, 20, 60, 0.95),
+    rgba(5, 10, 30, 1)
+  );
+  border: 1px solid rgba(79, 111, 255, 0.3);
+  border-radius: 22px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 0 50px rgba(79, 111, 255, 0.25);
+  animation: scaleIn 0.2s ease-in-out;
+}
+
+.credit-modal h2 {
+  margin-bottom: 25px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* ================= OPTIONS ================= */
+
+.credit-options {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* ================= CREDIT CARD ================= */
+
+.credit-box {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.credit-box:hover {
+  transform: translateY(-5px);
+  border-color: rgba(79, 111, 255, 0.6);
+  box-shadow: 0 0 25px rgba(79, 111, 255, 0.3);
+}
+
+.credit-box h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+.credit-box p {
+  font-size: 20px;
+  font-weight: 600;
+  color: #4f6fff;
+  margin-bottom: 15px;
+}
+
+/* ================= POPULAR STYLE ================= */
+
+.credit-box.popular {
+  border: 1px solid gold;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 215, 0, 0.08),
+    rgba(255, 255, 255, 0.05)
+  );
+  position: relative;
+}
+
+.credit-box.popular::before {
+  content: "BEST VALUE";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: gold;
+  color: black;
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+/* ================= BUTTON ================= */
+
+.credit-box button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: linear-gradient(90deg, #4f6fff, #5e17eb);
+  color: white;
+  transition: 0.3s ease;
+}
+
+.credit-box button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(79, 111, 255, 0.5);
+}
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+
+/* ===== CLOSE BUTTON ===== */
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(6px);
+}
+
+/* Hover effect */
+.close-btn:hover {
+  background: rgba(255, 77, 79, 0.15);
+  border-color: #ff4d4f;
+  color: #ff4d4f;
+  transform: rotate(90deg);
+  box-shadow: 0 0 15px rgba(255, 77, 79, 0.4);
+}
+.dash-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glass);
+  padding: 30px;
+  border-radius: 28px;
+  backdrop-filter: blur(12px);
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dash-card.wide { grid-column: span 2; }
+
+.dash-card:hover { border-color: rgba(79, 111, 255, 0.4); transform: translateY(-5px); }
+
+.card-header-icon { font-size: 1.5rem; margin-bottom: 15px; }
+.dash-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; }

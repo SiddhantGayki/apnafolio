@@ -9,6 +9,7 @@ export default function GoogleButton() {
   console.log("GOOGLE CLIENT ID =", clientId);
   const handleSuccess = async (credentialResponse) => {
     try {
+      // const res = await api.post("/auth/google-one-tap", {
       const res = await api.post("/auth/google-one-tap", {
         credential: credentialResponse.credential,
       });

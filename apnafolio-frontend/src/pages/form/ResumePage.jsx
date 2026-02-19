@@ -16,7 +16,7 @@ export default function ResumePage() {
     try {
       setSaving(true);
       setProgress("Preparing your portfolio...");
-      console.log("👉 Token before save:", localStorage.getItem("token"));
+      // console.log("👉 Token before save:", localStorage.getItem("token"));
 
       // Deep copy
       const payload = {
@@ -113,39 +113,3 @@ export default function ResumePage() {
   );
 }
 
-
-// import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import ResumeForm from "./ResumeForm";
-// import { UserAPI } from "../../utils/api";
-// import { uploadFile } from "../../utils/cloudinaryUpload";
-
-// export default function ResumePage() {
-//   const navigate = useNavigate();
-//   const [saving, setSaving] = useState(false);
-
-//   const handleSave = async (data) => {
-//     try {
-//       setSaving(true);
-//       const payload = structuredClone(data);
-
-//       if (payload.contact.photo instanceof File) {
-//         payload.contact.photoUrl = await uploadFile(payload.contact.photo);
-//       }
-//       delete payload.contact.photo;
-
-//       if (payload.resumeFile instanceof File) {
-//         payload.resumeFileUrl = await uploadFile(payload.resumeFile);
-//       }
-//       delete payload.resumeFile;
-
-//       const res = await UserAPI.saveResume(payload);
-//       if (res?.data?.success) navigate("/templates");
-//       else alert("Save failed");
-//     } finally {
-//       setSaving(false);
-//     }
-//   };
-
-//   return <ResumeForm onSubmit={handleSave} />;
-// }

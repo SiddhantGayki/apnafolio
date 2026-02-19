@@ -133,6 +133,7 @@ import "./TemplateList.css";
 import api from "../utils/api";
 import { getUsername } from "../utils/auth";
 import Spinner from "../components/Spinner";
+import { loadRazorpay } from "../utils/payments"; // ✅ import the Razorpay loader
 
 export default function TemplateList({ allowBuy = true }) {
   const username = getUsername();
@@ -171,10 +172,12 @@ export default function TemplateList({ allowBuy = true }) {
               razorpay_signature: response.razorpay_signature,
               templateId,
               amount: price,
+              purchaseType: "template", // 🔥 add this
             });
 
             if (verifyRes.data.success) {
-              window.location.href = `/u/${username}`;
+              // window.location.href = `/portfolio/${username}`;
+              window.location.href = `/dashboard`;
             } else {
               alert("❌ Payment verification failed");
             }
@@ -185,8 +188,15 @@ export default function TemplateList({ allowBuy = true }) {
         },
       };
 
-      const rzp = new window.Razorpay(options);
-      rzp.open();
+      // const rzp = new window.Razorpay(options);
+      // rzp.open();
+      await loadRazorpay(order, templateId);
+      // await loadRazorpay(order, null, "credit1");
+      // await loadRazorpay(order, null, "credit3");
+
+
+      window.location.href = "/dashboard";
+
     } catch (err) {
       console.error("Payment initiate error:", err);
       alert("❌ Payment failed to initiate");

@@ -1,195 +1,693 @@
-/* Global Form Container */
+/* ============================================================
+   APNAFOLIO — PORTFOLIO BUILDER
+   Theme: Professional Corporate | Navy + Indigo
+   Fonts: Plus Jakarta Sans + Inter
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ============================================================
+   ROOT TOKENS
+   ============================================================ */
+:root {
+  --bg:             #080d1a;
+  --bg-card:        #0d1526;
+  --bg-input:       #0f1b30;
+  --bg-input-focus: #111f38;
+  --surface:        #111f38;
+
+  --indigo:         #4f46e5;
+  --indigo-light:   #6366f1;
+  --indigo-soft:    rgba(79, 70, 229, 0.1);
+  --indigo-glow:    rgba(99, 102, 241, 0.2);
+  --blue:           #3b82f6;
+  --blue-soft:      rgba(59, 130, 246, 0.08);
+
+  --border:         rgba(255, 255, 255, 0.07);
+  --border-hover:   rgba(99, 102, 241, 0.3);
+  --border-focus:   rgba(99, 102, 241, 0.6);
+
+  --text-primary:   #f0f4ff;
+  --text-secondary: #8b9dc3;
+  --text-muted:     #4a5a7a;
+
+  --danger:         #ef4444;
+  --danger-soft:    rgba(239, 68, 68, 0.1);
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow-card:   0 4px 32px rgba(0, 0, 0, 0.45);
+  --shadow-indigo: 0 0 28px rgba(79, 70, 229, 0.22);
+}
+
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   FORM WRAPPER
+   ============================================================ */
 .resume-form {
-  max-width: 950px;
-  margin: 2rem auto;
-  padding: 2.5rem;
-  border-radius: 18px;
-  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-  color: #eee;
-  font-family: "Poppins", sans-serif;
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
-  animation: fadeIn 0.7s ease-in-out;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 28px 100px;
+  position: relative;
 }
 
-/* Form Heading */
-.resume-form h2 {
-  text-align: center;
-  font-size: 2.4rem;
+/* Top gradient bar */
+.resume-form::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--indigo), var(--blue), var(--indigo-light));
+  z-index: 100;
+}
+
+/* ============================================================
+   FORM HEADER
+   ============================================================ */
+.form-header {
+  padding: 52px 0 36px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+  animation: fadeSlideDown 0.5s ease both;
+}
+
+.form-header__badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--indigo-soft);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: var(--indigo-light);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.72rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ff0080, #00f5ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 1.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 20px;
+  margin-bottom: 14px;
 }
 
-/* Section Headings */
-.resume-form h3 {
-  margin-top: 2rem;
-  font-size: 1.6rem;
-  color: #00f5ff;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
-  padding-bottom: 0.4rem;
+.form-header h2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.resume-form h4 {
-  margin: 1rem 0 0.5rem;
-  font-size: 1.2rem;
-  color: #ff66cc;
+.form-header h2::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 32px;
+  background: linear-gradient(180deg, var(--indigo) 0%, var(--blue) 100%);
+  border-radius: 4px;
+  flex-shrink: 0;
 }
 
-/* Inputs & Textarea */
-.resume-form input,
-.resume-form textarea {
-  width: 100%;
-  padding: 0.9rem 1rem;
-  margin: 0.6rem 0 1.2rem;
-  border: none;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
-  font-size: 1rem;
-  outline: none;
-  transition: all 0.3s ease;
+.form-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-left: 20px;
 }
 
-.resume-form input:focus,
-.resume-form textarea:focus {
-  background: rgba(255, 255, 255, 0.18);
-  box-shadow: 0 0 10px #00f5ff;
+/* ============================================================
+   FORM SECTION — animated cards
+   ============================================================ */
+.form-section {
+  margin-top: 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeSlideUp 0.4s ease calc(var(--delay, 0s)) both;
+  transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-/* Skill Row */
-.skill-row {
+.form-section:hover {
+  border-color: rgba(99, 102, 241, 0.15);
+  box-shadow: 0 6px 40px rgba(0,0,0,0.3);
+}
+
+/* Subtle left glow line */
+.form-section::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--indigo) 0%, var(--blue) 60%, transparent 100%);
+  border-radius: 3px 0 0 3px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.form-section:hover::before {
+  opacity: 1;
+}
+
+/* ── Section Title ── */
+.section-title {
   display: flex;
   align-items: center;
   gap: 10px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--indigo-light);
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
 }
 
-.skill-row input {
+.section-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.section-title::after {
+  content: '';
   flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border-hover), transparent);
 }
 
-/* Nested Section (Projects, Education, etc.) */
+/* ============================================================
+   GRID LAYOUTS
+   ============================================================ */
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   FIELD GROUP
+   ============================================================ */
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-group label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.3px;
+}
+
+.required {
+  color: var(--indigo-light);
+  margin-left: 2px;
+}
+
+.optional {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 400;
+}
+
+/* ============================================================
+   INPUTS & TEXTAREAS
+   ============================================================ */
+.resume-form input[type="text"],
+.resume-form input[type="email"],
+.resume-form input[type="url"],
+.resume-form textarea {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  padding: 11px 14px;
+  outline: none;
+  transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+}
+
+.resume-form input::placeholder,
+.resume-form textarea::placeholder {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.resume-form input[type="text"]:hover,
+.resume-form input[type="email"]:hover,
+.resume-form input[type="url"]:hover,
+.resume-form textarea:hover {
+  border-color: var(--border-hover);
+}
+
+.resume-form input[type="text"]:focus,
+.resume-form input[type="email"]:focus,
+.resume-form input[type="url"]:focus,
+.resume-form textarea:focus {
+  border-color: var(--border-focus);
+  background: var(--bg-input-focus);
+  box-shadow: 0 0 0 3px var(--indigo-soft), var(--shadow-indigo);
+}
+
+.resume-form textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+/* Range */
+.resume-form input[type="range"] {
+  accent-color: var(--indigo-light);
+  border: none;
+  background: transparent;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* ============================================================
+   FILE UPLOAD BOX
+   ============================================================ */
+.file-upload-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-input);
+  border: 1px dashed rgba(99, 102, 241, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all var(--transition);
+  overflow: hidden;
+}
+
+.file-upload-box:hover {
+  border-color: var(--indigo-light);
+  background: var(--indigo-soft);
+}
+
+.file-upload-box input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.file-upload-icon { font-size: 1.2rem; }
+
+.file-upload-text {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.file-hint {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  margin-left: 4px;
+}
+
+.file-upload-box.large {
+  padding: 22px 20px;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.file-upload-box.compact {
+  padding: 9px 12px;
+}
+
+.photo-upload-group {
+  margin-top: 18px;
+}
+
+/* ============================================================
+   SKILLS GRID
+   ============================================================ */
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .skills-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   NESTED SECTION
+   ============================================================ */
 .nested-section {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 1rem;
-  border-radius: 15px;
-  margin-bottom: 1.2rem;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  position: relative;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  animation: cardIn 0.25s ease both;
 }
 
 .nested-section:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(0, 245, 255, 0.25);
+  border-color: var(--border-hover);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.25);
 }
 
-/* Buttons */
-.add-btn,
-.remove-btn,
-.submit-btn {
-  padding: 0.7rem 1.4rem;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
+.nested-section h4 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
 }
 
-/* Add Button */
+/* Nested section header row */
+.nested-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.nested-index {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--indigo-light);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ============================================================
+   SKILL ROW
+   ============================================================ */
+.skill-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.skill-row input { flex: 1; }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+/* Add Btn */
 .add-btn {
-  background: linear-gradient(135deg, #43e97b, #38f9d7);
-  color: #000;
-  margin-top: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--indigo-soft);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: var(--indigo-light);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-top: 8px;
+  letter-spacing: 0.2px;
+  transition: all var(--transition);
 }
 
 .add-btn:hover {
-  transform: scale(1.05);
-  background: linear-gradient(135deg, #38f9d7, #43e97b);
+  background: rgba(99, 102, 241, 0.18);
+  border-color: var(--indigo-light);
+  box-shadow: 0 0 16px var(--indigo-glow);
+  transform: translateY(-1px);
 }
 
-/* Remove Button */
+.add-btn:active { transform: translateY(0); }
+
+.add-btn.full-width {
+  width: 100%;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+/* Remove Btn */
 .remove-btn {
-  background: linear-gradient(135deg, #ff512f, #dd2476);
-  color: #fff;
+  background: var(--danger-soft);
+  border: 1px solid rgba(239, 68, 68, 0.18);
+  color: #f87171;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--transition);
+  white-space: nowrap;
 }
 
 .remove-btn:hover {
-  transform: scale(1.05);
-  background: linear-gradient(135deg, #dd2476, #ff512f);
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
 }
 
-/* Submit Button */
+.remove-btn.icon-btn {
+  padding: 5px 9px;
+  font-size: 0.7rem;
+}
+
+/* Submit Btn */
 .submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   width: 100%;
-  background: linear-gradient(135deg, #ff0080, #00f5ff);
-  color: white;
-  margin-top: 1.5rem;
-  font-size: 1.2rem;
+  margin-top: 40px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, var(--indigo) 0%, var(--indigo-light) 50%, var(--blue) 100%);
+  background-size: 200% 200%;
+  background-position: left center;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 60%);
+  pointer-events: none;
 }
 
 .submit-btn:hover {
-  background: linear-gradient(135deg, #00f5ff, #ff0080);
-  transform: scale(1.02);
-  box-shadow: 0 6px 25px rgba(0, 245, 255, 0.4);
+  background-position: right center;
+  box-shadow: 0 8px 32px rgba(79, 70, 229, 0.5);
+  transform: translateY(-2px);
 }
 
-/* File Inputs */
-.resume-form input[type="file"] {
-  background: transparent;
-  border: none;
-  color: #ddd;
-  margin: 0.5rem 0 1rem;
+.submit-btn:active { transform: translateY(0); }
+
+.submit-arrow {
+  font-size: 1.1rem;
+  transition: transform var(--transition);
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.submit-btn:hover .submit-arrow {
+  transform: translateX(4px);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .resume-form {
-    padding: 1.5rem;
-  }
-}
-
-
-/* spinner */
-.saving-overlay {
+/* ============================================================
+   CROP MODAL
+   ============================================================ */
+.crop-modal {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
+  background: rgba(8, 13, 26, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: fadeIn 0.2s ease;
+}
+
+.crop-wrapper {
+  background: var(--surface);
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  width: min(480px, 92vw);
+  box-shadow: var(--shadow-card), 0 0 60px rgba(79,70,229,0.12);
+  animation: slideUp 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.crop-modal-header {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.crop-area {
+  position: relative;
   width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
+  height: 300px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #000;
+  border: 1px solid var(--border);
+}
+
+.crop-controls {
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  gap: 12px;
+}
+
+.crop-zoom-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: -4px;
+}
+
+.crop-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.crop-buttons button {
+  flex: 1;
+  padding: 11px;
+  border-radius: var(--radius-sm);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  border: 1px solid;
+}
+
+.crop-buttons button:first-child {
+  background: linear-gradient(135deg, var(--indigo), var(--indigo-light));
+  border-color: transparent;
   color: #fff;
-  font-size: 1.2rem;
-  z-index: 9999;
 }
 
-.spinner {
-  border: 6px solid rgba(255, 255, 255, 0.2);
-  border-top: 6px solid #ffffff;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  animation: spin 1s linear infinite;
-  margin-bottom: 16px;
+.crop-buttons button:first-child:hover {
+  box-shadow: 0 4px 20px rgba(79,70,229,0.4);
+  transform: translateY(-1px);
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.crop-buttons button:last-child {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text-secondary);
+}
+
+.crop-buttons button:last-child:hover {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.14);
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.5); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 600px) {
+  .resume-form { padding: 0 16px 80px; }
+  .form-header { padding: 36px 0 28px; }
+  .form-header h2 { font-size: 1.7rem; }
+  .form-section { padding: 20px 18px; }
+  .nested-section { padding: 14px 16px; }
 }
