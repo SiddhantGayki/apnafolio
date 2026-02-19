@@ -616,3 +616,138 @@
 
 .card-header-icon { font-size: 1.5rem; margin-bottom: 15px; }
 .dash-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; }
+
+
+/* =========================================
+   🔥 IMPROVED RESPONSIVE STRUCTURE
+========================================= */
+
+/* Tablets */
+@media (max-width: 1024px) {
+
+  .user-dashboard {
+    padding: 50px 6%;
+  }
+
+  .dash-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 25px;
+  }
+
+  .hero-text h2 {
+    font-size: 2.2rem;
+  }
+
+  .hero-stats {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .stat-card {
+    flex: 1;
+    min-width: 140px;
+  }
+
+  .template-scroll-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dash-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dash-card.wide {
+    grid-column: span 1;
+  }
+}
+
+
+/* Mobile Devices */
+@media (max-width: 768px) {
+
+  .user-dashboard {
+    padding: 40px 5%;
+  }
+
+  .hero-text h2 {
+    font-size: 1.9rem;
+    line-height: 1.2;
+  }
+
+  .stat-card {
+    padding: 16px;
+    min-width: 100%;
+  }
+
+  .hero-stats {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .template-scroll-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dash-card {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .action-flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .btn-action {
+    width: 100%;
+  }
+
+  .portfolio-row input {
+    font-size: 0.8rem;
+  }
+
+  .btn-copy,
+  .btn-share {
+    font-size: 0.85rem;
+    padding: 10px;
+  }
+
+  .credit-options {
+    flex-direction: column;
+  }
+
+  .credit-modal {
+    width: 95%;
+    padding: 25px 20px;
+  }
+}
+
+
+/* Small Phones */
+@media (max-width: 480px) {
+
+  .hero-text h2 {
+    font-size: 1.6rem;
+  }
+
+  .tag-badge {
+    font-size: 0.65rem;
+    padding: 5px 10px;
+  }
+
+  .stat-card h3 {
+    font-size: 1.2rem;
+  }
+
+  .dash-card h3 {
+    font-size: 1.05rem;
+  }
+
+  .btn-preview-main {
+    font-size: 0.9rem;
+    padding: 12px;
+  }
+
+}

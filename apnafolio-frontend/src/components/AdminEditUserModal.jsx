@@ -112,10 +112,133 @@ export default function AdminEditUserModal({ user, onClose }) {
         </div>
 
         <div className="modal-actions">
-          <button onClick={() => onClose(false)} disabled={saving}>Cancel</button>
-          <button onClick={save} disabled={saving}>{saving ? "Saving..." : "Save"}</button>
+          <button onClick={() => onClose(false)} disabled={saving} className="primary-btn">Cancel</button>
+          <button onClick={save} disabled={saving} className="primary-btn">{saving ? "Saving..." : "Save"}</button>
         </div>
       </div>
     </div>
   );
 }
+
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import api from "../utils/api";
+// import Spinner from "./Spinner";
+// // import "./Admin.css";
+
+// export default function AdminEditUserModal({ user, onClose }) {
+//   if (!user) return null;
+
+//   const [paid, setPaid] = useState(!!user.paid);
+//   const [selectedTemplate, setSelectedTemplate] = useState(user.selectedTemplate || "");
+//   const [isAdmin, setIsAdmin] = useState(!!user.isAdmin);
+//   const [editCredits, setEditCredits] = useState(user.editCredits || 0);
+//   const [saving, setSaving] = useState(false);
+
+//   useEffect(() => {
+//     setPaid(!!user.paid);
+//     setSelectedTemplate(user.selectedTemplate || "");
+//     setIsAdmin(!!user.isAdmin);
+//     setEditCredits(user.editCredits || 0);
+//   }, [user]);
+
+//   const save = async () => {
+//     setSaving(true);
+
+//     try {
+//       const payload = {
+//         userId: user._id,
+//         paid,
+//         selectedTemplate,
+//         isAdmin,
+//         editCredits
+//       };
+
+//       const res = await api.post("/admin/update-user", payload);
+
+//       if (res?.data?.success) {
+//         onClose(true);
+//       }
+//     } catch (err) {
+//       console.error(err);
+//     } finally {
+//       setSaving(false);
+//     }
+//   };
+
+//   return (
+//     <div className="admin-modal-backdrop">
+//       <div className="admin-modal-card">
+
+//         <h2>User Settings</h2>
+//         <p className="user-meta">
+//           {user.name} • {user.email}
+//         </p>
+
+//         {/* Account Controls */}
+//         <div className="admin-grid">
+
+//           <div className="field">
+//             <label>Paid Plan</label>
+//             <select value={paid} onChange={(e) => setPaid(e.target.value === "true")}>
+//               <option value="true">Active</option>
+//               <option value="false">Inactive</option>
+//             </select>
+//           </div>
+
+//           <div className="field">
+//             <label>Template</label>
+//             <input
+//               value={selectedTemplate}
+//               onChange={(e) => setSelectedTemplate(e.target.value)}
+//             />
+//           </div>
+
+//           <div className="field">
+//             <label>Admin Role</label>
+//             <select value={isAdmin} onChange={(e) => setIsAdmin(e.target.value === "true")}>
+//               <option value="true">Yes</option>
+//               <option value="false">No</option>
+//             </select>
+//           </div>
+
+//           <div className="field">
+//             <label>Edit Credits</label>
+//             <input
+//               type="number"
+//               value={editCredits}
+//               onChange={(e) => setEditCredits(Number(e.target.value))}
+//             />
+//           </div>
+
+//         </div>
+
+//         {/* S3 STORAGE INFO */}
+//         <div className="s3-section">
+//           <h4>S3 Storage</h4>
+//           <p><strong>Profile Photo:</strong> {user.contact?.photo || "Not uploaded"}</p>
+//           <p><strong>Resume File:</strong> {user.resumeFile || "Not uploaded"}</p>
+//           <p><strong>Project Docs:</strong> {user.projects?.length || 0}</p>
+//         </div>
+
+//         {/* Metadata */}
+//         <div className="meta-section">
+//           <p>Created: {new Date(user.createdAt).toLocaleDateString()}</p>
+//           <p>Views: {user.analytics?.views || 0}</p>
+//         </div>
+
+//         <div className="modal-actions">
+//           <button onClick={() => onClose(false)}>Cancel</button>
+
+//           <button onClick={save} disabled={saving} className="primary-btn">
+//             {saving ? <Spinner size={18} inline /> : "Save Changes"}
+//           </button>
+//         </div>
+
+//       </div>
+//     </div>
+//   );
+// }

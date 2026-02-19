@@ -214,7 +214,7 @@ export default function TemplateList({ allowBuy = true }) {
       <header className="market-header">
         <div className="market-badge">Premium Collections</div>
         <h2>Pick Your <span>Digital Identity</span></h2>
-        <p>One-time payment. Lifetime ownership. No hidden charges.</p>
+        <p>Professionally designed templates to make your portfolio stand out. Choose the one that matches your style and let your work shine.</p>
       </header>
 
       {loading && <Spinner />}

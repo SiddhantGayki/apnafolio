@@ -225,3 +225,231 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useEffect, useState } from "react";
+// import api from "../../utils/api";
+// import AdminEditUserModal from "../../components/AdminEditUserModal";
+// import {
+//   BarChart, Bar, LineChart, Line,
+//   XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer,
+// } from "recharts";
+// import "../../styles/Admin.css";
+
+// export default function AdminDashboard() {
+
+//   /* ================= STATES ================= */
+
+//   const [users, setUsers] = useState([]);
+//   const [stats, setStats] = useState({});
+//   const [userChart, setUserChart] = useState([]);
+//   const [earningChart, setEarningChart] = useState([]);
+//   const [page, setPage] = useState(1);
+//   const [total, setTotal] = useState(0);
+//   const [search, setSearch] = useState("");
+//   const [filter, setFilter] = useState("all"); // paid/unpaid filter
+//   const [loading, setLoading] = useState(false);
+//   const [editingUser, setEditingUser] = useState(null);
+//   const [actionLoading, setActionLoading] = useState(null);
+
+//   const limit = 12;
+
+//   /* ================= FETCH USERS ================= */
+
+//   const fetchUsers = async (p = 1) => {
+//     setLoading(true);
+//     try {
+//       const res = await api.get("/admin/users", {
+//         params: { page: p, limit, search, filter }
+//       });
+
+//       if (res.data?.success) {
+//         setUsers(res.data.users || []);
+//         setTotal(res.data.total || 0);
+//       }
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   /* ================= FETCH STATS ================= */
+
+//   const fetchStats = async () => {
+//     try {
+//       const res = await api.get("/admin/stats");
+//       if (res.data?.success) {
+//         setStats(res.data.stats);
+//         setUserChart(res.data.userChart || []);
+//         setEarningChart(res.data.earningChart || []);
+//       }
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   };
+
+//   useEffect(() => { fetchUsers(page); }, [page, filter]);
+//   useEffect(() => { fetchStats(); }, []);
+
+//   const totalPages = Math.max(1, Math.ceil(total / limit));
+
+//   /* ================= ACTIONS ================= */
+
+//   const updateUser = async (userId, payload) => {
+//     try {
+//       setActionLoading(userId);
+//       await api.post("/admin/update-user", { userId, ...payload });
+//       fetchUsers(page);
+//       fetchStats();
+//     } finally {
+//       setActionLoading(null);
+//     }
+//   };
+
+//   const suspendUser = (u) => updateUser(u._id, { suspended: !u.suspended });
+//   const extendPlan = (u) => updateUser(u._id, { extendYear: true });
+//   const addCredits = (u) => updateUser(u._id, { addCredits: 3 });
+
+//   /* ================= COUPON SECTION ================= */
+
+//   const createCoupon = async () => {
+//     const code = prompt("Enter Coupon Code:");
+//     const discount = prompt("Enter Discount %:");
+
+//     if (!code || !discount) return;
+
+//     await api.post("/admin/create-coupon", {
+//       code,
+//       discount: Number(discount)
+//     });
+
+//     alert("Coupon Created");
+//   };
+
+//   /* ================= UI ================= */
+
+//   return (
+//     <div className="admin-page">
+
+//       <h1>Admin Control Center</h1>
+
+//       {/* SUMMARY */}
+//       <div className="admin-summary-cards">
+//         <div className="card">Users: {stats.totalUsers || 0}</div>
+//         <div className="card">Paid: {stats.paidUsers || 0}</div>
+//         <div className="card">Revenue: ₹{stats.revenue || 0}</div>
+//         <div className="card">Net: ₹{stats.networth || 0}</div>
+//         <div className="card">Storage: {stats.totalStorageMB} MB</div>
+//         <div className="card">Total Credits: {stats.totalCredits}</div>
+
+//       </div>
+
+//       {/* CHARTS */}
+//       <div className="charts-row">
+
+//         <div className="chart-box">
+//           <h3>User Growth</h3>
+//           <ResponsiveContainer width="100%" height={250}>
+//             <LineChart data={userChart}>
+//               <XAxis dataKey="month" />
+//               <YAxis />
+//               <CartesianGrid stroke="#333" />
+//               <Tooltip />
+//               <Line type="monotone" dataKey="users" stroke="#00d9ff" strokeWidth={2} />
+//             </LineChart>
+//           </ResponsiveContainer>
+//         </div>
+
+//         <div className="chart-box">
+//           <h3>Revenue (98% Net)</h3>
+//           <ResponsiveContainer width="100%" height={250}>
+//             <BarChart data={earningChart}>
+//               <XAxis dataKey="month" />
+//               <YAxis />
+//               <CartesianGrid stroke="#333" />
+//               <Tooltip />
+//               <Bar dataKey="revenue" fill="#22c55e" />
+//             </BarChart>
+//           </ResponsiveContainer>
+//         </div>
+
+//       </div>
+
+//       {/* FILTERS */}
+//       <div className="admin-filters">
+//         <button onClick={() => setFilter("all")}>All</button>
+//         <button onClick={() => setFilter("paid")}>Paid</button>
+//         <button onClick={() => setFilter("unpaid")}>Unpaid</button>
+//         <button onClick={createCoupon}>+ Create Coupon</button>
+//       </div>
+
+//       {/* USERS */}
+//       {loading ? <p>Loading...</p> : (
+//         <div className="admin-grid">
+//           {users.map((u) => (
+//             <div key={u._id} className="admin-card">
+
+//               <div className="admin-header">
+//                 <div>
+//                   <strong>{u.name}</strong>
+//                   <p>{u.email}</p>
+//                 </div>
+//                 <span className={`badge ${u.paid ? "paid" : "free"}`}>
+//                   {u.paid ? "PAID" : "FREE"}
+//                 </span>
+//               </div>
+
+//               <div className="admin-info">
+//                 <div>Username: {u.username}</div>
+//                 <div>Template: {u.selectedTemplate || "-"}</div>
+//                 <div>Credits: {u.editCredits ?? 0}</div>
+//                 <div>Expiry: {u.planExpiry ? new Date(u.planExpiry).toLocaleDateString() : "-"}</div>
+//                 <div>Views: {u.analytics?.views || 0}</div>
+//                 <div>Status: {u.suspended ? "🚫 Suspended" : "Active"}</div>
+
+//                 {/* S3 STORAGE */}
+//                 <div className="s3-box">
+//                   <strong>S3 Storage</strong>
+//                   <div>Photo: {u.contact?.photo ? "Uploaded" : "No"}</div>
+//                   <div>Resume: {u.resumeFile ? "Uploaded" : "No"}</div>
+//                   {/* <div>Projects: {u.projects?.length || 0}</div> */}
+//                 </div>
+//               </div>
+
+//               <div className="admin-actions">
+//                 <button onClick={() => extendPlan(u)} disabled={actionLoading === u._id}>Extend</button>
+//                 <button onClick={() => addCredits(u)} disabled={actionLoading === u._id}>+3 Credits</button>
+//                 <button onClick={() => suspendUser(u)} disabled={actionLoading === u._id}>
+//                   {u.suspended ? "Unsuspend" : "Suspend"}
+//                 </button>
+//                 <button onClick={() => setEditingUser(u)}>Edit</button>
+//               </div>
+
+//             </div>
+//           ))}
+//         </div>
+//       )}
+
+//       {/* PAGINATION */}
+//       <div className="admin-pagination">
+//         <button disabled={page <= 1} onClick={() => setPage(p => p - 1)}>Prev</button>
+//         <span>{page}</span>
+//         <button disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>Next</button>
+//       </div>
+
+//       {editingUser && (
+//         <AdminEditUserModal user={editingUser} onClose={() => setEditingUser(null)} />
+//       )}
+
+//     </div>
+//   );
+// }

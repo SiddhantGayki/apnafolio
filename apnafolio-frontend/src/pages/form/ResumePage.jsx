@@ -5,12 +5,16 @@ import { UserAPI } from "../../utils/api";
 // import { uploadFile } from "../../utils/cloudinaryUpload";
 import Spinner from "../../components/Spinner";
 import { uploadFile } from "../../utils/s3Upload";
+import Toast from "../../components/Toast";
+
 
 
 export default function ResumePage() {
   const [saving, setSaving] = useState(false);
   const [progress, setProgress] = useState(""); // ✅ progress message
   const navigate = useNavigate();
+  const [toast, setToast] = useState(null);
+
 
   const handleSave = async (data) => {
     try {
@@ -85,14 +89,17 @@ export default function ResumePage() {
       const res = await UserAPI.saveResume(payload);
 
       if (res?.data?.success) {
-        alert("✅ Portfolio saved successfully!");
+        // alert("✅ Portfolio saved successfully!");
+        setToast({ message: "Portfolio saved successfully!", type: "success" });
         navigate("/templates"); // ✅ redirect to TemplateList
       } else {
-        alert("❌ Something went wrong while saving!");
+        // alert("❌ Something went wrong while saving!");
+        setToast({ message: "Something went wrong while saving!", type: "error" });
       }
     } catch (err) {
       console.error("Save resume error:", err);
-      alert("❌ Failed to save portfolio. Check console for details.");
+      // alert("❌ Failed to save portfolio. Check console for details.");
+      setToast({ message: "Failed to save portfolio. Check console for details.", type: "error" });
     } finally {
       setSaving(false);
       setProgress("");
@@ -100,9 +107,19 @@ export default function ResumePage() {
   };
 
   return (
-    <div className="resume-page">
-      <ResumeForm onSubmit={handleSave} />
-      {saving && (
+    <>
+      {/* {toast && <Toast toast={toast} setToast={setToast} />} */}
+      {toast && (
+  <Toast
+    message={toast.message}
+    type={toast.type}
+    onClose={() => setToast(null)}
+  />
+)}
+
+      <div className="resume-page">
+        <ResumeForm onSubmit={handleSave} />
+        {saving && (
   <div className="saving-overlay">
     <Spinner size={56} />
     <p>{progress || "Saving... please wait"}</p>
@@ -110,6 +127,7 @@ export default function ResumePage() {
 )}
 
     </div>
+    </>
   );
 }
 

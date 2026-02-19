@@ -1,0 +1,35 @@
+.af-toast {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  padding: 14px 22px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  z-index: 999999;
+  animation: slideIn 0.35s ease;
+  backdrop-filter: blur(10px);
+}
+
+.af-toast.info {
+  background: rgba(79,111,255,0.15);
+  color: #4f6fff;
+  border: 1px solid rgba(79,111,255,0.4);
+}
+
+.af-toast.error {
+  background: rgba(239,68,68,0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239,68,68,0.4);
+}
+
+.af-toast.success {
+  background: rgba(34,197,94,0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34,197,94,0.4);
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
